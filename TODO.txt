@@ -1,0 +1,3 @@
+How OSGI works - technical info - because of osgi project in JDEECO Solution
+JNI - how it works
+

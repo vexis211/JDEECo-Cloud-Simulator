@@ -1,0 +1,13 @@
+Want to do:
+Java 8
+Eclipse 4.4
+
+Support for:
+JavaFX (fxml files) - http://www.eclipse.org/efxclipse/install.html
+Ecore (ecore, ecorediag, genmodel extensions)
+OMNeT++ (ned, ini, cfg, m, extension)
+MiXiM
+Eclipse JET Java template file (javajet extension) - http://jet-editor.sourceforge.net/
+JUnit
+
+
