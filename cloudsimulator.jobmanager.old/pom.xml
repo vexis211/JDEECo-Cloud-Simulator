@@ -25,6 +25,7 @@
 			<groupId>org.pacesys</groupId>
 			<artifactId>openstack4j</artifactId>
 			<version>1.0.2</version>
+			<classifier>withdeps</classifier>
 		</dependency>
 	</dependencies>
 </project>
