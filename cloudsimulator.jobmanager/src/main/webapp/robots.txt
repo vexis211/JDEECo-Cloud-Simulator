@@ -1,0 +1,3 @@
+# This defines what are web crawlers and other robots disallowed to do here
+User-agent: *
+Disallow: /download
