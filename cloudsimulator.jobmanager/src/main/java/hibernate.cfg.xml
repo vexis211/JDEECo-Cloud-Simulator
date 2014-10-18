@@ -13,6 +13,6 @@
         <property name="hibernate.search.autoregister_listeners">false</property>
         <property name="hibernate.show_sql">true</property>
         <mapping resource="cz/cuni/mff/d3s/jdeeco/cloudsimulator/jobmanager/data/models/SimulationConfiguration.hbm.xml" />
-        <mapping resource="cz/cuni/mff/d3s/jdeeco/cloudsimulator/jobmanager/data/models/SimulationRun.hbm.xml" />
+        <mapping resource="cz/cuni/mff/d3s/jde	eco/cloudsimulator/jobmanager/data/models/SimulationRun.hbm.xml" />
     </session-factory>
 </hibernate-configuration>
