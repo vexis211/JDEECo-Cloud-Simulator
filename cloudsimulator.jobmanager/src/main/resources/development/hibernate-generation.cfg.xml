@@ -12,13 +12,9 @@
         <property name="hibernate.connection.password"></property>
  
         <!-- SQL dialect -->
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
-        <!-- Specify session context -->
-        <property name="hibernate.current_session_context_class">org.hibernate.context.internal.ThreadLocalSessionContext</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
         <!-- Show SQL -->
         <property name="hibernate.show_sql">true</property>
-        <!-- Referring Mapping File -->
-        <mapping resource="hibernate.hbm.xml"/>
  
     </session-factory>
 </hibernate-configuration>
