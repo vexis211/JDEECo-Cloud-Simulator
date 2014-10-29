@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<f:view locale="en" encoding="UTF-8" contentType="text/html">
+
+	<!-- Sets all common parameters used through app. -->
+	<ui:param name="AppVersion"
+		value="#{request.getAttribute('appVersion')}" />
+	<ui:param name="SiteRoot" value="#{request.contextPath}" />
+	<ui:param name="SiteScripts" value="#{request.contextPath}/js" />
+	<ui:param name="SiteStyles" value="#{request.contextPath}/css" />
+	<ui:param name="SiteImages" value="#{request.contextPath}/images" />
+	<ui:param name="SiteDocs" value="#{request.contextPath}/docs" />
+
+	<head>
+<!-- Templates may change default title if needed. -->
+<title><ui:insert name="TitleContent">JDEECo cloud simulator</ui:insert>
+</title>
+
+<!-- Additional css/meta/title definitions goes here. -->
+<ui:insert name="HeadContent" />
+	</head>
+
+	<!-- Definition of body element and its content. -->
+	<body>
+		<ui:insert name="Content" />
+	</body>
+</f:view>
+</html>

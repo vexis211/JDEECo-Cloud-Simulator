@@ -16,7 +16,7 @@
 
 	<!-- Properties in Spring configuration files -->
 	<context:property-placeholder
-		location="classpath:profile.properties, classpath:hibernate.properties, classpath:mail.properties" />
+		location="classpath:properties/profile.properties, classpath:properties/hibernate.properties, classpath:properties/mail.properties" />
 
 	<!-- Enable Spring Annotation Configuration -->
 	<context:annotation-config />
