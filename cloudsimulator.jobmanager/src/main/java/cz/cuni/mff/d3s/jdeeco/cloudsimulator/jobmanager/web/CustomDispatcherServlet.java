@@ -28,6 +28,8 @@ public class CustomDispatcherServlet extends DispatcherServlet {
     	// TODO
 //    	request.setAttribute("appVersion", AppContext.getInstance().getUniqueAppVersionNumber());
 //    	request.setAttribute("googleAnalyticsCode", AppContext.getInstance().getGoogleAnalyticsCode());
+    	
+    	System.out.println("--------------------doDispatch--------------------");
 	super.doDispatch(request, response);
     }
 }

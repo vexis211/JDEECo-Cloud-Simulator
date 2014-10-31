@@ -13,29 +13,44 @@
 
 	<!-- Application Loggers -->
 	<logger name="cz.cuni.mff">
-		<level value="info" />
+		<level value="all" />
+		<appender-ref ref="console" />
 	</logger>
 
 	<!-- 3rdparty Loggers -->
-	<logger name="org.springframework.core">
+	<logger additivity="false" name="org.hibernate.SQL">
 		<level value="info" />
+		<appender-ref ref="console" />
+	</logger>
+	
+	<logger additivity="false" name="org.hibernate">
+		<level value="warn" />
+		<appender-ref ref="console" />
+	</logger>
+	
+	<logger additivity="false" name="net.sf.ehcache">
+		<level value="warn" />
+		<appender-ref ref="console" />
+	</logger>
+	
+	<logger additivity="false" name="org.springframework">
+		<level value="warn" />
+		<appender-ref ref="console" />
 	</logger>
 
-	<logger name="org.springframework.beans">
-		<level value="info" />
+	<logger additivity="false" name="org.springframework.security">
+		<level value="warn" />
+		<appender-ref ref="console" />
 	</logger>
 
-	<logger name="org.springframework.context">
-		<level value="info" />
+	<logger additivity="false" name="org.springframework.web">
+		<level value="warn" />
+		<appender-ref ref="console" />
 	</logger>
-
-	<logger name="org.springframework.web">
-		<level value="info" />
-	</logger>
-
+	
 	<!-- Root Logger -->
 	<root>
-		<priority value="warn" />
+		<priority value="all" />
 		<appender-ref ref="console" />
 	</root>
 

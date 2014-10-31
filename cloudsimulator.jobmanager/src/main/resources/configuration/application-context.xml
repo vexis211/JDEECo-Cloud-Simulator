@@ -18,12 +18,6 @@
 	<context:property-placeholder
 		location="classpath:properties/profile.properties, classpath:properties/hibernate.properties, classpath:properties/mail.properties" />
 
-	<!-- Enable Spring Annotation Configuration -->
-	<context:annotation-config />
-
 	<!-- Scan for all of Spring components such as Spring Service -->
 	<context:component-scan base-package="com.journaldev.spring.service" />
-
-	<context:component-scan
-		base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager" />
 </beans>

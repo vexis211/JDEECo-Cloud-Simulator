@@ -15,6 +15,11 @@
 		http://www.springframework.org/schema/task
 		http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
+	<context:annotation-config />
+	<mvc:annotation-driven />
+	<context:component-scan base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web" />
+	
+	
 	<!-- Localization -->
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basename" value="classpath:messages" />
@@ -47,10 +52,15 @@
 	<mvc:resources location="/pdf/" mapping="/pdf/**" />
 	<mvc:resources location="/css/" mapping="/css/**" />
 
-	<!-- Annotation controller mapping -->
-	<context:annotation-config />
-	<context:component-scan base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web" />
-
+	<!-- Annotation controller mapping --><!-- 
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" />
+	 -->
+	 
+<!-- 	<bean
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.IndexController">
+	</bean> -->
+	 
 	<!-- Configure Spring and JSR-303 Validation -->
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
