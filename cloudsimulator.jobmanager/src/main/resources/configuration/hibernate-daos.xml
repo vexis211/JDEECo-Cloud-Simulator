@@ -11,8 +11,15 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+	<bean id="userDao"
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.UserDaoImpl" />
+		
+	<bean id="simulationDataDao"
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationDataDaoImpl" />
 	<bean id="simulationCongfigurationDao"
 		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationConfigurationDaoImpl" />
+	<bean id="simulationExecutionDao"
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationExecutionDaoImpl" />
 	<bean id="simulationRunDao"
 		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationRunDaoImpl" />
 </beans>

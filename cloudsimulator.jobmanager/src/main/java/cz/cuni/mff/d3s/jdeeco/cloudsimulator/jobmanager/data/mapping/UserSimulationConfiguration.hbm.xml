@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 5, 2014 11:26:10 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.UserSimulationConfiguration" table="user_simulation_configuration" catalog="jdeeco_simulation">
+        <composite-id name="id" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.UserSimulationConfigurationId">
+            <key-property name="userId" type="int">
+                <column name="UserID" />
+            </key-property>
+            <key-property name="configurationId" type="int">
+                <column name="ConfigurationID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="simulationConfiguration" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationConfiguration" update="false" insert="false"
+        fetch="select">
+            <column name="ConfigurationID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="user" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User" update="false" insert="false" fetch="select">
+            <column name="UserID" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

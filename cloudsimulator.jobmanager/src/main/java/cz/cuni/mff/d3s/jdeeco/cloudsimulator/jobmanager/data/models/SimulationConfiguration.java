@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models;
 
-// Generated Oct 20, 2014 11:17:46 PM by Hibernate Tools 4.0.0
+// Generated Nov 5, 2014 11:26:09 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,13 +11,21 @@ import java.util.Set;
 public class SimulationConfiguration implements java.io.Serializable {
 
 	private Integer id;
-	private Set<SimulationRun> simulationRuns = new HashSet<SimulationRun>(0);
+	private SimulationData simulationData;
+	private Set<UserSimulationConfiguration> userSimulationConfigurations = new HashSet<UserSimulationConfiguration>(
+			0);
+	private Set<SimulationExecution> simulationExecutions = new HashSet<SimulationExecution>(
+			0);
 
 	public SimulationConfiguration() {
 	}
 
-	public SimulationConfiguration(Set<SimulationRun> simulationRuns) {
-		this.simulationRuns = simulationRuns;
+	public SimulationConfiguration(SimulationData simulationData,
+			Set<UserSimulationConfiguration> userSimulationConfigurations,
+			Set<SimulationExecution> simulationExecutions) {
+		this.simulationData = simulationData;
+		this.userSimulationConfigurations = userSimulationConfigurations;
+		this.simulationExecutions = simulationExecutions;
 	}
 
 	public Integer getId() {
@@ -28,12 +36,30 @@ public class SimulationConfiguration implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Set<SimulationRun> getSimulationRuns() {
-		return this.simulationRuns;
+	public SimulationData getSimulationData() {
+		return this.simulationData;
 	}
 
-	public void setSimulationRuns(Set<SimulationRun> simulationRuns) {
-		this.simulationRuns = simulationRuns;
+	public void setSimulationData(SimulationData simulationData) {
+		this.simulationData = simulationData;
+	}
+
+	public Set<UserSimulationConfiguration> getUserSimulationConfigurations() {
+		return this.userSimulationConfigurations;
+	}
+
+	public void setUserSimulationConfigurations(
+			Set<UserSimulationConfiguration> userSimulationConfigurations) {
+		this.userSimulationConfigurations = userSimulationConfigurations;
+	}
+
+	public Set<SimulationExecution> getSimulationExecutions() {
+		return this.simulationExecutions;
+	}
+
+	public void setSimulationExecutions(
+			Set<SimulationExecution> simulationExecutions) {
+		this.simulationExecutions = simulationExecutions;
 	}
 
 }
