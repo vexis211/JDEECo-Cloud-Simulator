@@ -11,9 +11,5 @@
 			<default-locale>en</default-locale>
 			<supported-locale>en</supported-locale>
 		</locale-config>
-		<resource-bundle>
-			<base-name>jdeeco-simulator</base-name><!-- TODO -->
-			<var>config</var>
-		</resource-bundle>
 	</application>
 </faces-config>

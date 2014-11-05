@@ -259,7 +259,7 @@
 			<version>${jsf.version}</version>
 		</dependency>
 		<!-- Primefaces -->
-		<dependency>
+	 	<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
 			<version>${primefaces.version}</version>
