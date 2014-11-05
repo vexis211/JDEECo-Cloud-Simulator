@@ -22,7 +22,7 @@
 				<value>hskalicky@gmail.com</value>
 			</list>
 		</property>
-		<property name="sender" value="error@uschovna.zoznam.sk" />
+		<property name="sender" value="TODO" />
 	</bean>
 
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">

@@ -7,9 +7,8 @@
 <f:view locale="en" encoding="UTF-8" contentType="text/html">
 
 	<!-- Sets all common parameters used through app. -->
-	<%-- <ui:param name="AppVersion"
-		value="#{request.getAttribute('appVersion')}" />
-	<ui:param name="SiteRoot" value="#{request.contextPath}" />
+	<%-- <ui:param name="AppVersion" value="#{request.getAttribute('appVersion')}" /> --%>
+	<%-- <ui:param name="SiteRoot" value="#{request.contextPath}" />
 	<ui:param name="SiteScripts" value="#{request.contextPath}/js" />
 	<ui:param name="SiteStyles" value="#{request.contextPath}/css" />
 	<ui:param name="SiteImages" value="#{request.contextPath}/images" />
@@ -17,7 +16,8 @@
 
 	<head>
 <!-- Templates may change default title if needed. -->
-<title><ui:insert name="TitleContent">JDEECo cloud simulator</ui:insert>
+<title>
+	<ui:insert name="TitleContent">JDEECo cloud simulator</ui:insert>
 </title>
 
 <!-- Additional css/meta/title definitions goes here. -->

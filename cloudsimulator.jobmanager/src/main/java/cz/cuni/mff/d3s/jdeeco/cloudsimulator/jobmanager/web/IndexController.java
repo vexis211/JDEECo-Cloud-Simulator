@@ -18,7 +18,6 @@ public class IndexController {
 	
 	@RequestMapping({"/", ""})
 	public ModelAndView index(HttpServletRequest request) {
-		logger.fatal("IndexController works!!!");
 		return defaultModel();
 	}
 

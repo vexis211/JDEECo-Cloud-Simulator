@@ -1,0 +1,21 @@
+JDEECo cloud simulator
+
+Goal of the thesis is to design and implement cloud infrastructure for simulating application based on JDEECo framework. JDEECo is Java implementation of DEECo component model. Chosen cloud platform is OpenStack. 
+
+Thesis consist of the following parts:
+
+Create OpenStack infrastructure.
+Create algorithm for managing simulation runs according to simulation configuration. This contains creating and starting new virtual machines for simulation runs and optimizing costs of simulation according to this its configuration.
+Analyse, design and implement configuration specifying simulation. This contains specification of one simulation run (network) and specification of simulation itself: number of runs, optimization mode (deadline, cheapest, ...).
+Analyse, design and implement configuration for collecting data during simulations. This contains specification of collected data and  way how they are aggregated.
+Create algorithm for collecting and aggregating data from simulation runs.
+Create web pages for presenting collected data about simulation.
+
+
+Literature:
+[1] Keznikl J., Bureš T., Plášil F., Kit M.: Towards Dependable Emergent Ensembles of Components: The DEECo Component Model, Proceedings of WICSA/ECSA 2012, Helsinki, Finland, pp. 249-252, IEEE CS, ISBN 978-0-7695-4827-2, DOI 10.1109/WICSA-ECSA.212.39, August 2012 
+
+[2] Bureš T., Gerostathopoulos I., Hnětynka P., Keznikl J., Kit M., Plášil F.: DEECo - an Ensemble-Based Component System, In Proceedings of CBSE 2013, Vancouver, Canada, June 2013 
+
+http://www.omnetpp.org/doc/omnetpp/Manual.pdf
+http://ci.matsim.org:8080/view/All/job/UserGuide/ws/trunk/docs/user-guide/user-guide.pdf

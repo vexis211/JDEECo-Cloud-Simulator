@@ -16,8 +16,14 @@
 
 	<!-- Properties in Spring configuration files -->
 	<context:property-placeholder
-		location="classpath:properties/profile.properties, classpath:properties/hibernate.properties, classpath:properties/mail.properties" />
+		location="classpath:properties/profile.properties, classpath:properties/hibernate.properties, classpath:properties/mail.properties, classpath:properties/build.properties" />
 
+	<bean id="appContext" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContextImpl" scope="singleton">
+		<property name="appVersionNumber" value="${build.buildTimestamp}" />
+	</bean>
+	
 	<!-- Scan for all of Spring components such as Spring Service -->
 	<context:component-scan base-package="com.journaldev.spring.service" />
+
+	
 </beans>
