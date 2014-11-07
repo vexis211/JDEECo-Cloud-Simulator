@@ -17,7 +17,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	private final Logger logger = Logger.getLogger(BaseDaoImpl.class);
 
 	@Resource
-	private SessionFactory sessionFactory;
+	protected SessionFactory sessionFactory;
 
 	private Class<T> persistentClass;
 

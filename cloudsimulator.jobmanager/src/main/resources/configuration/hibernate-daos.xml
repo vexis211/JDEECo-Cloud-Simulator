@@ -13,6 +13,8 @@
 
 	<bean id="userDao"
 		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.UserDaoImpl" />
+	<bean id="userInfoDao"
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.UserInfoDaoImpl" />
 		
 	<bean id="simulationDataDao"
 		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationDataDaoImpl" />

@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models;
 
-// Generated Nov 5, 2014 11:26:09 PM by Hibernate Tools 4.0.0
+// Generated Nov 7, 2014 10:24:01 PM by Hibernate Tools 4.0.0
 
 import java.util.Date;
 import java.util.HashSet;
@@ -14,24 +14,37 @@ public class User implements java.io.Serializable {
 	private Integer id;
 	private String email;
 	private String password;
+	private int role;
 	private Date registrationDate;
+	private Date lastActivityDate;
+	private int activationState;
+	private Set<UserInfo> userInfos = new HashSet<UserInfo>(0);
 	private Set<UserSimulationConfiguration> userSimulationConfigurations = new HashSet<UserSimulationConfiguration>(
 			0);
 
 	public User() {
 	}
 
-	public User(String email, String password, Date registrationDate) {
+	public User(String email, String password, int role, Date registrationDate,
+			int activationState) {
 		this.email = email;
 		this.password = password;
+		this.role = role;
 		this.registrationDate = registrationDate;
+		this.activationState = activationState;
 	}
 
-	public User(String email, String password, Date registrationDate,
+	public User(String email, String password, int role, Date registrationDate,
+			Date lastActivityDate, int activationState,
+			Set<UserInfo> userInfos,
 			Set<UserSimulationConfiguration> userSimulationConfigurations) {
 		this.email = email;
 		this.password = password;
+		this.role = role;
 		this.registrationDate = registrationDate;
+		this.lastActivityDate = lastActivityDate;
+		this.activationState = activationState;
+		this.userInfos = userInfos;
 		this.userSimulationConfigurations = userSimulationConfigurations;
 	}
 
@@ -59,12 +72,44 @@ public class User implements java.io.Serializable {
 		this.password = password;
 	}
 
+	public int getRole() {
+		return this.role;
+	}
+
+	public void setRole(int role) {
+		this.role = role;
+	}
+
 	public Date getRegistrationDate() {
 		return this.registrationDate;
 	}
 
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+
+	public Date getLastActivityDate() {
+		return this.lastActivityDate;
+	}
+
+	public void setLastActivityDate(Date lastActivityDate) {
+		this.lastActivityDate = lastActivityDate;
+	}
+
+	public int getActivationState() {
+		return this.activationState;
+	}
+
+	public void setActivationState(int activationState) {
+		this.activationState = activationState;
+	}
+
+	public Set<UserInfo> getUserInfos() {
+		return this.userInfos;
+	}
+
+	public void setUserInfos(Set<UserInfo> userInfos) {
+		this.userInfos = userInfos;
 	}
 
 	public Set<UserSimulationConfiguration> getUserSimulationConfigurations() {
