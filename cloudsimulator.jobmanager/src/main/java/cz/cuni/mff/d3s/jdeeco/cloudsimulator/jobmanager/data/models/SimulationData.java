@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models;
 
-// Generated Nov 7, 2014 10:24:01 PM by Hibernate Tools 4.0.0
+// Generated Nov 10, 2014 7:52:52 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,8 +11,7 @@ import java.util.Set;
 public class SimulationData implements java.io.Serializable {
 
 	private Integer id;
-	private Set<SimulationConfiguration> simulationConfigurations = new HashSet<SimulationConfiguration>(
-			0);
+	private Set<SimulationConfiguration> simulationConfigurations = new HashSet<SimulationConfiguration>(0);
 
 	public SimulationData() {
 	}
@@ -33,8 +32,7 @@ public class SimulationData implements java.io.Serializable {
 		return this.simulationConfigurations;
 	}
 
-	public void setSimulationConfigurations(
-			Set<SimulationConfiguration> simulationConfigurations) {
+	public void setSimulationConfigurations(Set<SimulationConfiguration> simulationConfigurations) {
 		this.simulationConfigurations = simulationConfigurations;
 	}
 

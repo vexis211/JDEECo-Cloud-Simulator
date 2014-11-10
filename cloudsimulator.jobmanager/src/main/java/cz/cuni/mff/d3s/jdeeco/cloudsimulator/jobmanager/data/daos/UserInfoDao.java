@@ -2,10 +2,32 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.UserInfo;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.LoginCodeInfo;
 
 public interface UserInfoDao extends BaseDao<UserInfo> {
 
 	User findByActivationCode(String activationCode);
+
+	User findByResetPasswordCode(String resetPasswordCode);
+
+	LoginCodeInfo findByAnonymousLoginCode(String anonymousLoginCode);
+
+	/**
+	 * Retrieves reset password code or null if not exists.
+	 * 
+	 * @param user
+	 * @return
+	 */
+	String getResetPasswordCode(User user);
+
+	/**
+	 * Stores reset password code for user as user info entry and delete all previous entries. To delete current entry
+	 * call with resetCode == null.
+	 * 
+	 * @param user
+	 * @param resetCode
+	 */
+	void setResetPasswordCode(User user, String resetCode);
 
 	/**
 	 * Retrieves activation code or null if not exists.
@@ -24,24 +46,21 @@ public interface UserInfoDao extends BaseDao<UserInfo> {
 	 */
 	void setActivationCode(User user, String activationCode);
 
-	
-	
-	User findByResetPasswordCode(String resetPasswordCode);
+	/**
+	 * Retrieves anonymous code for user or null if not set.
+	 * 
+	 * @param userId
+	 *            User associated with code.
+	 * @return Anonymous login code or null.
+	 */
+	LoginCodeInfo getAnonymousLoginCode(int userId);
 
 	/**
-	 * Retrieves reset password code or null if not exists.
+	 * Stores anonymous login code in user info and delete all previous entry for this user's anonymous login codes.
+	 * Call with anonymousLoginCode == null to delete current entry.
 	 * 
-	 * @param user
-	 * @return
+	 * @param anonymousLoginCode
+	 *            Code structure.
 	 */
-	String getResetPasswordCode(User user);
-
-	/**
-	 * Stores reset password code for user as user info entry and delete all previous entries. To delete current entry
-	 * call with resetCode == null.
-	 * 
-	 * @param user
-	 * @param resetCode
-	 */
-	void setResetPasswordCode(User user, String resetCode);
+	void setAnonymousLoginCode(LoginCodeInfo anonymousLoginCode);
 }

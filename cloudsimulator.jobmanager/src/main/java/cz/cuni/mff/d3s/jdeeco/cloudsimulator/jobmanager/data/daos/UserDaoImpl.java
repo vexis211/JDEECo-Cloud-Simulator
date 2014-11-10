@@ -3,6 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos;
 import org.hibernate.criterion.Restrictions;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.Role;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.RoleConvertor;
 
 public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
@@ -51,6 +52,6 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
 	 */
 	@Override
 	public boolean isUserAdmin(User user) {
-		return RoleConvertor.getRole(user.getRole()) == RoleConvertor.ROLE_ADMINISTRATOR;
+		return RoleConvertor.getRole(user.getRole()) == Role.ROLE_ADMINISTRATOR;
 	}
 }

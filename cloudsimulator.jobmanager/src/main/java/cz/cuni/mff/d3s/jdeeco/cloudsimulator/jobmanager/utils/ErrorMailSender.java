@@ -23,15 +23,7 @@ public class ErrorMailSender {
 
 	@Resource
 	protected JavaMailSender mailSender;
-
-	public void setMailSender(JavaMailSender mailSender) {
-		this.mailSender = mailSender;
-	}
-
-	public JavaMailSender getMailSender() {
-		return this.mailSender;
-	}
-
+	
 	public String getSender() {
 		return sender;
 	}
@@ -65,5 +57,4 @@ public class ErrorMailSender {
 		// Send the message.
 		mailSender.send(errorMessage);
 	}
-
 }

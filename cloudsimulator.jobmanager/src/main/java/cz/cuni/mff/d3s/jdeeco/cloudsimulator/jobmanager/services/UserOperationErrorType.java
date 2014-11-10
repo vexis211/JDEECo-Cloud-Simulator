@@ -21,4 +21,9 @@ public enum UserOperationErrorType {
      * User does not exists.
      */
     NOT_FOUND,
+    
+    /**
+     * Invalid value set in token expire creation.
+     */
+    TOKEN_EXPIRY_IS_INVALID
 }

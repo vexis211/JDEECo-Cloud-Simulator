@@ -357,6 +357,7 @@
 			<version>${spring.version}</version>
 		</dependency>
 
+
 		<!-- Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -379,6 +380,12 @@
 			<version>${spring-security.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
 		<!-- Webflow -->
 		<dependency>
 			<groupId>org.springframework.webflow</groupId>

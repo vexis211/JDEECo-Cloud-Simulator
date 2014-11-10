@@ -3,8 +3,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
- * Spring security GrantedAuthority implementation. Using conversion between
- * spring security string roles and int values from model.
+ * Spring security GrantedAuthority implementation. Using conversion between spring security string roles and int values
+ * from model.
  */
 public class Authority implements GrantedAuthority {
 

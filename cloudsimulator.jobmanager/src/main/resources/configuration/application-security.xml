@@ -12,23 +12,51 @@
 	</bean>
 
 	<bean id="authenticationSuccessHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler" />
-	
+
 	<!-- Returns 403 to AJAX action request on authentication failed. -->
 	<bean id="authenticationEntryPoint" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.AjaxActionAuthenicationEntryPoint">
-		<constructor-arg index="0" value="${profile.siteRoot}" />
+		<constructor-arg name="loginUrl" value="${profile.siteRoot}" />
 	</bean>
-	
+
 	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-		
+
+	<bean id="codeAuthenticationProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.CodeAuthenticationProvider">
+		<property name="authenticators">
+			<map key-type="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.AuthenticationCodeType">
+				<entry key="ANONYMOUS_LOGIN">
+					<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.authenticators.AnonymousLoginCodeAuthenticator">
+						<constructor-arg index="0" ref="userService" />
+					</bean>
+				</entry>
+				<entry key="RESET_PASSWORD">
+					<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.authenticators.ResetPasswordCodeAuthenticator">
+						<constructor-arg index="0" ref="userService" />
+					</bean>
+				</entry>
+				<entry key="ACTIVATION">
+					<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.authenticators.ActivationCodeAuthenticator">
+						<constructor-arg index="0" ref="userService" />
+					</bean>
+				</entry>
+				<entry key="AUTH_TOKEN">
+					<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.authenticators.AuthTokenCodeAuthenticator">
+						<constructor-arg index="0" ref="authTokenService" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
 	<security:authentication-manager alias="authenticationManager">
 		<security:authentication-provider user-service-ref="userService">
 			<security:password-encoder ref="passwordEncoder" />
 		</security:authentication-provider>
+		<security:authentication-provider ref="codeAuthenticationProvider" />
 	</security:authentication-manager>
-	
-	
-	<!-- **************************** security:http ****************************  -->
-	
+
+
+	<!-- **************************** security:http **************************** -->
+
 	<!-- Configure Spring Security -->
 	<security:http pattern="/docs/**" security="none" />
 	<security:http pattern="/css/**" security="none" />

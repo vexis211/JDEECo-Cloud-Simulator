@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models;
 
-// Generated Nov 7, 2014 10:24:01 PM by Hibernate Tools 4.0.0
+// Generated Nov 10, 2014 7:52:52 PM by Hibernate Tools 4.0.0
 
 import java.util.Date;
 import java.util.HashSet;
@@ -19,14 +19,13 @@ public class User implements java.io.Serializable {
 	private Date lastActivityDate;
 	private int activationState;
 	private Set<UserInfo> userInfos = new HashSet<UserInfo>(0);
-	private Set<UserSimulationConfiguration> userSimulationConfigurations = new HashSet<UserSimulationConfiguration>(
-			0);
+	private Set<AuthenticationToken> authenticationTokens = new HashSet<AuthenticationToken>(0);
+	private Set<UserSimulationConfiguration> userSimulationConfigurations = new HashSet<UserSimulationConfiguration>(0);
 
 	public User() {
 	}
 
-	public User(String email, String password, int role, Date registrationDate,
-			int activationState) {
+	public User(String email, String password, int role, Date registrationDate, int activationState) {
 		this.email = email;
 		this.password = password;
 		this.role = role;
@@ -34,9 +33,8 @@ public class User implements java.io.Serializable {
 		this.activationState = activationState;
 	}
 
-	public User(String email, String password, int role, Date registrationDate,
-			Date lastActivityDate, int activationState,
-			Set<UserInfo> userInfos,
+	public User(String email, String password, int role, Date registrationDate, Date lastActivityDate,
+			int activationState, Set<UserInfo> userInfos, Set<AuthenticationToken> authenticationTokens,
 			Set<UserSimulationConfiguration> userSimulationConfigurations) {
 		this.email = email;
 		this.password = password;
@@ -45,6 +43,7 @@ public class User implements java.io.Serializable {
 		this.lastActivityDate = lastActivityDate;
 		this.activationState = activationState;
 		this.userInfos = userInfos;
+		this.authenticationTokens = authenticationTokens;
 		this.userSimulationConfigurations = userSimulationConfigurations;
 	}
 
@@ -112,12 +111,19 @@ public class User implements java.io.Serializable {
 		this.userInfos = userInfos;
 	}
 
+	public Set<AuthenticationToken> getAuthenticationTokens() {
+		return this.authenticationTokens;
+	}
+
+	public void setAuthenticationTokens(Set<AuthenticationToken> authenticationTokens) {
+		this.authenticationTokens = authenticationTokens;
+	}
+
 	public Set<UserSimulationConfiguration> getUserSimulationConfigurations() {
 		return this.userSimulationConfigurations;
 	}
 
-	public void setUserSimulationConfigurations(
-			Set<UserSimulationConfiguration> userSimulationConfigurations) {
+	public void setUserSimulationConfigurations(Set<UserSimulationConfiguration> userSimulationConfigurations) {
 		this.userSimulationConfigurations = userSimulationConfigurations;
 	}
 

@@ -9,15 +9,11 @@ public class RoleConvertor  {
 	private static Map<Integer, String> dbToAppRoles;
 	private static Map<String, Integer> appToDbRoles;
 	
-    public static final String ROLE_USER = "ROLE_USER";
-    public static final String ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
-    public static final String ROLE_ADMINISTRATOR = "ROLE_ADMINISTRATOR";
-    
     static {
     	dbToAppRoles = new HashMap<Integer, String>();
-    	dbToAppRoles.put(0, ROLE_ANONYMOUS);
-    	dbToAppRoles.put(1, ROLE_USER);
-    	dbToAppRoles.put(2, ROLE_ADMINISTRATOR);
+    	dbToAppRoles.put(0, Role.ROLE_ANONYMOUS);
+    	dbToAppRoles.put(1, Role.ROLE_USER);
+    	dbToAppRoles.put(2, Role.ROLE_ADMINISTRATOR);
     	
     	appToDbRoles = new HashMap<String, Integer>();
     	for (Entry<Integer, String> entry : dbToAppRoles.entrySet()) {

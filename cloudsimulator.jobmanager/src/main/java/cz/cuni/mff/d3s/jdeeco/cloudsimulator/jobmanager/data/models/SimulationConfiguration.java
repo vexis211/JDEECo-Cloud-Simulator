@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models;
 
-// Generated Nov 7, 2014 10:24:01 PM by Hibernate Tools 4.0.0
+// Generated Nov 10, 2014 7:52:52 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,17 +12,14 @@ public class SimulationConfiguration implements java.io.Serializable {
 
 	private Integer id;
 	private SimulationData simulationData;
-	private Set<UserSimulationConfiguration> userSimulationConfigurations = new HashSet<UserSimulationConfiguration>(
-			0);
-	private Set<SimulationExecution> simulationExecutions = new HashSet<SimulationExecution>(
-			0);
+	private Set<UserSimulationConfiguration> userSimulationConfigurations = new HashSet<UserSimulationConfiguration>(0);
+	private Set<SimulationExecution> simulationExecutions = new HashSet<SimulationExecution>(0);
 
 	public SimulationConfiguration() {
 	}
 
 	public SimulationConfiguration(SimulationData simulationData,
-			Set<UserSimulationConfiguration> userSimulationConfigurations,
-			Set<SimulationExecution> simulationExecutions) {
+			Set<UserSimulationConfiguration> userSimulationConfigurations, Set<SimulationExecution> simulationExecutions) {
 		this.simulationData = simulationData;
 		this.userSimulationConfigurations = userSimulationConfigurations;
 		this.simulationExecutions = simulationExecutions;
@@ -48,8 +45,7 @@ public class SimulationConfiguration implements java.io.Serializable {
 		return this.userSimulationConfigurations;
 	}
 
-	public void setUserSimulationConfigurations(
-			Set<UserSimulationConfiguration> userSimulationConfigurations) {
+	public void setUserSimulationConfigurations(Set<UserSimulationConfiguration> userSimulationConfigurations) {
 		this.userSimulationConfigurations = userSimulationConfigurations;
 	}
 
@@ -57,8 +53,7 @@ public class SimulationConfiguration implements java.io.Serializable {
 		return this.simulationExecutions;
 	}
 
-	public void setSimulationExecutions(
-			Set<SimulationExecution> simulationExecutions) {
+	public void setSimulationExecutions(Set<SimulationExecution> simulationExecutions) {
 		this.simulationExecutions = simulationExecutions;
 	}
 
