@@ -46,7 +46,7 @@ public class ForgottenPasswordController {
 	/** Reset password
 	 * 
 	 * @param resetPasswordCode Reset code
-	 * @return Redirection to main
+	 * @return Redirection to new password
 	 */
 	@RequestMapping(value = MappingSettings.RESETPASSWORD + "/{resetPasswordCode}")
 	public ModelAndView resetPassword(@PathVariable String resetPasswordCode, HttpServletRequest request) {

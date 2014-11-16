@@ -8,7 +8,7 @@
 	xmlns:atteq="http://www.atteq.com/tags"
 	xmlns:comp="http://java.sun.com/jsf/composite/components"
 	template="/WEB-INF/views/layouts/index.xhtml">
-	
+
 	<ui:define name="HeadContent">
 		<!-- Meta -->
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -27,7 +27,28 @@
 	</ui:define>
 
 	<ui:define name="Content">
-		Hello World!!!
+		<div id="login-div">
+			<c:if test="${failure eq 'badCredentials'}">
+				<div>Wrong credentials!</div>
+			</c:if>
+			<c:if test="${failure eq 'accountNotActivated'}">
+				<div>Account is not activated activation email has been resent!</div>
+			</c:if>
+			
+			<form id="login-form" method="post" action="#{SiteRoot}/client/auth" name="loginForm">
+				<div>
+					<input type="text" value="E-mail" id="email-input" name="email" /> 
+					<input type="password" id="password-input" name="password" />
+					<input type="submit" value="Login" />
+				</div>
+			</form>
+
+			<div class="links">
+				<a href="#{SiteRoot}/client/register">Registration</a>
+				<br />
+				<a href="#{SiteRoot}/client/forgottenpassword">Forgotten password</a>
+			</div>
+		</div>
 	</ui:define>
 
 	<ui:define name="JsContent">

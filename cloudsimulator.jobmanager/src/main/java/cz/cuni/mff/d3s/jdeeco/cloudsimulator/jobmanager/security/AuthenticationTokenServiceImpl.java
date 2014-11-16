@@ -46,7 +46,7 @@ public class AuthenticationTokenServiceImpl implements AuthenticationTokenServic
 		Date created = new Date();
 		Date expire = new Date(created.getTime() + expireInSeconds);
 		AuthenticationToken authToken = new AuthenticationToken(user, value, created, expire);
-		authTokenDao.persist(authToken);
+		authTokenDao.saveOrUpdate(authToken);
 		return authToken;
 	}
 

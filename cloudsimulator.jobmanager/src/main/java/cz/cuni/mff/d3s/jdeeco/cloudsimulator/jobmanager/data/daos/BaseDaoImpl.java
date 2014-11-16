@@ -19,18 +19,18 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	@Resource
 	protected SessionFactory sessionFactory;
 
-	private Class<T> persistentClass;
+	private Class<T> classType;
 
 	@SuppressWarnings("unchecked")
 	public BaseDaoImpl() {
-		this.persistentClass = (Class<T>) ((ParameterizedType) getClass()
+		this.classType = (Class<T>) ((ParameterizedType) getClass()
 				.getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
 	@Override
-	public void persist(T transientInstance) {
+	public void saveOrUpdate(T item) {
 		try {
-			getSession().persist(transientInstance);
+			getSession().saveOrUpdate(item);
 		} catch (RuntimeException re) {
 			logger.error("persist failed", re);
 			throw re;
@@ -38,9 +38,9 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	@Override
-	public void delete(T persistentInstance) {
+	public void delete(T item) {
 		try {
-			getSession().delete(persistentInstance);
+			getSession().delete(item);
 		} catch (RuntimeException re) {
 			logger.error("delete failed", re);
 			throw re;
@@ -71,7 +71,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	protected Criteria getCriteria() {
-		return getSession().createCriteria(persistentClass);
+		return getSession().createCriteria(classType);
 	}
 
 	@SuppressWarnings("unchecked")

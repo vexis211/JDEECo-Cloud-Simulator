@@ -20,8 +20,6 @@
 	<bean id="appContext" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContextImpl" scope="singleton">
 		<property name="appVersionNumber" value="${build.buildTimestamp}" />
 		<property name="siteRoot" value="${profile.siteRoot}" />
-		<property name="activateAccountUri" value="user/activate" />
-		<property name="resetPasswordUri" value="user/resetpassword" />
 	</bean>
 
 

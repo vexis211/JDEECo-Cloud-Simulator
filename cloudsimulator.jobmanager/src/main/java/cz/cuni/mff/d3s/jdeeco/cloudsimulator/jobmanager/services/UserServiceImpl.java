@@ -61,14 +61,20 @@ public class UserServiceImpl implements UserService, SecurityService {
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 		User user = userDao.findByEmail(username);
-		if (user == null || !userDao.isUserActivated(user)) {
-			// No user found or not activated yet.
+		if (user == null) {
+			// No user found.
 			throw new UsernameNotFoundException(username);
 		}
+		else if (userDao.isUserActivated(user)) {
+			// Update last activity.
+			user.setLastActivityDate(new Date());
+			userDao.saveOrUpdate(user);
+		}
+		else {
+			// User not activated yet.
+			sendActivationEmail(user);
+		}
 
-		// Update last activity.
-		user.setLastActivityDate(new Date());
-		userDao.persist(user);
 		return new CustomUserDetailsImpl(user);
 	}
 
@@ -87,7 +93,7 @@ public class UserServiceImpl implements UserService, SecurityService {
 		userInfoDao.setActivationCode(user, activationCode);
 		String encodedPassword = passwordEncoder.encode(rawPassword);
 		user.setPassword(encodedPassword);
-		userDao.persist(user);
+		userDao.saveOrUpdate(user);
 	}
 
 	/**
@@ -117,7 +123,7 @@ public class UserServiceImpl implements UserService, SecurityService {
 		user.setPassword(encodedPassword);
 		user.setRole(RoleConvertor.getRole(Role.ROLE_USER));
 		userDao.setIsUserRegistered(user, true);
-		userDao.persist(user);
+		userDao.saveOrUpdate(user);
 
 		// Generate and store activation code.
 		String activationCode = UUID.randomUUID().toString();
@@ -228,7 +234,7 @@ public class UserServiceImpl implements UserService, SecurityService {
 	private void activateUserCore(User user) {
 		// Set user as activated.
 		userDao.setIsUserActivated(user, true);
-		userDao.persist(user);
+		userDao.saveOrUpdate(user);
 
 		// Remove code because it should work only once.
 		userInfoDao.setActivationCode(user, null);
@@ -247,7 +253,7 @@ public class UserServiceImpl implements UserService, SecurityService {
 			String resetPasswordCode = UUID.randomUUID().toString();
 			userInfoDao.setResetPasswordCode(user, resetPasswordCode);
 			emailService.sendResetPasswordEmail(user, resetPasswordCode);
-			userDao.persist(user);
+			userDao.saveOrUpdate(user);
 			return user;
 		} catch (MailException ex) {
 			logger.error(String.format("Cannot reset password for user '%s'", email), ex);
@@ -316,7 +322,7 @@ public class UserServiceImpl implements UserService, SecurityService {
 	public final void changePassword(final int userId, final String newPassword) {
 		User user = userDao.findById(userId);
 		user.setPassword(passwordEncoder.encode(newPassword));
-		userDao.persist(user);
+		userDao.saveOrUpdate(user);
 	}
 
 	/**
@@ -413,7 +419,7 @@ public class UserServiceImpl implements UserService, SecurityService {
 		// Update new logged user last activity date.
 		User loggedUser = UserHelper.getAuthenticatedUser();
 		loggedUser.setLastActivityDate(new Date());
-		userDao.persist(loggedUser);
+		userDao.saveOrUpdate(loggedUser);
 	}
 
 	@Override

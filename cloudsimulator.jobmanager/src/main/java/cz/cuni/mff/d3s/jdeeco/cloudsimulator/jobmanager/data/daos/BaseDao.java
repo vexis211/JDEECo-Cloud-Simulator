@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface BaseDao<T> {
 
-	public void persist(T transientInstance);
+	public void saveOrUpdate(T item);
 
-	public void delete(T persistentInstance);
+	public void delete(T item);
 
 	public T findById(int id);
 

@@ -8,11 +8,18 @@
 		http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 	<bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
-		<property name="errorPage" value="${profile.siteRoot}" />
+		<property name="errorPage" value="/" />
 	</bean>
 
 	<bean id="authenticationSuccessHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler" />
-
+	<bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
+		<property name="exceptionMappings">
+			<props>
+	            <prop key="org.springframework.security.authentication.BadCredentialsException">/?failure=badCredentials</prop>
+	            <prop key="org.springframework.security.authentication.LockedException">/?failure=accountNotActivated</prop>
+			</props>
+		</property>
+	</bean>
 	<!-- Returns 403 to AJAX action request on authentication failed. -->
 	<bean id="authenticationEntryPoint" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.AjaxActionAuthenicationEntryPoint">
 		<constructor-arg name="loginUrl" value="${profile.siteRoot}" />
@@ -102,11 +109,11 @@
 		<security:intercept-url pattern="/action/**" access="ROLE_USER,ROLE_ADMINISTRATOR" />
 		<security:intercept-url pattern="/main/**" access="ROLE_USER,ROLE_ADMINISTRATOR" />
 
-		<security:form-login login-page="${profile.siteRoot}" login-processing-url="/client/auth"
-			authentication-failure-url="${profile.siteRoot}?failure=1" default-target-url="${profile.siteRoot}main"
-			password-parameter="password" username-parameter="email" always-use-default-target="true"
-			authentication-success-handler-ref="authenticationSuccessHandler" />
+		<security:form-login login-page="/" login-processing-url="/client/auth"
+			default-target-url="/main" password-parameter="password"
+			username-parameter="email" always-use-default-target="true" authentication-success-handler-ref="authenticationSuccessHandler"
+			authentication-failure-handler-ref="authenticationFailureHandler" />
 
-		<security:logout logout-url="/client/logout" logout-success-url="${profile.siteRoot}" />
+		<security:logout logout-url="/client/logout" logout-success-url="/" />
 	</security:http>
 </beans>

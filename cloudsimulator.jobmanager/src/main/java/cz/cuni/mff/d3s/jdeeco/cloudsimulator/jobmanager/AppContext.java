@@ -4,7 +4,4 @@ public interface AppContext {
 	
 	long getAppVersionNumber();
 	String getSiteRoot();
-	
-	String getActivateAccountUri();
-	String getResetPasswordUri();
 }

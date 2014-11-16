@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:atteq="http://www.atteq.com/tags"
+	xmlns:comp="http://java.sun.com/jsf/composite/components"
+	template="/WEB-INF/views/layouts/index.xhtml">
+	
+<!-- 	<ui:define name="HeadContent">
+		<link href="#{SiteStyles}/reset.css?version=#{AppVersion}" type="text/css" rel="stylesheet" />
+		<link href="#{SiteStyles}/style.css?version=#{AppVersion}" type="text/css" rel="stylesheet" />
+	</ui:define> -->
+	
+	<ui:define name="Content">
+		<body>
+			<div id="close">
+				<a href="#{cancelUri}">Close</a>
+			</div>
+
+			<c:if test="${registerState == 2}">
+				<div class="content">
+					<div class="success">Thank you for your registration!</div>
+				</div>
+			</c:if>
+			<c:if test="${not(registerState == 2)}">
+				<div class="content">
+					<form id="registration-form" method="post"
+						action="#{SiteRoot}/client/register" name="registerForm">
+						<c:if test="${registerState == 1}">
+							<div id="register-error" class="error-message">
+								<h:outputText value="#{registerErrorMsg}" escape="false" />
+							</div>
+						</c:if>
+						<c:if test="${not(registerState == 1)}">
+							<div id="register-error" class="error-message hidden">
+								<h:outputText value="#{registerErrorMsg}" escape="false" />
+							</div>
+						</c:if>
+						<div>
+							<!-- Another visit, form is already submitted. -->
+							<c:if test="${registerModel.getEmail() == null}">
+								<input id="email-input" type="text" value="E-mail" name="email" />
+							</c:if>
+							<c:if test="${registerModel.getEmail() != null}">
+								<input id="email-input" type="text" value="#{registerModel.getEmail()}" name="email" />
+							</c:if>
+
+							<input id="password-input" type="password" name="password" value="" />
+							<input id="password-verify-input" type="password" name="passwordVerify" value="" />
+							<input type="submit" value="Register" />
+						</div>
+					</form>
+				</div>
+			</c:if>
+		</body>
+
+	</ui:define>
+<!-- 	<ui:define name="JsContent">
+		<script type="text/javascript"
+			src="#{SiteScripts}/libs/jquery-1.9.0.min.js"></script>
+		<script type="text/javascript"
+			src="#{SiteScripts}/libs/validation.js?version=#{AppVersion}"></script>
+		<script type="text/javascript"
+			src="#{SiteScripts}/app/notlogged/register.js?version=#{AppVersion}"></script>
+		<script type="text/javascript"
+			src="//fast.fonts.com/jsapi/c37c838c-00e2-4103-84ff-a10bd1663c9f.js"></script>
+	</ui:define> -->
+</ui:composition>

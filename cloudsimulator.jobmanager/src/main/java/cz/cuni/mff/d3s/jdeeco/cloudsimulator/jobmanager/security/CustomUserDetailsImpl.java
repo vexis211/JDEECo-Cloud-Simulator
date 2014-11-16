@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.UserActivationFlags;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User;
 
 /**
@@ -69,7 +70,7 @@ public class CustomUserDetailsImpl implements CustomUserDetails {
 
 	@Override
 	public final boolean isAccountNonLocked() {
-		return true;
+		return UserActivationFlags.hasFlags(getUser(), UserActivationFlags.IS_ACTIVATED);
 	}
 
 	@Override

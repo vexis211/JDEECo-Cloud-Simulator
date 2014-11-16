@@ -12,6 +12,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContext;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.utils.EmailPreparator;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.utils.ExtendedMimeMessagePreparator;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.MappingSettings;
 
 public class EmailServiceImpl implements EmailService {
 
@@ -57,8 +58,8 @@ public class EmailServiceImpl implements EmailService {
 	 * @return HTTP link.
 	 */
 	private String createAccountActivationLink(final String activationCode) {
-		String activateLink = String.format("%s%s/%s", appContext.getSiteRoot(), appContext.getActivateAccountUri(),
-				activationCode);
+		String activateLink = String.format("%s/%s",
+				MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.ACTIVATION), activationCode);
 		return activateLink;
 	}
 
@@ -83,8 +84,8 @@ public class EmailServiceImpl implements EmailService {
 	 * @return HTTP link.
 	 */
 	private String createResetPasswordLink(final String resetPasswordCode) {
-		String activateLink = String.format("%s%s/%s", appContext.getSiteRoot(), appContext.getResetPasswordUri(),
-				resetPasswordCode);
+		String activateLink = String.format("%s/%s",
+				MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.RESETPASSWORD), resetPasswordCode);
 		return activateLink;
 	}
 

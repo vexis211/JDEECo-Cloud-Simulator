@@ -17,7 +17,7 @@
         <property name="role" type="int">
             <column name="Role" not-null="true" />
         </property>
-        <property name="registrationDate" type="timestamp">
+        <property name="registrationDate" type="timestamp" insert="false">
             <column name="RegistrationDate" length="19" not-null="true" />
         </property>
         <property name="lastActivityDate" type="timestamp">

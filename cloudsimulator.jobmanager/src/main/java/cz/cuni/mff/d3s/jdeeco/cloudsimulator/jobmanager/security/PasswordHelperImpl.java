@@ -30,7 +30,7 @@ public class PasswordHelperImpl implements PasswordHelper {
 	
 	@Override
 	public boolean hasPasswordIncorrectCharacters(String password) {
-		return Pattern.matches("^[a-zA-Z0-9]*$", password);
+		return !Pattern.matches("^[a-zA-Z0-9]*$", password);
 	}
 
 }

@@ -17,8 +17,6 @@ public class MappingSettings {
 	public static final String ACTIVATION = "/client/activate";
 	public static final String AUTHENTICATION = "/client/auth";
 	public static final String CHANGEPASSWORD = "/client/changepassword";
-	public static final String CHECKAUTHENTICATION = "/client/checkauth";
-	public static final String LOGIN = "/client/login";
 	public static final String LOGOUT = "/client/logout";
 	public static final String NEWPASSWORD = "/client/newpassword";
 	public static final String REGISTRATION = "/client/register";
@@ -26,4 +24,12 @@ public class MappingSettings {
 
 	public static final String MAIN = "/main";
 
+	
+	public static String GetFullUri(String root, String subPage) {
+		if (root.endsWith("/") && subPage.startsWith("/")){
+			return root + subPage.substring(1); // we dont want double slash
+		}
+		return root + subPage;
+	}
+	
 }

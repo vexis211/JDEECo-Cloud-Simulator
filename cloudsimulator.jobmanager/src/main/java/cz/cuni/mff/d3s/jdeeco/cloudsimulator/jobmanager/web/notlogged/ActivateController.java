@@ -56,6 +56,6 @@ public class ActivateController {
 	}
 
 	private String renderOK() {
-		return "redirect:/main";
+		return "redirect:" + MappingSettings.MAIN;
 	}
 }

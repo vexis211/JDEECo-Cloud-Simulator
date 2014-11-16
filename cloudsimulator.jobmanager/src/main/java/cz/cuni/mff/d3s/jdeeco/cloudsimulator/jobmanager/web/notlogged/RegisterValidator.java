@@ -41,7 +41,7 @@ public class RegisterValidator implements Validator {
 		/**
 		 * Agreement is not accepted.
 		 */
-		AGREEMENT_NOT_CHECKED
+//		AGREEMENT_NOT_CHECKED
 	}
 	
 	@Resource
@@ -49,7 +49,7 @@ public class RegisterValidator implements Validator {
 	
 	private static final String MISSING_EMAIL = "Email is not specified.";
 	private static final String SHORT_PASSWORD = "Password must have at least 8 characters.";
-	private static final String ACCEPT_SERVICE_RULES = "You must accept service rules to proceed.";
+//	private static final String ACCEPT_SERVICE_RULES = "You must accept service rules to proceed.";
 	private static final String BAD_EMAIL_FORMAT = "E-mail address is in bad format. Correct format is name@domain.com (or other top level domain).";
 	private static final String BAD_PASS_CHARS = "Password can contain only alphanumerical characters.";
 	private static final String PASS_DONOT_MATCH = "Passwords does not match!";
@@ -77,8 +77,8 @@ public class RegisterValidator implements Validator {
 					MISSING_EMAIL);
 			errors.rejectValue(RegisterForm.PASSWORD_FIELD, ErrorType.PASSWORD_TOO_SHORT.name(),
 					SHORT_PASSWORD);
-			errors.rejectValue(RegisterForm.AGREEMENT_FIELD, ErrorType.AGREEMENT_NOT_CHECKED.name(),
-					ACCEPT_SERVICE_RULES);
+//			errors.rejectValue(RegisterForm.AGREEMENT_FIELD, ErrorType.AGREEMENT_NOT_CHECKED.name(),
+//					ACCEPT_SERVICE_RULES);
 		} else {
 			if (StringHelper.isNullOrEmpty(validatedObj.getEmail())
 					|| ValidatorHelper.isNotEmail(validatedObj.getEmail())) {
@@ -102,11 +102,11 @@ public class RegisterValidator implements Validator {
 						PASS_DONOT_MATCH);
 			}
 
-			if (!validatedObj.getAgreement()) {
+			/*if (!validatedObj.getAgreement()) {
 				errors.rejectValue(RegisterForm.AGREEMENT_FIELD, ErrorType.AGREEMENT_NOT_CHECKED.name(),
 						ACCEPT_SERVICE_RULES);
-			}
-
+			}*/
+			
 			// Email collisions are not checked here. It must be checked on
 			// database insert.
 		}
