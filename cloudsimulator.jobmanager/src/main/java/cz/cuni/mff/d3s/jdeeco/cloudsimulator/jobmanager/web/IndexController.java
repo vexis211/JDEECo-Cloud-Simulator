@@ -9,14 +9,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
-@RequestMapping({"/", ""})
 public class IndexController {
 
 	public static final String INDEX_VIEW = "index";
+	public static final String INDEX_FAILURE_PARAM = "failure";
 
+	@SuppressWarnings("unused")
 	private final Logger logger = Logger.getLogger(IndexController.class);
 	
-	@RequestMapping({"/", ""})
+	@RequestMapping(value = MappingSettings.INDEX)
 	public ModelAndView index(HttpServletRequest request) {
 		return defaultModel();
 	}

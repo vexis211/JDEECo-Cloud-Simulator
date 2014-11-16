@@ -7,6 +7,22 @@
 		http://www.springframework.org/schema/task
 		http://www.springframework.org/schema/task/spring-task.xsd">
 
-	<task:scheduler id="scheduler" pool-size="3" />
+	<task:executor id="taskExecutor" pool-size="5"/>
+	<task:scheduler id="taskScheduler" pool-size="10"/>
 
+	<task:annotation-driven executor="taskExecutor" scheduler="taskScheduler"/>
+		
+	<bean id="taskManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.tasks.TaskManagerImpl" />
+	<bean id="afterCommitExecutor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.tasks.AfterCommitExecutorImpl" scope="prototype" /> 
+
+	<!-- <bean id="multipleDownloadTask" class="com.atteq.uschovna.tasks.MultipleDownloadTask" scope="prototype">
+		<property name="mailSender" ref="mailSender" />
+	</bean>
+	 -->
+
+	<!-- Clean storage and database at 2:00 am -->
+	<!-- <task:scheduled-tasks scheduler="taskScheduler">
+		<task:scheduled ref="cleanStorageTask" method="run" cron="0 0 2 * * *"/>
+	</task:scheduled-tasks>
+	 -->
 </beans>

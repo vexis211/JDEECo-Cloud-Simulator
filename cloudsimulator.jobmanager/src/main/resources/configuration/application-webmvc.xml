@@ -18,6 +18,8 @@
 	<context:annotation-config />
 	<mvc:annotation-driven />
 	<context:component-scan base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web" />
+	<context:component-scan base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged" />
+	<context:component-scan base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client" />
 	
 	
 	<!-- Localization -->
@@ -65,9 +67,10 @@
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
 	<!-- use annotation and non-annotation controllers together -->
-	<bean
-		class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
+	<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
+	<!-- 	class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.ExtendedBeanNameUrlHandlerMapping"> -->
 		<property name="order" value="0" />
+		<!-- <property name="useTrailingSlashMatch" value="true" /> -->
 	</bean>
 
 	<bean
@@ -75,5 +78,11 @@
 	</bean>
 	
 	<!-- Validators. -->
+	
+	<bean id="loginValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged.LoginValidator" />
+	<bean id="registerValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged.RegisterValidator" />
+	<bean id="forgottenPasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged.ForgottenPasswordValidator" />
+	<bean id="changePasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.ChangePasswordValidator" />
+	<bean id="newPasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.NewPasswordValidator" />
 	
 </beans>

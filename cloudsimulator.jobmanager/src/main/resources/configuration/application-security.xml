@@ -8,7 +8,7 @@
 		http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 	<bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
-		<property name="errorPage" value="/accessDenied.htm" /> <!-- TODO -->
+		<property name="errorPage" value="${profile.siteRoot}" />
 	</bean>
 
 	<bean id="authenticationSuccessHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler" />
@@ -19,6 +19,8 @@
 	</bean>
 
 	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+	<bean id="passwordHelper" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.PasswordHelperImpl" />
 
 	<bean id="codeAuthenticationProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.CodeAuthenticationProvider">
 		<property name="authenticators">

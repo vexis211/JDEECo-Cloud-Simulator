@@ -27,9 +27,9 @@
 
 
 	<!-- Services -->
-	<bean id="userService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserServiceImpl" />
+	<bean id="userService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserServiceImpl" scope="singleton" />
 
-	<bean id="authTokenService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.AuthenticationTokenServiceImpl" />
+	<bean id="authTokenService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.AuthenticationTokenServiceImpl" scope="singleton" />
 
 	<!-- Scan for all of Spring components such as Spring Service -->
 	<context:component-scan base-package="com.journaldev.spring.service" />

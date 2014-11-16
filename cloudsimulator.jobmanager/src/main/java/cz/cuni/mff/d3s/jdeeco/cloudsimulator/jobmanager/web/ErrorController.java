@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Error controller.
  */
 @Controller
-@RequestMapping(value = { "/errors/" })
 public class ErrorController {
 
 	/**
@@ -22,7 +21,7 @@ public class ErrorController {
 	 * Map 400 page.
 	 * @return 400 view
 	 */
-	@RequestMapping(value = "400")
+	@RequestMapping(value = MappingSettings.ERROR_400)
 	public final String page400() {
 		return getViewPath("400");
 	}
@@ -31,7 +30,7 @@ public class ErrorController {
 	 * Map 403 page.
 	 * @return 403 view
 	 */
-	@RequestMapping(value = "403")
+	@RequestMapping(value = MappingSettings.ERROR_403)
 	public final String page403() {
 		return getViewPath("403");
 	}
@@ -40,7 +39,7 @@ public class ErrorController {
 	 * Map 404 page.
 	 * @return 404 view
 	 */
-	@RequestMapping(value = "404")
+	@RequestMapping(value = MappingSettings.ERROR_404)
 	public final String page404() {
 		return getViewPath("404");
 	}
@@ -49,7 +48,7 @@ public class ErrorController {
 	 * Map 405 page.
 	 * @return 405 view
 	 */
-	@RequestMapping(value = "405")
+	@RequestMapping(value = MappingSettings.ERROR_405)
 	public final String page405() {
 		return getViewPath("405");
 	}
@@ -58,7 +57,7 @@ public class ErrorController {
 	 * Map 500 page.
 	 * @return 500 view
 	 */
-	@RequestMapping(value = "500")
+	@RequestMapping(value = MappingSettings.ERROR_500)
 	public final String page500() {
 		return getViewPath("500");
 	}
@@ -67,7 +66,7 @@ public class ErrorController {
 	 * Map Exception throwable page.
 	 * @return Exception throwable view
 	 */
-	@RequestMapping(value = "exceptionThrowable")
+	@RequestMapping(value = MappingSettings.ERROR_EXCEPTIONTHROWABLE)
 	public final String pageExceptionThrowable() {
 		return getViewPath("exceptionThrowable");
 	}

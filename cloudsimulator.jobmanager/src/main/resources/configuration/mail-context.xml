@@ -22,7 +22,7 @@
 		<constructor-arg name="fromPersonalName" value="${mail.fromPersonalName}" />
 	</bean>
 
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" scope="singleton">
 		<property name="host" value="${mail.host}" />
 		<property name="port" value="${mail.port}" />
 		<property name="username" value="${mail.username}" />
