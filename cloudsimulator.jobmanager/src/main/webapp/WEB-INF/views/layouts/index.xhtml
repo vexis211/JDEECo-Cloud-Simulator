@@ -1,32 +1,41 @@
-<?xml version='1.0' encoding='UTF-8' ?> 
+<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<f:view locale="en" encoding="UTF-8" contentType="text/html"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<html>
 
-<f:view locale="en" encoding="UTF-8" contentType="text/html">
+<!-- Sets all common parameters used through app. -->
+<ui:param name="AppVersion" value="#{request.getAttribute('appVersion')}" />
+<ui:param name="SiteRoot" value="#{request.contextPath}" />
+<ui:param name="SiteScripts" value="#{request.contextPath}/js" />
+<ui:param name="SiteStyles" value="#{request.contextPath}/css" />
+<ui:param name="SiteImages" value="#{request.contextPath}/images" />
+<ui:param name="SiteDocs" value="#{request.contextPath}/docs" />
 
-	<!-- Sets all common parameters used through app. -->
-	<ui:param name="AppVersion" value="#{request.getAttribute('appVersion')}" />
-	<ui:param name="SiteRoot" value="#{request.contextPath}" />
-	<ui:param name="SiteScripts" value="#{request.contextPath}/js" />
-	<ui:param name="SiteStyles" value="#{request.contextPath}/css" />
-	<ui:param name="SiteImages" value="#{request.contextPath}/images" />
-	<ui:param name="SiteDocs" value="#{request.contextPath}/docs" />
+<head>
+	<!-- Meta -->
+	<ui:include src="/WEB-INF/views/elements/meta_tags.xhtml" />
+		
+	<!-- Initialize basic methods used commonly through the app. -->
+	<script type="text/javascript" src="#{SiteScripts}/app/common/utils.js?version=#{AppVersion}"></script>
+	<script type="text/javascript" src="#{SiteScripts}/app/common/namespaces.js?version=#{AppVersion}"></script>
+	<!-- Script for loading other scripts. -->
+	<script type="text/javascript" src="#{SiteScripts}/app/init/init_load.js?version=#{AppVersion}"></script>
+	<script type="text/javascript" src="#{SiteScripts}/app/init/init.js?version=#{AppVersion}"></script>
 
-	<head>
-<!-- Templates may change default title if needed. -->
-<title>
-	<ui:insert name="TitleContent">JDEECo cloud simulator</ui:insert>
-</title>
+	<!-- Templates may change default title if needed. -->
+	<title><ui:insert name="TitleContent">JDEECo cloud simulator</ui:insert></title>
+	
+	<!-- Additional css/meta/title definitions goes here. -->
+	<ui:insert name="HeadContent" />
+</head>
 
-<!-- Additional css/meta/title definitions goes here. -->
-<ui:insert name="HeadContent" />
-	</head>
+<!-- Definition of body element and its content. -->
+<body>
+	<ui:insert name="Content" />
+</body>
 
-	<!-- Definition of body element and its content. -->
-	<body>
-		<ui:insert name="Content" />
-	</body>
+	</html>
 </f:view>
-</html>

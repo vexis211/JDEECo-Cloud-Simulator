@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html>
+<f:view contentType="text/html" encoding="UTF-8"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:security="http://www.springframework.org/security/tags">
+	<html>
+
+<!-- Sets all common parameters used through app. -->
+<ui:param name="AppVersion" value="#{request.getAttribute('appVersion')}" />
+<ui:param name="SiteRoot" value="#{request.contextPath}" />
+<ui:param name="SiteScripts" value="#{request.contextPath}/js" />
+<ui:param name="SiteStyles" value="#{request.contextPath}/css" />
+<ui:param name="SiteImages" value="#{request.contextPath}/images" />
+<ui:param name="SiteDocs" value="#{request.contextPath}/docs" />
+
+<!-- Current app version. Used to download correct css/js files. 
+	Must be incremented with each change to css/js files
+	to prevent caching incorrect files in web browsers. -->
+<head>
+	<!-- Meta -->
+	<ui:include src="/WEB-INF/views/elements/meta_tags.xhtml" />
+
+	<!-- Initialize basic methods used commonly through the app. -->
+	<script type="text/javascript" src="#{SiteScripts}/app/common/utils.js?version=#{AppVersion}"></script>
+	<script type="text/javascript" src="#{SiteScripts}/app/common/namespaces.js?version=#{AppVersion}"></script>
+	<!-- Script for loading other scripts. -->
+	<script type="text/javascript" src="#{SiteScripts}/app/init/init_load.js?version=#{AppVersion}"></script>
+	<script type="text/javascript" src="#{SiteScripts}/app/init/init.js?version=#{AppVersion}"></script>
+	
+	<!-- Templates may change default title if needed. -->
+	<title><ui:insert name="TitleContent">JDEECo Simulator</ui:insert></title>
+	
+	<!-- Additional css/meta/title definitions goes here. -->
+	<ui:insert name="HeadContent" />
+</head>
+
+<!-- Definition of body element and its content. -->
+<body>
+	<div id="top-content">
+		<ui:insert name="TopContent">
+			<!-- Icon -->
+			
+			<!-- Main menu -->
+			<div class="header-menu">
+				<!-- Projects -->
+				<div class="header-projects">
+					<div class="projects-button"><span>Projects</span></div>
+					<div class="projects-add-button"><span>+</span></div>
+				</div>
+				<!-- Infrastructure -->
+				<div class="header-infrastructure">
+					<div class="infrastructure-button"><span>Infrastructure</span></div>
+				</div>
+				<!-- Simulation queue -->
+				<div class="header-simulation-queue">
+					<div class="simulation-queue-button"><span>Simulation queue</span></div>
+				</div>
+			</div>
+			
+			<div class="header-user-panel">
+				<ui:include src="/WEB-INF/views/elements/main/dialogs/user_panel.xhtml">
+					<ui:param name="user" value="${user}" />
+				</ui:include>
+			</div>
+		</ui:insert>
+	</div>
+	<div id="middle-content">
+		<ui:insert name="MiddleContent">No content!</ui:insert>
+	</div>
+	<div id="footer-content">
+		<ui:insert name="BottomContent">
+			<footer id="footer">
+				JDEECo, 2014
+			</footer>
+		</ui:insert>
+	</div>
+	
+	<!-- Dialogs -->
+	<ui:include src="/WEB-INF/views/elements/main/dialogs/change_password.xhtml" />
+		
+	<!-- Javascript configuration. -->
+	<script type="text/javascript">
+		getConfigNs().siteUri = '#{siteUri}';
+		getConfigNs().siteRoot = '#{SiteRoot}';
+		getConfigNs().siteScripts = '#{SiteScripts}';
+		getConfigNs().siteImages = '#{SiteImages}';
+		
+		// Current user data.
+		getConfigNs().user = {
+			'email': '#{user.getEmail()}',
+			<ui:fragment rendered="#{isUserAdmin}">
+				'isAdmin': true,
+			</ui:fragment>
+			<ui:fragment rendered="#{not isUserAdmin}">
+				'isAdmin': false,
+			</ui:fragment>
+		};
+	</script>
+
+	<!-- Places all user's javascript inside JsContent makes them have initialized app context. -->
+	<ui:insert name="JsContent" />
+
+	<script type="text/javascript">
+		Init.after_we_have_all_the_scripts();
+	</script>
+</body>
+	</html>
+</f:view>
