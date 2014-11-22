@@ -32,3 +32,11 @@ function getConfigNs() {
 function getWidgetsNs() {
 	return getOrCreateSubNs(getAppNs(), 'widgets');
 }
+
+function getMainNs() {
+	return getOrCreateSubNs(getAppNs(), 'main');
+}
+
+function getMainWidgetsNs() {
+	return getOrCreateSubNs(getAppNs(), 'main.widgets');
+}

@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 19, 2014 7:40:52 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User" table="user" catalog="jdeeco_simulation">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="identity" />
+        </id>
+        <property name="email" type="string">
+            <column name="Email" not-null="true" unique="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="Password" length="60" not-null="true" />
+        </property>
+        <property name="role" type="int">
+            <column name="Role" not-null="true" />
+        </property>
+        <property name="registrationDate" type="timestamp" insert="false">
+            <column name="RegistrationDate" length="19" not-null="true" />
+        </property>
+        <property name="lastActivityDate" type="timestamp">
+            <column name="LastActivityDate" length="19" />
+        </property>
+        <property name="activationState" type="int">
+            <column name="ActivationState" not-null="true" />
+        </property>
+        <set name="userInfos" table="user_info" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UserID" not-null="true" />
+            </key>
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.UserInfo" />
+        </set>
+        <set name="simulationDatas" table="simulation_data" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UserID" not-null="true" />
+            </key>
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationData" />
+        </set>
+        <set name="simulationConfigurations" table="simulation_configuration" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UserID" not-null="true" />
+            </key>
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationConfiguration" />
+        </set>
+        <set name="simulationExecutions" table="simulation_execution" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UserID" not-null="true" />
+            </key>
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationExecution" />
+        </set>
+        <set name="authenticationTokens" table="authentication_token" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="Owner" not-null="true" />
+            </key>
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.AuthenticationToken" />
+        </set>
+        <set name="projects" table="project" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UserID" not-null="true" />
+            </key>
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.Project" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -24,6 +24,18 @@ public class MappingSettings {
 
 	public static final String MAIN = "/main";
 
+	public static final String PROJECT = "/project";
+	public static final String PROJECT_ADD = "/project/add";
+	public static final String PROJECT_EDIT = "/project/edit";
+
+	public static final String CONFIGURATION = "/configuration";
+	public static final String CONFIGURATION_ADD = "/configuration/add";
+	public static final String CONFIGURATION_EDIT = "/configuration/edit";
+
+	public static final String EXECUTION = "/execution";
+	public static final String EXECUTION_ADD = "/execution/add";
+	public static final String EXECUTION_EDIT = "/execution/edit";
+
 	
 	public static String GetFullUri(String root, String subPage) {
 		if (root.endsWith("/") && subPage.startsWith("/")){

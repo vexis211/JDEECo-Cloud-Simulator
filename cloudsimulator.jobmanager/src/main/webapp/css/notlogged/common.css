@@ -1,0 +1,72 @@
+.auth-parent-div {
+	position: relative;
+	margin: 0 auto;
+	height: 400px;
+	width: 550px;
+}
+
+.auth-div {
+	background: #f1f1f1;
+	color: white;
+	width: 50%;
+	transform: translate(-50%, -50%);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	padding: 20px;
+}
+
+.auth-div .error-div {
+	text-align: center;
+	margin-bottom: 6px;
+	color: red;
+	font-weight: bold;
+}
+
+.auth-form input {
+	margin: 2px 0;
+	width: 100%;
+	padding: 3px 0;
+}
+
+.auth-form .submit-input {
+	/* 	background: #8AC007;
+	color: white; */
+	font-weight: bold;
+	margin-top: 8px;
+	position: relative;
+	width: 60%;
+	right: 20%;
+	left: 20%;
+}
+
+.auth-div .links-div {
+	margin-top: 20px;
+}
+
+.auth-div .links-div a {
+	display: block;
+	width: 130px;
+	text-align: center;
+	padding: 1px 0;
+	text-decoration: initial;
+	font-size: 13px;
+	font-weight: bold;
+	border: 2px solid lightgray;
+	background: lightgray;
+	color: black;
+}
+
+.auth-div .links-div a:hover {
+	background: #f1f1f1;
+	/* color: black; */
+	border: 2px solid lightgray;
+}
+
+.auth-div .links-div a:nth-of-type(1) {
+	float: left;
+}
+
+.auth-div .links-div a:nth-of-type(2) {
+	float: right;
+}

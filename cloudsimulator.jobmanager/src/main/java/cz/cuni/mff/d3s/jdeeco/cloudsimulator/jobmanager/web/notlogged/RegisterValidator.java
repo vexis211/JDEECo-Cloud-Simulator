@@ -19,6 +19,10 @@ public class RegisterValidator implements Validator {
 	 */
 	public static enum ErrorType {
 		/**
+		 * Form is not completely filled.
+		 */
+		NOT_FILLED,
+		/**
 		 * Email was not specified.
 		 */
 		EMAIL_NOT_SPECIFIED,
@@ -38,10 +42,6 @@ public class RegisterValidator implements Validator {
 		 * Password and passwordverify does not match.
 		 */
 		PASSWORD_VERIFY_NOT_MATCH,
-		/**
-		 * Agreement is not accepted.
-		 */
-//		AGREEMENT_NOT_CHECKED
 	}
 	
 	@Resource
@@ -49,63 +49,47 @@ public class RegisterValidator implements Validator {
 	
 	private static final String MISSING_EMAIL = "Email is not specified.";
 	private static final String SHORT_PASSWORD = "Password must have at least 8 characters.";
-//	private static final String ACCEPT_SERVICE_RULES = "You must accept service rules to proceed.";
 	private static final String BAD_EMAIL_FORMAT = "E-mail address is in bad format. Correct format is name@domain.com (or other top level domain).";
 	private static final String BAD_PASS_CHARS = "Password can contain only alphanumerical characters.";
 	private static final String PASS_DONOT_MATCH = "Passwords does not match!";
 
+	public static final String EMAIL_IN_USE = "Email address is already in use, for password reset use this %s.";
+	private static final String FILL_ALL_ENTRIES = "You must fill all entries!";
+	
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return RegisterForm.class.equals(clazz);
-	}
-
-	public boolean isEmpty(Object target) {
-		if (target == null) {
-			return true;
-		}
-		RegisterForm validatedObj = (RegisterForm) target;
-		return StringHelper.isNullOrEmpty(validatedObj.getEmail())
-				|| StringHelper.isNullOrEmpty(validatedObj.getPassword())
-				|| StringHelper.isNullOrEmpty(validatedObj.getPasswordVerify());
 	}
 
 	@Override
 	public void validate(Object target, Errors errors) {
 		RegisterForm validatedObj = (RegisterForm) target;
 		if (validatedObj == null) {
-			errors.rejectValue(RegisterForm.EMAIL_FIELD, ErrorType.EMAIL_INVALID_VALUE.name(),
-					MISSING_EMAIL);
-			errors.rejectValue(RegisterForm.PASSWORD_FIELD, ErrorType.PASSWORD_TOO_SHORT.name(),
-					SHORT_PASSWORD);
-//			errors.rejectValue(RegisterForm.AGREEMENT_FIELD, ErrorType.AGREEMENT_NOT_CHECKED.name(),
-//					ACCEPT_SERVICE_RULES);
+			errors.rejectValue(RegisterForm.EMAIL_FIELD, ErrorType.EMAIL_INVALID_VALUE.name(), MISSING_EMAIL);
+			errors.rejectValue(RegisterForm.PASSWORD_FIELD, ErrorType.PASSWORD_TOO_SHORT.name(), SHORT_PASSWORD);
 		} else {
+			
 			if (StringHelper.isNullOrEmpty(validatedObj.getEmail())
-					|| ValidatorHelper.isNotEmail(validatedObj.getEmail())) {
-				errors.rejectValue(RegisterForm.EMAIL_FIELD, ErrorType.EMAIL_INVALID_VALUE.name(),
-						BAD_EMAIL_FORMAT);
+				|| StringHelper.isNullOrEmpty(validatedObj.getPassword())
+				|| StringHelper.isNullOrEmpty(validatedObj.getPasswordVerify())){
+				errors.reject(ErrorType.NOT_FILLED.name(), FILL_ALL_ENTRIES);				
+			}
+			
+			if (ValidatorHelper.isNotEmail(validatedObj.getEmail())) {
+				errors.rejectValue(RegisterForm.EMAIL_FIELD, ErrorType.EMAIL_INVALID_VALUE.name(), BAD_EMAIL_FORMAT);
 			}
 
-			if (StringHelper.isNullOrEmpty(validatedObj.getPassword())
-					|| passwordHelper.isPasswordTooWeak(validatedObj.getPassword())) {
-				errors.rejectValue(RegisterForm.PASSWORD_FIELD, ErrorType.PASSWORD_TOO_SHORT.name(),
-						SHORT_PASSWORD);
+			if (passwordHelper.isPasswordTooWeak(validatedObj.getPassword())) {
+				errors.rejectValue(RegisterForm.PASSWORD_FIELD, ErrorType.PASSWORD_TOO_SHORT.name(), SHORT_PASSWORD);
 			}
 
 			if (passwordHelper.hasPasswordIncorrectCharacters(validatedObj.getPassword())) {
-				errors.rejectValue(RegisterForm.PASSWORD_FIELD, ErrorType.PASSWORD_NOT_ALPHANUMERIC.name(),
-						BAD_PASS_CHARS);
+				errors.rejectValue(RegisterForm.PASSWORD_FIELD, ErrorType.PASSWORD_NOT_ALPHANUMERIC.name(), BAD_PASS_CHARS);
 			}
 
 			if (!validatedObj.getPassword().equals(validatedObj.getPasswordVerify())) {
-				errors.rejectValue(RegisterForm.PASSWORD_VERIFY_FIELD, ErrorType.PASSWORD_VERIFY_NOT_MATCH.name(),
-						PASS_DONOT_MATCH);
+				errors.rejectValue(RegisterForm.PASSWORD_VERIFY_FIELD, ErrorType.PASSWORD_VERIFY_NOT_MATCH.name(), PASS_DONOT_MATCH);
 			}
-
-			/*if (!validatedObj.getAgreement()) {
-				errors.rejectValue(RegisterForm.AGREEMENT_FIELD, ErrorType.AGREEMENT_NOT_CHECKED.name(),
-						ACCEPT_SERVICE_RULES);
-			}*/
 			
 			// Email collisions are not checked here. It must be checked on
 			// database insert.

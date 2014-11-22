@@ -11,30 +11,28 @@
 
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
-		<link rel="stylesheet" type="text/css" href="#{SiteStyles}/index.css?version=#{AppVersion}" />
+		<link rel="stylesheet" type="text/css" href="#{SiteStyles}/notlogged/common.css?version=#{AppVersion}" />
 	</ui:define>
 
 	<ui:define name="Content">
-		<div id="login-div">
-			<c:if test="${failure eq 'badCredentials'}">
-				<div>Wrong credentials!</div>
-			</c:if>
-			<c:if test="${failure eq 'accountNotActivated'}">
-				<div>Account is not activated activation email has been resent!</div>
-			</c:if>
-			
-			<form id="login-form" method="post" action="#{SiteRoot}/client/auth" name="loginForm">
-				<div>
-					<input type="text" value="E-mail" id="email-input" name="email" /> 
-					<input type="password" id="password-input" name="password" />
-					<input type="submit" value="Login" />
+		<div id="login-parent-div" class="auth-parent-div">
+			<div id="login-div" class="auth-div">				
+				<form id="login-form" class="auth-form" method="post" action="#{SiteRoot}/client/auth" name="loginForm">
+					<div class="error-div">
+						<c:if test="${failure eq 'badCredentials'}">Wrong credentials!</c:if>
+						<c:if test="${failure eq 'accountNotActivated'}">Account is not activated activation email has been resent!</c:if>
+					</div>
+					<div>
+						<input id="email-input" type="text" name="email" value="E-mail" /> 
+						<input id="password-input" type="password" name="password" />
+						<input class="submit-input" type="submit" value="Login" />
+					</div>
+				</form>
+	
+				<div class="links-div">
+					<a href="#{SiteRoot}/client/register"><span>Registration</span></a>
+					<a href="#{SiteRoot}/client/forgottenpassword"><span>Forgotten password</span></a>
 				</div>
-			</form>
-
-			<div class="links">
-				<a href="#{SiteRoot}/client/register">Registration</a>
-				<br />
-				<a href="#{SiteRoot}/client/forgottenpassword">Forgotten password</a>
 			</div>
 		</div>
 	</ui:define>

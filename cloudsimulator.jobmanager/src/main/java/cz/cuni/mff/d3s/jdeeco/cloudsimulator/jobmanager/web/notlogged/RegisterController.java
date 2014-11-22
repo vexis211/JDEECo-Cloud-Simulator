@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,12 +47,12 @@ public class RegisterController {
 	/**
 	 * Registration error message.
 	 */
-	private static final String ERROR_MSG_VAR = "registerErrorMsg";
+	private static final String ERROR_MSG_VAR = "errorMsg";
 
 	/**
 	 * Variable with values for register form.
 	 */
-	private static final String ERROR_MODEL_VAR = "registerModel";
+	private static final String ERROR_MODEL_VAR = "model";
 
 	/**
 	 * Where to go after form is canceled.
@@ -64,9 +65,11 @@ public class RegisterController {
 	@SuppressWarnings("unused")
 	private static final String LOGGED_USER_VAR = "user";
 
-	private static final String EMAIL_IN_USE = "Email address is already in use, for password reset use this %s.";
-	private static final String FILL_ALL_ENTRIES = "You must fill all entries!";
+	private static final int FORM_NOT_SUBMITTED_STATE = 0;
+	private static final int FORM_ERROR_STATE = 1;
+	private static final int FORM_SUBMITTED_STATE = 2;
 
+	
 	/**
 	 * Validation of register form results.
 	 */
@@ -89,12 +92,11 @@ public class RegisterController {
 	public ModelAndView showForm() throws UnsupportedEncodingException {
 		User user = UserHelper.getAuthenticatedUser();
 		if (testUserIsActivated(user)) {
-			// User is already activated, he cannot do anything with
-			// registration.
+			// User is already activated, he cannot do anything with registration.
 			return redirectToMainModel();
 		}
 
-		return defaultModel();
+		return defaultModel().addObject(REGISTER_STATE_VAR, FORM_NOT_SUBMITTED_STATE);
 	}
 
 	/**
@@ -117,9 +119,7 @@ public class RegisterController {
 			return redirectToMainModel();
 		}
 		registerValidator.validate(registerForm, result);
-		if (registerValidator.isEmpty(registerForm)) {
-			return renderEmptyError(registerForm, result);
-		} else if (result.hasErrors()) {
+		if (result.hasErrors()) {
 			return renderErrors(registerForm, result);
 		}
 		try {
@@ -139,11 +139,11 @@ public class RegisterController {
 	 * @return ModelAndView of success register page.
 	 */
 	private ModelAndView renderSuccess() {
-		return defaultModel().addObject(REGISTER_STATE_VAR, 2);
+		return defaultModel().addObject(REGISTER_STATE_VAR, FORM_SUBMITTED_STATE);
 	}
 
 	/**
-	 * Renders errors when there are empty values.
+	 * Renders errors in values.
 	 *
 	 * @param form
 	 *            Posted form.
@@ -151,10 +151,11 @@ public class RegisterController {
 	 *            Validation results.
 	 * @return Model and view.
 	 */
-	private ModelAndView renderEmptyError(final RegisterForm form, final BindingResult result) {
-		ModelAndView model = defaultModel().addObject(REGISTER_STATE_VAR, 1);
-		model.addObject(ERROR_MSG_VAR, FILL_ALL_ENTRIES);
+	private ModelAndView renderErrors(final RegisterForm form, final BindingResult result) {
+		ModelAndView model = defaultModel().addObject(REGISTER_STATE_VAR, FORM_ERROR_STATE);
 		model.addObject(ERROR_MODEL_VAR, form);
+		FieldError er = result.getFieldError();
+		model.addObject(ERROR_MSG_VAR, er.getDefaultMessage());
 		return model;
 	}
 
@@ -173,26 +174,10 @@ public class RegisterController {
 			final UserOperationErrorType errorType) {
 		if (errorType.equals(UserOperationErrorType.EMAIL_ALREADY_REGISTERED)) {
 			String forgottenPasswordLink = HTMLHelper.createLink(MappingSettings.FORGOTTENPASSWORD, "site");
-			result.rejectValue(RegisterForm.EMAIL_FIELD, "error.not-already-used",
-					String.format(EMAIL_IN_USE, forgottenPasswordLink));
+			result.rejectValue(RegisterForm.EMAIL_FIELD, "error.not-already-used", String.format(RegisterValidator.EMAIL_IN_USE, forgottenPasswordLink));
 			return renderErrors(form, result);
 		}
 		return renderSuccess();
-	}
-
-	/**
-	 * Renders errors in values.
-	 *
-	 * @param form
-	 *            Posted form.
-	 * @param result
-	 *            Validation results.
-	 * @return Model and view.
-	 */
-	private ModelAndView renderErrors(final RegisterForm form, final BindingResult result) {
-		ModelAndView model = defaultModel().addObject(REGISTER_STATE_VAR, 1);
-		model.addObject(ERROR_MODEL_VAR, form);
-		return model;
 	}
 
 	/**

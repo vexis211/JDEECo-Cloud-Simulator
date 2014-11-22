@@ -23,7 +23,7 @@
 	to prevent caching incorrect files in web browsers. -->
 <head>
 	<!-- Meta -->
-	<ui:include src="/WEB-INF/views/elements/meta_tags.xhtml" />
+	<ui:include src="/WEB-INF/views/elements/metaTags.xhtml" />
 
 	<!-- Initialize basic methods used commonly through the app. -->
 	<script type="text/javascript" src="#{SiteScripts}/app/common/utils.js?version=#{AppVersion}"></script>
@@ -63,7 +63,7 @@
 			</div>
 			
 			<div class="header-user-panel">
-				<ui:include src="/WEB-INF/views/elements/main/dialogs/user_panel.xhtml">
+				<ui:include src="/WEB-INF/views/elements/userPanel.xhtml">
 					<ui:param name="user" value="${user}" />
 				</ui:include>
 			</div>
@@ -81,30 +81,29 @@
 	</div>
 	
 	<!-- Dialogs -->
-	<ui:include src="/WEB-INF/views/elements/main/dialogs/change_password.xhtml" />
+	<ui:include src="/WEB-INF/views/elements/dialogs/changePassword.xhtml" />
 		
-	<!-- Javascript configuration. -->
-	<script type="text/javascript">
-		getConfigNs().siteUri = '#{siteUri}';
-		getConfigNs().siteRoot = '#{SiteRoot}';
-		getConfigNs().siteScripts = '#{SiteScripts}';
-		getConfigNs().siteImages = '#{SiteImages}';
 		
-		// Current user data.
-		getConfigNs().user = {
-			'email': '#{user.getEmail()}',
-			<ui:fragment rendered="#{isUserAdmin}">
-				'isAdmin': true,
-			</ui:fragment>
-			<ui:fragment rendered="#{not isUserAdmin}">
-				'isAdmin': false,
-			</ui:fragment>
-		};
-	</script>
+	<!-- -------------------------- JavaScript -------------------------- -->
+	<ui:include src="/WEB-INF/views/elements/jsConfig.xhtml" />
+
+	<!-- Libraries. -->
+	<script type="text/javascript" src="#{SiteScripts}/libs/jquery-2.1.1.min.js"></script>
+
+	<!-- Common scripts section. -->
+	<script type="text/javascript" src="#{SiteScripts}/app/widgets.js?version=#{AppVersion}"></script>
+	
+	<!-- Layout widgets -->
+	<script type="text/javascript" src="#{SiteScripts}/app/widgets/change_password_widget.js?version=#{AppVersion}"></script>
+	<script type="text/javascript" src="#{SiteScripts}/app/widgets/user_widget.js?version=#{AppVersion}"></script>
+	<script type="text/javascript" src="#{SiteScripts}/app/widgets/logout_widget.js?version=#{AppVersion}"></script>
+	<script type="text/javascript" src="#{SiteScripts}/app/widgets/autologout_widget.js?version=#{AppVersion}"></script>
 
 	<!-- Places all user's javascript inside JsContent makes them have initialized app context. -->
 	<ui:insert name="JsContent" />
 
+	<script type="text/javascript" src="#{SiteScripts}/app/main.js?version=#{AppVersion}"></script>
+		
 	<script type="text/javascript">
 		Init.after_we_have_all_the_scripts();
 	</script>

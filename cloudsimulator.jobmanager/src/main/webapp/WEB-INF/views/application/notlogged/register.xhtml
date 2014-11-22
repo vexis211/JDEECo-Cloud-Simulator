@@ -9,54 +9,44 @@
 	xmlns:comp="http://java.sun.com/jsf/composite/components"
 	template="/WEB-INF/views/layouts/index.xhtml">
 	
-<!-- 	<ui:define name="HeadContent">
-		<link href="#{SiteStyles}/reset.css?version=#{AppVersion}" type="text/css" rel="stylesheet" />
-		<link href="#{SiteStyles}/style.css?version=#{AppVersion}" type="text/css" rel="stylesheet" />
-	</ui:define> -->
+ 	<ui:define name="HeadContent">
+		<!-- Stylesheets -->
+		<link rel="stylesheet" type="text/css" href="#{SiteStyles}/notlogged/common.css?version=#{AppVersion}" />
+		<link rel="stylesheet" type="text/css" href="#{SiteStyles}/notlogged/register.css?version=#{AppVersion}" />
+	</ui:define>
 	
 	<ui:define name="Content">
-		<body>
-			<div id="close">
-				<a href="#{cancelUri}">Close</a>
-			</div>
-
-			<c:if test="${registerState == 2}">
-				<div class="content">
-					<div class="success">Thank you for your registration!</div>
-				</div>
-			</c:if>
-			<c:if test="${not(registerState == 2)}">
-				<div class="content">
-					<form id="registration-form" method="post"
-						action="#{SiteRoot}/client/register" name="registerForm">
-						<c:if test="${registerState == 1}">
-							<div id="register-error" class="error-message">
-								<h:outputText value="#{registerErrorMsg}" escape="false" />
-							</div>
-						</c:if>
-						<c:if test="${not(registerState == 1)}">
-							<div id="register-error" class="error-message hidden">
-								<h:outputText value="#{registerErrorMsg}" escape="false" />
-							</div>
-						</c:if>
+		<div id="register-parent-div" class="auth-parent-div">
+			<div id="register-div" class="auth-div">	
+				<c:if test="${registerState == 0 || registerState == 1}">
+					<form id="register-form" class="auth-form" method="post" action="#{SiteRoot}/client/register" name="registerForm">
+						<div class="error-div">
+							<h:outputText value="#{errorMsg}" escape="false" />
+						</div>
 						<div>
 							<!-- Another visit, form is already submitted. -->
-							<c:if test="${registerModel.getEmail() == null}">
-								<input id="email-input" type="text" value="E-mail" name="email" />
+							<c:if test="${model.getEmail() == null}">
+								<input id="email-input" type="text" name="email" value="E-mail" />
 							</c:if>
-							<c:if test="${registerModel.getEmail() != null}">
-								<input id="email-input" type="text" value="#{registerModel.getEmail()}" name="email" />
+							<c:if test="${model.getEmail() != null}">
+								<input id="email-input" type="text" name="email" value="#{model.getEmail()}" />
 							</c:if>
 
 							<input id="password-input" type="password" name="password" value="" />
 							<input id="password-verify-input" type="password" name="passwordVerify" value="" />
-							<input type="submit" value="Register" />
+							<input class="submit-input" type="submit" value="Register" />
 						</div>
 					</form>
+				</c:if>
+				<c:if test="${registerState == 2}">
+					<div class="success-div">Thank you for your registration!</div>
+				</c:if>
+				
+				<div class="links-div">
+					<a href="#{cancelUri}">Back</a>
 				</div>
-			</c:if>
-		</body>
-
+			</div>
+		</div>
 	</ui:define>
 <!-- 	<ui:define name="JsContent">
 		<script type="text/javascript"
