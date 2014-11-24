@@ -68,6 +68,7 @@
 	<!-- Configure Spring Security -->
 	<security:http pattern="/docs/**" security="none" />
 	<security:http pattern="/css/**" security="none" />
+	<security:http pattern="/less/**" security="none" />
 	<security:http pattern="/images/**" security="none" />
 	<security:http pattern="/js/**" security="none" />
 
@@ -80,8 +81,8 @@
 		<security:intercept-url pattern="/$" access="ROLE_ANONYMOUS" />
 		<security:access-denied-handler ref="accessDeniedHandler" />
 	</security:http>
-	<security:http pattern="/client/forgotten" auto-config="true">
-		<security:intercept-url pattern="/client/forgotten" access="ROLE_ANONYMOUS" />
+	<security:http pattern="/client/forgottenpassword" auto-config="true">
+		<security:intercept-url pattern="/client/forgottenpassword" access="ROLE_ANONYMOUS" />
 		<security:access-denied-handler ref="accessDeniedHandler" />
 	</security:http>
 	<security:http pattern="/client/resetpassword/**" auto-config="true">
@@ -93,7 +94,7 @@
 		<security:access-denied-handler ref="accessDeniedHandler" />
 	</security:http>
 
-	<!-- Allow access to maintenance and administration for admins -->
+	<!-- Allow access to maintenance and administration for administrators -->
 	<security:http pattern="/maintenance/**" auto-config="true">
 		<security:intercept-url pattern="/maintenance/**" access="ROLE_ADMINISTRATOR" />
 	</security:http>
@@ -105,14 +106,14 @@
 	<!-- Access for role user ROLE_USER,ROLE_ADMINISTRATOR -->
 	<security:http auto-config="true" entry-point-ref="authenticationEntryPoint">
 		<!-- logged views -->
-		<security:intercept-url pattern="/action/**" access="ROLE_USER,ROLE_ADMINISTRATOR" />
+	 	<security:intercept-url pattern="/action/**" access="ROLE_USER,ROLE_ADMINISTRATOR" />
 		<security:intercept-url pattern="/main/**" access="ROLE_USER,ROLE_ADMINISTRATOR" />
 
 		<security:form-login login-page="/" login-processing-url="/client/auth"
-			default-target-url="/main" password-parameter="password"
+			default-target-url="${profile.siteRoot}main" password-parameter="password"
 			username-parameter="email" always-use-default-target="true"
 			authentication-failure-handler-ref="authenticationFailureHandler" />
 
-		<security:logout logout-url="/client/logout" logout-success-url="/" />
+		<security:logout logout-url="/client/logout" logout-success-url="${profile.siteRoot}" />
 	</security:http>
 </beans>

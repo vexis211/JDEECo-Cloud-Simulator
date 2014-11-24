@@ -90,34 +90,22 @@ public class RegisterController {
 
 	@RequestMapping(value = MappingSettings.REGISTRATION, method = RequestMethod.GET)
 	public ModelAndView showForm() throws UnsupportedEncodingException {
-		User user = UserHelper.getAuthenticatedUser();
-		if (testUserIsActivated(user)) {
-			// User is already activated, he cannot do anything with registration.
-			return redirectToMainModel();
+		if (NotLoggedHelper.isUserLoggedIn(userService)) {
+			return NotLoggedHelper.redirectToMainModel();
 		}
 
 		return defaultModel().addObject(REGISTER_STATE_VAR, FORM_NOT_SUBMITTED_STATE);
 	}
 
-	/**
-	 * Checks if user is activated.
-	 *
-	 * @param user
-	 *            User to check, can be null.
-	 * @return True if user is activated otherwise false.
-	 */
-	private boolean testUserIsActivated(final User user) {
-		return user != null && userService.isActivated(user);
-	}
-
 	@RequestMapping(value = MappingSettings.REGISTRATION, method = RequestMethod.POST)
 	public ModelAndView validateForm(@ModelAttribute RegisterForm registerForm, BindingResult result) {
+
 		User loggedUser = UserHelper.getAuthenticatedUser();
-		if (testUserIsActivated(loggedUser)) {
-			// User is already activated, he cannot be activated again.
+		if (NotLoggedHelper.isUserLoggedIn(userService)) {
 			logger.debug(String.format("Already activated user with id '%d' is trying to register.", loggedUser.getId()));
-			return redirectToMainModel();
+			return NotLoggedHelper.redirectToMainModel();
 		}
+		
 		registerValidator.validate(registerForm, result);
 		if (result.hasErrors()) {
 			return renderErrors(registerForm, result);
@@ -178,13 +166,6 @@ public class RegisterController {
 			return renderErrors(form, result);
 		}
 		return renderSuccess();
-	}
-
-	/**
-	 * @return Redirect to main view.
-	 */
-	private ModelAndView redirectToMainModel() {
-		return new ModelAndView("redirect:" + MappingSettings.MAIN);
 	}
 	
 	/**

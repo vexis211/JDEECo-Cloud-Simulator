@@ -28,6 +28,6 @@
 		};
 	};
 	
-	namespace.AutologoutWidget.prototype = new getWidgetsNs().Widget();
+	AutologoutWidget.prototype = new getWidgetsNs().Widget();
 	namespace.AutologoutWidget = AutologoutWidget;
 }(getMainWidgetsNs()));

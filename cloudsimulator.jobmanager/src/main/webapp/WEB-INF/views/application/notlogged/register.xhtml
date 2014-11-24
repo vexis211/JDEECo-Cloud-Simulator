@@ -11,8 +11,8 @@
 	
  	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
-		<link rel="stylesheet" type="text/css" href="#{SiteStyles}/notlogged/common.css?version=#{AppVersion}" />
-		<link rel="stylesheet" type="text/css" href="#{SiteStyles}/notlogged/register.css?version=#{AppVersion}" />
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/notlogged/auth.less?version=#{AppVersion}" />
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/notlogged/register.less?version=#{AppVersion}" />
 	</ui:define>
 	
 	<ui:define name="Content">
@@ -48,14 +48,4 @@
 			</div>
 		</div>
 	</ui:define>
-<!-- 	<ui:define name="JsContent">
-		<script type="text/javascript"
-			src="#{SiteScripts}/libs/jquery-1.9.0.min.js"></script>
-		<script type="text/javascript"
-			src="#{SiteScripts}/libs/validation.js?version=#{AppVersion}"></script>
-		<script type="text/javascript"
-			src="#{SiteScripts}/app/notlogged/register.js?version=#{AppVersion}"></script>
-		<script type="text/javascript"
-			src="//fast.fonts.com/jsapi/c37c838c-00e2-4103-84ff-a10bd1663c9f.js"></script>
-	</ui:define> -->
 </ui:composition>

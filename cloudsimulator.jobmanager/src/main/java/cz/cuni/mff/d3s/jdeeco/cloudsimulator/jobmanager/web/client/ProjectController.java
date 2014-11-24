@@ -3,6 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.MappingSettings;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.UriParamSettings;
 
+@Controller
 public class ProjectController {
 
 	@SuppressWarnings("unused")
@@ -19,7 +21,7 @@ public class ProjectController {
 	private static final String PROJECT_VIEW = "main/project";
 	private static final String ADDPROJECT_VIEW = "main/addProject";
 	private static final String EDITPROJECT_VIEW = "main/editProject";
-	
+		
 	@RequestMapping(value = MappingSettings.MAIN)
 	public ModelAndView showProjectList(HttpServletRequest request) {
 

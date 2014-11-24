@@ -53,6 +53,7 @@
 	<mvc:resources location="/images/" mapping="/images/**" />
 	<mvc:resources location="/pdf/" mapping="/pdf/**" />
 	<mvc:resources location="/css/" mapping="/css/**" />
+	<mvc:resources location="/less/" mapping="/less/**" />
 
 	<!-- Annotation controller mapping --><!-- 
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />

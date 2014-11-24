@@ -14,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContext;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.UserHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.MappingSettings;
 
@@ -67,24 +66,12 @@ public class ForgottenPasswordController {
 
 	@RequestMapping(value = MappingSettings.FORGOTTENPASSWORD, method = RequestMethod.GET)
 	public ModelAndView showForm() {
-		User user = UserHelper.getAuthenticatedUser();
-		if (testUserIsActivated(user)) {
-			// User is already activated, he cannot do anything reset password
-			return redirectToMainModel();
+		if (NotLoggedHelper.isUserLoggedIn(userService)) {
+			return NotLoggedHelper.redirectToMainModel();
 		}
 		return defaultFormView().addObject(FORGOTTEN_PASSWORD_STATE, FORM_NOT_SUBMITTED_STATE);
 	}
 
-	/**
-	 * Checks if user is activated.
-	 *
-	 * @param user
-	 *            User to check, can be null.
-	 * @return True if user is activated otherwise false.
-	 */
-	private boolean testUserIsActivated(final User user) {
-		return user != null && userService.isActivated(user);
-	}
 
 	@RequestMapping(value = MappingSettings.FORGOTTENPASSWORD, method = RequestMethod.POST)
 	public ModelAndView validateForm(@ModelAttribute ForgottenPasswordForm form, BindingResult result) {
@@ -110,10 +97,6 @@ public class ForgottenPasswordController {
 
 	private ModelAndView renderFormSuccess(ForgottenPasswordForm form) {
 		return defaultFormView().addObject(FORGOTTEN_PASSWORD_STATE, FORM_SUBMITTED_STATE);
-	}
-
-	private ModelAndView redirectToMainModel() {
-		return new ModelAndView("redirect:" + MappingSettings.MAIN);
 	}
 	
 	private ModelAndView defaultFormView() {
