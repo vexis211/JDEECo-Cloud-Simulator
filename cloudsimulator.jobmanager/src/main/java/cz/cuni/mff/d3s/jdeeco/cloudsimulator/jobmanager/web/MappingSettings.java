@@ -25,8 +25,8 @@ public class MappingSettings {
 
 	
 	public static final String PROJECT = MAIN + "/project";
-	public static final String PROJECT_ADD = MAIN + "/main/project/add";
-	public static final String PROJECT_EDIT = MAIN + "/main/project/edit";
+	public static final String PROJECT_ADD = MAIN + "/project/add";
+	public static final String PROJECT_EDIT = MAIN + "/project/edit";
 
 	public static final String CONFIGURATION = MAIN + "/configuration";
 	public static final String CONFIGURATION_ADD = MAIN + "/configuration/add";
@@ -36,6 +36,9 @@ public class MappingSettings {
 	public static final String EXECUTION_ADD = MAIN + "/execution/add";
 	public static final String EXECUTION_EDIT = MAIN + "/execution/edit";
 
+
+	public static final String INFRASTRUCTURE = MAIN + "/infrastructure";
+	public static final String SIMULATIONQUEUE = MAIN + "/simulationqueue";
 	
 	public static String GetFullUri(String root, String subPage) {
 		if (root.endsWith("/") && subPage.startsWith("/")){

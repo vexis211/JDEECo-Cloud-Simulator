@@ -28,6 +28,7 @@
 		};
 	};
 	
-	AutologoutWidget.prototype = new getWidgetsNs().Widget();
+	var widgetsNs = getWidgetsNs();
+	AutologoutWidget.prototype = new widgetsNs.Widget();
 	namespace.AutologoutWidget = AutologoutWidget;
 }(getMainWidgetsNs()));

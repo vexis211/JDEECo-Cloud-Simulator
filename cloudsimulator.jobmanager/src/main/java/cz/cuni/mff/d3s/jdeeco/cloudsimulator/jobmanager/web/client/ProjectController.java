@@ -25,26 +25,26 @@ public class ProjectController {
 	@RequestMapping(value = MappingSettings.MAIN)
 	public ModelAndView showProjectList(HttpServletRequest request) {
 
-		return new ModelAndView(PROJECTLIST_VIEW);
+		return ClientHelper.getDefaultModel(PROJECTLIST_VIEW);
 	}
 
 	@RequestMapping(value = MappingSettings.PROJECT, params = UriParamSettings.PROJECTID)
 	public ModelAndView showProject(HttpServletRequest request,
 			@RequestParam(value = UriParamSettings.PROJECTID) int projectID) {
 
-		return new ModelAndView(PROJECT_VIEW);
+		return ClientHelper.getDefaultModel(PROJECT_VIEW);
 	}
 
 	@RequestMapping(value = MappingSettings.PROJECT_ADD)
 	public ModelAndView addProject(HttpServletRequest request) {
 
-		return new ModelAndView(ADDPROJECT_VIEW);
+		return ClientHelper.getDefaultModel(ADDPROJECT_VIEW);
 	}
 
 	@RequestMapping(value = MappingSettings.PROJECT_EDIT, params = UriParamSettings.PROJECTID)
 	public ModelAndView editProject(HttpServletRequest request,
 			@RequestParam(value = UriParamSettings.PROJECTID) int projectID) {
 
-		return new ModelAndView(EDITPROJECT_VIEW);
+		return ClientHelper.getDefaultModel(EDITPROJECT_VIEW);
 	}
 }

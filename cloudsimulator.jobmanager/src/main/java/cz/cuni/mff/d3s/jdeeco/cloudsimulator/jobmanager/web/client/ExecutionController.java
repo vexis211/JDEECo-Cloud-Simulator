@@ -26,19 +26,19 @@ public class ExecutionController {
 	public ModelAndView showExecution(HttpServletRequest request,
 			@RequestParam(value = UriParamSettings.EXECUTIONID) int executionID) {
 
-		return new ModelAndView(EXECUTION_VIEW);
+		return ClientHelper.getDefaultModel(EXECUTION_VIEW);
 	}
 
 	@RequestMapping(value = MappingSettings.EXECUTION_ADD)
 	public ModelAndView addExecution(HttpServletRequest request) {
 
-		return new ModelAndView(ADDEXECUTION_VIEW);
+		return ClientHelper.getDefaultModel(ADDEXECUTION_VIEW);
 	}
 
 	@RequestMapping(value = MappingSettings.EXECUTION_EDIT, params = UriParamSettings.EXECUTIONID)
 	public ModelAndView editExecution(HttpServletRequest request,
 			@RequestParam(value = UriParamSettings.EXECUTIONID) int executionID) {
 
-		return new ModelAndView(EDITEXECUTION_VIEW);
+		return ClientHelper.getDefaultModel(EDITEXECUTION_VIEW);
 	}
 }

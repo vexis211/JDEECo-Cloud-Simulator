@@ -1,5 +1,17 @@
 var Utils = function(Utils) {
 
+	/* Handle messages passed as parameter */
+	/** Get URL parameter
+	 *
+	 * @param name Parameter name
+	 * @return Parameter value
+	 */
+	Utils.get_url_parameter = function(name) {
+	    return decodeURI(
+	        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+	    );
+	};
+	
 	Utils.html_unescape = function(text) {
 		return text.replace(/&amp;/g, '&')
 				.replace(/&lt;/g, '<')

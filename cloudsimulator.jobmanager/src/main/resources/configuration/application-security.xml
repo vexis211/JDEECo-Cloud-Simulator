@@ -114,6 +114,6 @@
 			username-parameter="email" always-use-default-target="true"
 			authentication-failure-handler-ref="authenticationFailureHandler" />
 
-		<security:logout logout-url="/client/logout" logout-success-url="${profile.siteRoot}" />
+		<security:logout logout-url="/action/client/logout" logout-success-url="${profile.siteRoot}" />
 	</security:http>
 </beans>

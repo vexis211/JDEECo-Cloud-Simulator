@@ -30,6 +30,7 @@
 	<script type="text/javascript" src="#{SiteScripts}/app/common/namespaces.js?version=#{AppVersion}" />
 	
 	<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/main.less?version=#{AppVersion}" />
+	<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/userPanel.less?version=#{AppVersion}" />
 		
 	<!-- Templates may change default title if needed. -->
 	<title><ui:insert name="TitleContent">JDEECo Simulator</ui:insert></title>
@@ -43,43 +44,44 @@
 
 <!-- Definition of body element and its content. -->
 <body>
-	<div id="top-content">
-		<ui:insert name="TopContent">
-			<!-- Icon -->
-			
-			<!-- Main menu -->
-			<div class="header-menu">
-				<!-- Projects -->
-				<div class="header-projects">
-					<div class="projects-button"><span>Projects</span></div>
-					<div class="projects-add-button"><span>+</span></div>
+	<div id="content">
+		<div id="top-content">
+			<ui:insert name="TopContent">
+				<!-- Icon -->
+				
+				<!-- Main menu -->
+				<div class="header-menu">
+					<!-- Projects -->
+					<a href="/main" class="header-projects">
+						<span>Projects</span>
+					</a>
+					<!-- Infrastructure -->
+					<a href="/main/infrastructure" class="header-infrastructure">
+						<span>Infrastructure</span>
+					</a>
+					<!-- Simulation queue -->
+					<a href="/main/simulationqueue" class="header-simulation-queue">
+						<span>Simulation queue</span>
+					</a>
 				</div>
-				<!-- Infrastructure -->
-				<div class="header-infrastructure">
-					<div class="infrastructure-button"><span>Infrastructure</span></div>
+				
+				<div class="header-user-panel">
+					<ui:include src="/WEB-INF/views/elements/userPanel.xhtml">
+						<ui:param name="user" value="${user}" />
+					</ui:include>
 				</div>
-				<!-- Simulation queue -->
-				<div class="header-simulation-queue">
-					<div class="simulation-queue-button"><span>Simulation queue</span></div>
-				</div>
-			</div>
-			
-			<div class="header-user-panel">
-				<ui:include src="/WEB-INF/views/elements/userPanel.xhtml">
-					<ui:param name="user" value="${user}" />
-				</ui:include>
-			</div>
-		</ui:insert>
-	</div>
-	<div id="middle-content">
-		<ui:insert name="MiddleContent">No content!</ui:insert>
-	</div>
-	<div id="footer-content">
-		<ui:insert name="BottomContent">
-			<footer id="footer">
-				JDEECo, 2014
-			</footer>
-		</ui:insert>
+			</ui:insert>
+		</div>
+		<div id="middle-content">
+			<ui:insert name="MiddleContent">No content!</ui:insert>
+		</div>
+		<div id="footer-content">
+			<ui:insert name="BottomContent">
+				<footer id="footer">
+					JDEECo, 2014
+				</footer>
+			</ui:insert>
+		</div>
 	</div>
 	
 	<!-- Dialogs -->
@@ -94,14 +96,13 @@
 	<script type="text/javascript" src="#{SiteScripts}/libs/jquery-2.1.1.min.js" />
 
 	<!-- Common scripts section. -->
+	<script type="text/javascript" src="#{SiteScripts}/app/html_provider.js?version=#{AppVersion}" />
 	<script type="text/javascript" src="#{SiteScripts}/app/common/utils.js?version=#{AppVersion}"/>
 	<script type="text/javascript" src="#{SiteScripts}/app/init/init.js?version=#{AppVersion}" />
 	<script type="text/javascript" src="#{SiteScripts}/app/common/widgets.js?version=#{AppVersion}" />
 	
 	<!-- Layout widgets -->
-	<script type="text/javascript" src="#{SiteScripts}/app/widgets/change_password_widget.js?version=#{AppVersion}" />
-	<script type="text/javascript" src="#{SiteScripts}/app/widgets/user_widget.js?version=#{AppVersion}" />
-	<script type="text/javascript" src="#{SiteScripts}/app/widgets/logout_widget.js?version=#{AppVersion}" />
+	<script type="text/javascript" src="#{SiteScripts}/app/widgets/user_panel_widget.js?version=#{AppVersion}" />
 	<script type="text/javascript" src="#{SiteScripts}/app/widgets/autologout_widget.js?version=#{AppVersion}" />
 
 	<!-- Places all user's javascript inside JsContent makes them have initialized app context. -->

@@ -26,19 +26,19 @@ public class ConfigurationController {
 	public ModelAndView showConfiguration(HttpServletRequest request,
 			@RequestParam(value = UriParamSettings.CONFIGURATIONID) int configurationID) {
 
-		return new ModelAndView(CONFIGURATION_VIEW);
+		return ClientHelper.getDefaultModel(CONFIGURATION_VIEW);
 	}
 
 	@RequestMapping(value = MappingSettings.CONFIGURATION_ADD)
 	public ModelAndView addConfiguration(HttpServletRequest request) {
 
-		return new ModelAndView(ADDCONFIGURATION_VIEW);
+		return ClientHelper.getDefaultModel(ADDCONFIGURATION_VIEW);
 	}
 
 	@RequestMapping(value = MappingSettings.CONFIGURATION_EDIT, params = UriParamSettings.CONFIGURATIONID)
 	public ModelAndView editConfiguration(HttpServletRequest request,
 			@RequestParam(value = UriParamSettings.CONFIGURATIONID) int configurationID) {
 
-		return new ModelAndView(EDITCONFIGURATION_VIEW);
+		return ClientHelper.getDefaultModel(EDITCONFIGURATION_VIEW);
 	}
 }
