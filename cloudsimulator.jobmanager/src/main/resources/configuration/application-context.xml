@@ -26,6 +26,7 @@
 
 	<!-- Services -->
 	<bean id="userService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserServiceImpl" scope="singleton" />
+	<bean id="projectService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.ProjectServiceImpl" scope="singleton" />
 
 	<bean id="authTokenService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.AuthenticationTokenServiceImpl" scope="singleton" />
 

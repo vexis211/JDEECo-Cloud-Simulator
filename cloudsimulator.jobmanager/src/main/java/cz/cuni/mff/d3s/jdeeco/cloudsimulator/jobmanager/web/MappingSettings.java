@@ -24,17 +24,18 @@ public class MappingSettings {
 	public static final String LOGOUT = ACTION + "/client/logout";
 
 	
-	public static final String PROJECT = MAIN + "/project";
-	public static final String PROJECT_ADD = MAIN + "/project/add";
-	public static final String PROJECT_EDIT = MAIN + "/project/edit";
+	public static final String PROJECT = MAIN + "/project/{projectId}";
+	public static final String PROJECT_CREATE = MAIN + "/project/create";
+	public static final String PROJECT_EDIT = PROJECT + "/edit";
+	public static final String PROJECT_HIDE = PROJECT + "/hide";
 
-	public static final String CONFIGURATION = MAIN + "/configuration";
-	public static final String CONFIGURATION_ADD = MAIN + "/configuration/add";
-	public static final String CONFIGURATION_EDIT = MAIN + "/configuration/edit";
+	public static final String CONFIGURATION = MAIN + "/configuration/{configurationId}";
+	public static final String CONFIGURATION_ADD = MAIN + "/configuration/add/{projectId}";
+	public static final String CONFIGURATION_EDIT = CONFIGURATION + "/edit";
 
-	public static final String EXECUTION = MAIN + "/execution";
-	public static final String EXECUTION_ADD = MAIN + "/execution/add";
-	public static final String EXECUTION_EDIT = MAIN + "/execution/edit";
+	public static final String EXECUTION = MAIN + "/execution/{executionId}";
+	public static final String EXECUTION_RUN = MAIN + "/execution/run/{configurationId}";
+	public static final String EXECUTION_EDIT = EXECUTION + "/edit";
 
 
 	public static final String INFRASTRUCTURE = MAIN + "/infrastructure";

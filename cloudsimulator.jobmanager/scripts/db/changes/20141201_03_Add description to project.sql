@@ -1,0 +1,2 @@
+ALTER TABLE `project`
+ADD COLUMN `Description` VARCHAR(1000) NOT NULL DEFAULT '' AFTER `Name`;

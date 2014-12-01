@@ -19,6 +19,8 @@
 	<bean id="authenticationTokenDao"
 		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.AuthenticationTokenDaoImpl" />
 		
+	<bean id="projectDao"
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.ProjectDaoImpl" />
 	<bean id="simulationDataDao"
 		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationDataDaoImpl" />
 	<bean id="simulationCongfigurationDao"

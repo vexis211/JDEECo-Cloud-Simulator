@@ -85,4 +85,8 @@
 	<bean id="changePasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.ChangePasswordValidator" />
 	<bean id="newPasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.NewPasswordValidator" />
 	
+	<!-- Item factories. -->
+	<bean id="projectItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.ProjectItemFactoryImpl" />
+	<bean id="configurationItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.ConfigurationItemFactoryImpl" />
+	
 </beans>

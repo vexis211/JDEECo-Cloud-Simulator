@@ -1,4 +1,4 @@
-package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged;
+package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged.data;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.ValidationResult;
 

@@ -21,6 +21,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserOperationEx
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.utils.HTMLHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.MappingSettings;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged.data.RegisterForm;
 
 /**
  * Register form for users.

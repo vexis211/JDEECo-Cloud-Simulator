@@ -16,6 +16,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContext;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.MappingSettings;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged.data.ForgottenPasswordForm;
 
 /** Forgotten password and password reset requests */
 @Controller

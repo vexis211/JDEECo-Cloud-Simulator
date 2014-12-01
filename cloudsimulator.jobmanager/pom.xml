@@ -25,8 +25,6 @@
 		<spring-webflow.version>2.4.1.RELEASE</spring-webflow.version>
 		<aspectj.version>1.8.2</aspectj.version>
 		<jsf.version>2.2.8-02</jsf.version>
-		<primefaces.version>5.1</primefaces.version>
-		<primefaces-themes.version>1.0.10</primefaces-themes.version>
 		<el-impl.version>2.2</el-impl.version>
 		<log4j.version>1.2.17</log4j.version>
 		<slf4j.version>1.7.7</slf4j.version>
@@ -257,18 +255,6 @@
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-api</artifactId>
 			<version>${jsf.version}</version>
-		</dependency>
-		<!-- Primefaces -->
-	 	<dependency>
-			<groupId>org.primefaces</groupId>
-			<artifactId>primefaces</artifactId>
-			<version>${primefaces.version}</version>
-		</dependency>
-		<!-- Primefaces Theme Library -->
-		<dependency>
-			<groupId>org.primefaces.themes</groupId>
-			<artifactId>blitzer</artifactId>
-			<version>${primefaces-themes.version}</version>
 		</dependency>
 		<!-- JSP Library -->
 		<dependency>

@@ -10,13 +10,24 @@
 
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
-		<!-- <link rel="stylesheet" type="text/css" href="#{SiteStyles}/index.css?version=#{AppVersion}" /> -->
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/createProject.less?version=#{AppVersion}" />
 	</ui:define>
 
 	<ui:define name="MiddleContent">
-		add project
-		
-		<!-- Dialogs -->
+		<div id="create-project-div">
+			<form>
+				<table>
+					<tr>
+						<td>Name:</td>
+						<td><input type="text" /></td>
+					</tr>
+					<tr>
+						<td>Description:</td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
+		</div>
 	</ui:define>
 
 	<!-- Specific scripts. -->
