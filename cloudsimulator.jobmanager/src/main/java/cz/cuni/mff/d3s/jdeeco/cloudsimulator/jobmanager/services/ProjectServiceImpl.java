@@ -5,8 +5,12 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.ProjectDao;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.Project;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.UserHelper;
 
 public class ProjectServiceImpl implements ProjectService {
 
@@ -32,6 +36,18 @@ public class ProjectServiceImpl implements ProjectService {
 		// TODO implement
 		List<Project> projects = new ArrayList<Project>();
 		return projects;
+	}
+
+	@Transactional(readOnly = false)
+	@Override
+	public Project createProject(String name, String description) {
+		
+		User currentUser = UserHelper.getAuthenticatedUser();
+		
+		Project project = new Project(currentUser, name, description);
+		projectDao.saveOrUpdate(project);
+		
+		return project;
 	}
 
 }

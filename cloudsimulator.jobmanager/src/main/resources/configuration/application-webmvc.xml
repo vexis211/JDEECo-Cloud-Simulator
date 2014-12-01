@@ -79,14 +79,16 @@
 	</bean>
 	
 	<!-- Validators. -->
-	
 	<bean id="registerValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged.RegisterValidator" />
 	<bean id="forgottenPasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged.ForgottenPasswordValidator" />
 	<bean id="changePasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.ChangePasswordValidator" />
 	<bean id="newPasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.NewPasswordValidator" />
 	
+	<bean id="projectValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.ProjectValidator" />
+	
 	<!-- Item factories. -->
 	<bean id="projectItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.ProjectItemFactoryImpl" />
 	<bean id="configurationItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.ConfigurationItemFactoryImpl" />
+	<bean id="executionItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.ExecutionItemFactoryImpl" />
 	
 </beans>

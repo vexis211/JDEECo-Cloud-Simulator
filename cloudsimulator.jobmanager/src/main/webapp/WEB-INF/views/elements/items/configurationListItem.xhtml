@@ -8,21 +8,23 @@
 	xmlns:sec="http://www.springframework.org/security/tags"
 	xmlns:comp="http://java.sun.com/jsf/composite/components">
 
+	<ui:param name="ConfigurationPath" value="#{SiteRoot}/main/configuration" />
+
 	<div class="configuration-list-item-div" id="configuration-#{configuration.id}-div">
 		<table>
 			<tr>
-				<td class="configuration-name-td"><a href="/configuration/#{configuration.id}">#{configuration.name}</a></td>
+				<td class="configuration-name-td"><a href="#{ConfigurationPath}/#{configuration.id}">#{configuration.name}</a></td>
 				<td class="configuration-last-run-date-td">
-					<a href="/configuration/#{configuration.id}/lastexecution">
+					<a href="#{ConfigurationPath}/#{configuration.id}/lastexecution">
 						<h:outputText value="#{configuration.lastRunDate}">
 		                    <f:convertDateTime pattern="dd/MM/yyyy - HH:mm:ss" />
 		                </h:outputText>
 					</a>
 				</td>
-				<td class="configuration-status-td"><a href="/configuration/#{configuration.id}/lastexecution">#{configuration.status}</a></td>
-				<td class="run-configuration-td"><a href="/configuration/#{configuration.id}/run">run…</a></td>
-				<td class="edit-configuration-td"><a href="/configuration/#{configuration.id}/edit">edit</a></td>
-				<td class="hide-configuration-td"><a href="/configuration/#{configuration.id}/hide">hide</a></td>
+				<td class="configuration-status-td"><a href="#{ConfigurationPath}/#{configuration.id}/lastexecution">#{configuration.status}</a></td>
+				<td class="run-configuration-td"><a href="#{ConfigurationPath}/#{configuration.id}/run">run…</a></td>
+				<td class="edit-configuration-td"><a href="#{ConfigurationPath}/#{configuration.id}/edit">edit</a></td>
+				<td class="hide-configuration-td"><a href="#{ConfigurationPath}/#{configuration.id}/hide">hide</a></td>
 			</tr>
 		</table>
 	</div>

@@ -8,6 +8,8 @@
 	xmlns:comp="http://java.sun.com/jsf/composite/components"
 	template="/WEB-INF/views/layouts/main.xhtml">
 
+	<ui:param name="ProjectPath" value="#{SiteRoot}/main/project" />
+	
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
 		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/projectList.less?version=#{AppVersion}" />
@@ -15,8 +17,8 @@
 
 	<ui:define name="MiddleContent">
 		<div id="projects-header-div">
-			<a href="/project/create">Create Project</a>			
-			<a href="TODO">Configure Visible Projects</a>
+			<a href="#{ProjectPath}/create">Create Project</a>			
+			<a href="#{ProjectPath}/configurevisibility">Configure Visible Projects</a>
 		</div>
 		
 		<div id="projects-div">

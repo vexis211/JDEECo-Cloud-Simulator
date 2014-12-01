@@ -8,24 +8,46 @@
 	xmlns:comp="http://java.sun.com/jsf/composite/components"
 	template="/WEB-INF/views/layouts/main.xhtml">
 
+	<ui:param name="ProjectPath" value="#{SiteRoot}/main/project" />
+	
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
 		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/createProject.less?version=#{AppVersion}" />
 	</ui:define>
 
 	<ui:define name="MiddleContent">
-		<div id="create-project-div">
-			<form>
+		<div id="create-project-div">					
+			<form id="create-project-form" method="post" action="#{ProjectPath}/create" name="projectItem">
+				<div class="error-div">
+					<h:outputText value="#{errorMsg}" escape="false" />
+				</div>
 				<table>
 					<tr>
-						<td>Name:</td>
-						<td><input type="text" /></td>
+						<td>Name:</td>						
+						<td>
+							<c:if test="${model.getName() == null}">
+								<input id="name-input" type="text" name="name" />
+							</c:if>
+							<c:if test="${model.getName() != null}">
+								<input id="name-input" type="text" name="name" value="${model.getName()}" />
+							</c:if>
+						</td>
 					</tr>
 					<tr>
-						<td>Description:</td>
-						<td></td>
+						<td>Description:</td>			
+						<td>
+							<c:if test="${model.getDescription() == null}">
+								<input id="description-input" type="text" name="description" />
+							</c:if>
+							<c:if test="${model.getDescription() != null}">
+								<input id="description-input" type="text" name="description" value="${model.getDescription()}" />
+							</c:if>
+						</td>
 					</tr>
 				</table>
+				<div class="actions-div">
+					<input class="submit-input" type="submit" value="Create" />
+				</div>
 			</form>
 		</div>
 	</ui:define>

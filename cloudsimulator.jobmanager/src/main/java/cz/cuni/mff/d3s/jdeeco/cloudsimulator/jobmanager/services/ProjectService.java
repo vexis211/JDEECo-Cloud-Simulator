@@ -8,4 +8,6 @@ public interface ProjectService {
 	List<Project> listProjects();
 	List<Project> listVisibleProjects();
 	List<Project> listHiddenProjects();
+	
+	Project createProject(String name, String description);
 }

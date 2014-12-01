@@ -28,6 +28,7 @@ public class MappingSettings {
 	public static final String PROJECT_CREATE = MAIN + "/project/create";
 	public static final String PROJECT_EDIT = PROJECT + "/edit";
 	public static final String PROJECT_HIDE = PROJECT + "/hide";
+	public static final String PROJECT_CONFIGUREVISIBILITY = PROJECT + "/configurevisibility";
 
 	public static final String CONFIGURATION = MAIN + "/configuration/{configurationId}";
 	public static final String CONFIGURATION_ADD = MAIN + "/configuration/add/{projectId}";

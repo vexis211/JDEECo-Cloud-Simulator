@@ -16,7 +16,8 @@ public class ProjectItemImpl implements ProjectItem {
 
 	public ProjectItemImpl(Project project) {
 		this.id = project.getId();
-		this.name = project.getDescription();
+		this.name = project.getName();
+		this.description = project.getDescription();
 	}
 
 	@Override
@@ -58,13 +59,11 @@ public class ProjectItemImpl implements ProjectItem {
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		// TODO Auto-generated method stub
-
+		this.description = description;
 	}
 }

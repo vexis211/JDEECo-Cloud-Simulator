@@ -8,17 +8,20 @@
 	xmlns:sec="http://www.springframework.org/security/tags"
 	xmlns:comp="http://java.sun.com/jsf/composite/components">
 
+	<ui:param name="ConfigurationPath" value="#{SiteRoot}/main/configuration" />
+	<ui:param name="ProjectPath" value="#{SiteRoot}/main/project" />
+
 	<div class="project-list-item-div" id="project-#{project.id}-div">
 		<div class="header-div">
 			<table>
 				<tr>
 					<td class="project-expander-td"><span></span></td>
-					<td class="project-name-td"><a href="/project/#{project.id}">#{project.name}</a></td>
+					<td class="project-name-td"><a href="#{ProjectPath}/#{project.id}">#{project.name}</a></td>
 					<td class="project-status-failed-td"><span>#{project.failingConfigurationsCount} failing</span></td>
 					<td class="project-status-successful-td"><span>#{project.successfulConfigurationsCount} successful</span></td>
-					<td class="add-configuration-td"><a href="/configuration/add/#{project.id}">add</a></td>
-					<td class="edit-project-td"><a href="/project/#{project.id}/edit">edit</a></td>
-					<td class="hide-project-td"><a href="/project/#{project.id}/hide">hide</a></td>
+					<td class="add-configuration-td"><a href="#{ConfigurationPath}/add/#{project.id}">add</a></td>
+					<td class="edit-project-td"><a href="#{ProjectPath}/#{project.id}/edit">edit</a></td>
+					<td class="hide-project-td"><a href="#{ProjectPath}/#{project.id}/hide">hide</a></td>
 				</tr>
 			</table>
 		</div>
