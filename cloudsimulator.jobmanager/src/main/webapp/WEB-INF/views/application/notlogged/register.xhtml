@@ -18,18 +18,18 @@
 	<ui:define name="Content">
 		<div id="register-parent-div" class="auth-parent-div">
 			<div id="register-div" class="auth-div">	
-				<c:if test="${registerState == 0 || registerState == 1}">
+				<c:if test="#{registerState == 0 || registerState == 1}">
 					<form id="register-form" class="auth-form" method="post" action="#{SiteRoot}/client/register" name="registerForm">
 						<div class="error-div">
 							<h:outputText value="#{errorMsg}" escape="false" />
 						</div>
 						<div>
 							<!-- Another visit, form is already submitted. -->
-							<c:if test="${model.getEmail() == null}">
+							<c:if test="#{model.email == null}">
 								<input id="email-input" type="text" name="email" value="E-mail" />
 							</c:if>
-							<c:if test="${model.getEmail() != null}">
-								<input id="email-input" type="text" name="email" value="#{model.getEmail()}" />
+							<c:if test="#{model.email != null}">
+								<input id="email-input" type="text" name="email" value="#{model.email}" />
 							</c:if>
 
 							<input id="password-input" type="password" name="password" value="" />
@@ -38,7 +38,7 @@
 						</div>
 					</form>
 				</c:if>
-				<c:if test="${registerState == 2}">
+				<c:if test="#{registerState == 2}">
 					<div class="success-div">Thank you for your registration!</div>
 				</c:if>
 				

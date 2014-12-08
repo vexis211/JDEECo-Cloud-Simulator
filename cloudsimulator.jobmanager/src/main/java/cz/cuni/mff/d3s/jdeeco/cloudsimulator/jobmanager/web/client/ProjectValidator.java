@@ -4,7 +4,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.utils.StringHelper;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.utils.ValidatorHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.ProjectItem;
 
 /** Validator used for new project */

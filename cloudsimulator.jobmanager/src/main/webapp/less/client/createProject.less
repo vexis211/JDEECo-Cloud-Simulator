@@ -1,134 +1,49 @@
 @import "../common/globalVars";
 
-#projects-header-div {
-	margin: 3px 10px 0 0;
-	text-align: right;
-	
-	a {		
-		color: @foreground-color;
-		text-decoration: none;
-		padding: 0 5px 0 5px;
-		border-left: 1px solid @control-color;
-		
-		&:hover {
-			text-decoration: underline;
-		}
-		
-		&:nth-of-type(1) {
-		border-left: 0;
-		}
-	}
-}
-
-#projects-div {
+#create-project-div {	
 	margin: 10px;
-	.tds () {
-		vertical-align: middle;
-	}
-
-	.status-tds () {
-		.tds ();
-		width: 120px;
-		text-align: right;
-	}
-
-	.action-tds () {
-		.tds ();
-		width: 35px;
-		text-align: center;
-	}
 	
-	a {
-		color: @foreground-color;
-		text-decoration: none;
-		
-		&:hover {
-			text-decoration: underline;
+	#create-project-form {
+		.error-div {
+			padding: 2px;
+			color: @error-color;
+			font-weight: bold;
 		}
-	}
 
-	.project-list-item-div {
-		margin-bottom: 5px;
-		color: @foreground-color;		
-		
-		.header-div {
-			background: @control-color;
-			font-weight: bold;	
-
-			table {
-				padding: 3px;
+		table {
+			tr {
+				td {
+					padding-top: 10px;
+				}
+								
+				td:first-child {
+					width: 150px;
+					vertical-align: top;
+				}
+				td:last-child {
+					width: 400px;
+				}
+			}
+			
+			input {
+				padding: 2px;
 				width: 100%;
 			}
-
-			.project-expander-td {
-				.tds ();
-				text-align: center;
-				width: 18px;
-			}
-
-			.project-name-td {
-				.tds ();
-			}
-
-			.project-status-failed-td {
-				.status-tds;
-			}
-
-			.project-status-successful-td {
-				.status-tds;
-				padding-right: 20px;
-			}
-
-			.add-configuration-td {
-				.action-tds;
-			}
-
-			.edit-project-td {
-				.action-tds;
-			}
-
-			.hide-project-td {
-				.action-tds;
+			
+			textarea {
+				padding: 3px;
+				width: 100%;
+				resize: none;
 			}
 		}
 
-		.project-configurations-div {
-			margin: 0 0 0 22px;
-
-			.configuration-list-item-div {
-				table {
-					padding: 3px;
-					width: 100%;
-					border-bottom: 1px solid @control-color;
-				}
-
-				.configuration-name-td {
-					.tds ();
-				}
-
-				.configuration-status-td {
-					.status-tds;
-					
-					padding-right: 20px;
-				}
-
-				.configuration-last-run-date-td {
-					.tds ();
-					width: 150px;
-					text-align: right;					
-				}
-
-				.run-configuration-td {
-					.action-tds;
-				}
-
-				.edit-configuration-td {
-					.action-tds;
-				}
-
-				.hide-configuration-td {
-					.action-tds;
-				}
+		.actions-div {
+			margin-top: 10px;
+			padding: 10px 2px 2px 2px;
+			border-top: 1px dotted @control-color;
+			
+			.submit-input {
+				padding: 3px 20px;
 			}
 		}
 	}

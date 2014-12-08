@@ -9,7 +9,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.ProjectI
 public class ProjectItemFactoryImpl implements ProjectItemFactory {
 
 	@Resource
-	private ConfigurationItemFactory configurationItemFactory;
+	private SimulationConfigurationItemFactory configurationItemFactory;
 
 	@Override
 	public ProjectItem create(Project project, boolean addConfigurations) {

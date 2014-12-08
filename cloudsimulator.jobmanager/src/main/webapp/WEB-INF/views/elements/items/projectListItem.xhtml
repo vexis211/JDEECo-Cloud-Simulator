@@ -8,9 +8,6 @@
 	xmlns:sec="http://www.springframework.org/security/tags"
 	xmlns:comp="http://java.sun.com/jsf/composite/components">
 
-	<ui:param name="ConfigurationPath" value="#{SiteRoot}/main/configuration" />
-	<ui:param name="ProjectPath" value="#{SiteRoot}/main/project" />
-
 	<div class="project-list-item-div" id="project-#{project.id}-div">
 		<div class="header-div">
 			<table>
@@ -25,10 +22,7 @@
 				</tr>
 			</table>
 		</div>
-		<div class="project-configurations-div">
-			<c:forEach var="configuration" items="#{project.configurations}">
-				<ui:include src="/WEB-INF/views/elements/items/configurationListItem.xhtml" />
-			</c:forEach>			
-		</div>
+		
+		<ui:include src="/WEB-INF/views/elements/items/simulationConfigurationListItems.xhtml" />
 	</div>
 </f:subview>

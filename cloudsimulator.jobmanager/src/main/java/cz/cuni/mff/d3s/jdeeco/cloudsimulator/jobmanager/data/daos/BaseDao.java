@@ -9,6 +9,8 @@ public interface BaseDao<T> {
 	public void delete(T item);
 
 	public T findById(int id);
+	
+	public T findLastAdded();
 
 	public List<T> findAll();
 }

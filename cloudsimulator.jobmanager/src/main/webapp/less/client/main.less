@@ -4,6 +4,8 @@ html, body {
 	margin:0;
 	padding:0;
 	height:100%;
+	
+	color: @foreground-color;	
 }
 
 #content {
@@ -31,7 +33,6 @@ html, body {
 			padding: 5px 0;
 			width: 150px;
 			background: @control-color;
-			color: @foreground-color;
 			border: 2px solid @control-color;
 			text-decoration: none;
 			font-weight: bolder;
@@ -69,3 +70,13 @@ html, body {
 	border-top: 3px solid @control-color;
 	text-align: center;
 }
+
+
+a {
+	text-decoration: none;
+	color: @foreground-color;	
+	
+	&:hover {
+		text-decoration: underline;
+	}
+}	

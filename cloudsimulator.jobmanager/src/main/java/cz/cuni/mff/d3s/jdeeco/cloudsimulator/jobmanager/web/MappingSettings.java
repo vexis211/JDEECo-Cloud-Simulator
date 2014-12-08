@@ -23,19 +23,24 @@ public class MappingSettings {
 	public static final String CHANGEPASSWORD = ACTION + "/client/changepassword";
 	public static final String LOGOUT = ACTION + "/client/logout";
 
-	
-	public static final String PROJECT = MAIN + "/project/{projectId}";
-	public static final String PROJECT_CREATE = MAIN + "/project/create";
+
+	public static final String PROJECT_ROOT = MAIN + "/project";
+	public static final String PROJECT = PROJECT_ROOT + "/{projectId}";
+	public static final String PROJECT_CREATE = PROJECT_ROOT + "/create";
 	public static final String PROJECT_EDIT = PROJECT + "/edit";
 	public static final String PROJECT_HIDE = PROJECT + "/hide";
-	public static final String PROJECT_CONFIGUREVISIBILITY = PROJECT + "/configurevisibility";
+	public static final String PROJECT_CONFIGUREVISIBILITY = PROJECT_ROOT + "/configurevisibility";
 
-	public static final String CONFIGURATION = MAIN + "/configuration/{configurationId}";
-	public static final String CONFIGURATION_ADD = MAIN + "/configuration/add/{projectId}";
+	public static final String CONFIGURATION_ROOT = MAIN + "/configuration";
+	public static final String CONFIGURATION = CONFIGURATION_ROOT + "/{configurationId}";
+	public static final String CONFIGURATION_ADD = CONFIGURATION_ROOT + "/add/{projectId}";
 	public static final String CONFIGURATION_EDIT = CONFIGURATION + "/edit";
+	public static final String CONFIGURATION_CONFIGUREVISIBILITY = CONFIGURATION_ROOT + "/configurevisibility/{projectId}";
 
-	public static final String EXECUTION = MAIN + "/execution/{executionId}";
-	public static final String EXECUTION_RUN = MAIN + "/execution/run/{configurationId}";
+	public static final String EXECUTION_ROOT = MAIN + "/execution";
+	public static final String EXECUTION = EXECUTION_ROOT + "/{executionId}";
+	public static final String EXECUTION_RUN = EXECUTION_ROOT + "/run/{configurationId}";
+	public static final String EXECUTION_STOP = EXECUTION + "/stop";
 	public static final String EXECUTION_EDIT = EXECUTION + "/edit";
 
 

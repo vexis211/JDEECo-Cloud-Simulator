@@ -10,13 +10,17 @@
 	xmlns:security="http://www.springframework.org/security/tags">
 	<html>
 
-<!-- Sets all common parameters used through app. -->
-<ui:param name="AppVersion" value="#{request.getAttribute('appVersion')}" />
-<ui:param name="SiteRoot" value="#{request.contextPath}" />
-<ui:param name="SiteScripts" value="#{request.contextPath}/js" />
-<ui:param name="SiteStyles" value="#{request.contextPath}/less" />
-<ui:param name="SiteImages" value="#{request.contextPath}/images" />
-<ui:param name="SiteDocs" value="#{request.contextPath}/docs" />
+	<!-- Sets all common parameters used through app. -->
+	<ui:param name="AppVersion" value="#{request.getAttribute('appVersion')}" />
+	<ui:param name="SiteRoot" value="#{request.contextPath}" />
+	<ui:param name="SiteScripts" value="#{request.contextPath}/js" />
+	<ui:param name="SiteStyles" value="#{request.contextPath}/less" />
+	<ui:param name="SiteImages" value="#{request.contextPath}/images" />
+	<ui:param name="SiteDocs" value="#{request.contextPath}/docs" />
+
+	<ui:param name="ProjectPath" value="#{SiteRoot}/main/project" />
+	<ui:param name="ConfigurationPath" value="#{SiteRoot}/main/configuration" />
+	<ui:param name="ExecutionPath" value="#{SiteRoot}/main/execution" />
 
 <!-- Current app version. Used to download correct css/js files. 
 	Must be incremented with each change to css/js files

@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:comp="http://java.sun.com/jsf/composite/components"
+	template="/WEB-INF/views/layouts/main.xhtml">
+
+	<ui:param name="ProjectPath" value="#{SiteRoot}/main/project" />
+	
+	<ui:define name="HeadContent">
+		<!-- Stylesheets -->
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/createProject.less?version=#{AppVersion}" />
+	</ui:define>
+
+	<ui:define name="MiddleContent">
+		<div id="create-project-div">					
+			<form id="create-project-form" method="post" action="#{ProjectPath}/create" name="projectItem">
+				<div class="error-div">
+					<h:outputText value="#{errorMsg}" escape="false" />
+				</div>
+				<table>
+					<tr>
+						<td>Name:</td>						
+						<td>
+							<c:if test="#{model.name == null}">
+								<input id="name-input" type="text" name="name" />
+							</c:if>
+							<c:if test="#{model.name != null}">
+								<input id="name-input" type="text" name="name" value="#{model.name}" />
+							</c:if>
+						</td>
+					</tr>
+					<tr>
+						<td>Description:</td>			
+						<td>
+							<c:if test="#{model.description == null}">
+								<textarea id="description-area" name="description" rows="5" />
+							</c:if>
+							<c:if test="#{model.description != null}">
+								<textarea id="description-area" name="description" rows="5">#{model.description}</textarea>
+							</c:if>
+						</td>
+					</tr>
+				</table>
+				<div class="actions-div">
+					<input class="submit-input" type="submit" value="Create" />
+				</div>
+			</form>
+		</div>
+	</ui:define>
+
+	<!-- Specific scripts. -->
+	<ui:define name="JsContent">
+
+	</ui:define>
+</ui:composition>

@@ -16,8 +16,8 @@ public interface ProjectItem {
 	public String getDescription();
 	public void setDescription(String description);
 
-	public List<ConfigurationItem> getConfigurations();	
-	public void addConfiguration(ConfigurationItem configuration);	
+	public List<SimulationConfigurationItem> getConfigurations();	
+	public void addConfiguration(SimulationConfigurationItem configuration);	
 	
 	public int getFailingConfigurationsCount();
 	public int getSuccessfulConfigurationsCount(); 

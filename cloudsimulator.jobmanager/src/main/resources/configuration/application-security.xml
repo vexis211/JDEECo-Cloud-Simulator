@@ -7,6 +7,8 @@
 		http://www.springframework.org/schema/security
 		http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
+	<bean id="authenticationTokenService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.AuthenticationTokenServiceImpl" scope="singleton" />
+
 	<bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
 		<property name="errorPage" value="/" />
 	</bean>
@@ -48,7 +50,7 @@
 				</entry>
 				<entry key="AUTH_TOKEN">
 					<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.authenticators.AuthTokenCodeAuthenticator">
-						<constructor-arg index="0" ref="authTokenService" />
+						<constructor-arg index="0" ref="authenticationTokenService" />
 					</bean>
 				</entry>
 			</map>

@@ -12,23 +12,26 @@ public class SimulationConfiguration implements java.io.Serializable {
 	private SimulationData simulationData;
 	private User creator;
 	private String name;
+	private String description;
 	private Set<SimulationExecution> simulationExecutions = new HashSet<SimulationExecution>(0);
 
 	public SimulationConfiguration() {
 	}
 
-	public SimulationConfiguration(Project project, User creator, String name) {
+	public SimulationConfiguration(Project project, User creator, String name, String description) {
 		this.project = project;
 		this.creator = creator;
 		this.name = name;
+		this.description = description;
 	}
 
 	public SimulationConfiguration(Project project, SimulationData simulationData, User creator, String name,
-			Set<SimulationExecution> simulationExecutions) {
+			String description, Set<SimulationExecution> simulationExecutions) {
 		this.project = project;
 		this.simulationData = simulationData;
 		this.creator = creator;
 		this.name = name;
+		this.description = description;
 		this.simulationExecutions = simulationExecutions;
 	}
 
@@ -70,6 +73,14 @@ public class SimulationConfiguration implements java.io.Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Set<SimulationExecution> getSimulationExecutions() {

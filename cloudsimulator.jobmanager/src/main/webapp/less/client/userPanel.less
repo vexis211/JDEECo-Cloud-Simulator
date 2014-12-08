@@ -3,7 +3,6 @@
 #user-panel {
 	display: block;
 	font-weight: bold;
-	color: @foreground-color;
 	text-align: center;
 	width: 190px;
 	.panel-header {
@@ -14,6 +13,7 @@
 
 		&:hover {
 			cursor: pointer;
+			text-decoration: underline;
 		}
 	}
 
@@ -27,7 +27,6 @@
 		> a {
 			display: block;
 			background: @background-color;
-			color: @control-color;
 			text-decoration: none;
 			border-color: @foreground-color;
 			border-style: dotted;
@@ -35,7 +34,7 @@
 			padding: 4px 0;
 			
 			&:hover {
-				color: @foreground-color;
+				text-decoration: underline;
 			}
 		}
 	}

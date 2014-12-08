@@ -3,6 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos;
 import org.hibernate.criterion.Restrictions;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.UserActivationFlags;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.Role;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.RoleConvertor;
 

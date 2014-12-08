@@ -19,8 +19,8 @@
 			<div id="login-div" class="auth-div">				
 				<form id="login-form" class="auth-form" method="post" action="#{SiteRoot}/client/auth" name="loginForm">
 					<div class="error-div">
-						<c:if test="${failure eq 'badCredentials'}">Wrong credentials!</c:if>
-						<c:if test="${failure eq 'accountNotActivated'}">Account is not activated activation email has been resent!</c:if>
+						<c:if test="#{failure eq 'badCredentials'}">Wrong credentials!</c:if>
+						<c:if test="#{failure eq 'accountNotActivated'}">Account is not activated activation email has been resent!</c:if>
 					</div>
 					<div>
 						<input id="email-input" type="text" name="email" value="E-mail" /> 

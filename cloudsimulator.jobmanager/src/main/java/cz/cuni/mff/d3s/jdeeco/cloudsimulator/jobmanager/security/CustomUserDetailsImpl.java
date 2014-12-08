@@ -5,8 +5,8 @@ import java.util.HashSet;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.UserActivationFlags;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.UserActivationFlags;
 
 /**
  * Implementation of spring security UserDetails providing also underlying User

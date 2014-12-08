@@ -8,24 +8,25 @@
 	xmlns:comp="http://java.sun.com/jsf/composite/components"
 	template="/WEB-INF/views/layouts/main.xhtml">
 
-	<ui:param name="ProjectPath" value="#{SiteRoot}/main/project" />
-	
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
-		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/projectList.less?version=#{AppVersion}" />
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/simulationConfiguration.less?version=#{AppVersion}" />
 	</ui:define>
 
 	<ui:define name="MiddleContent">
-		<div id="projects-header-div">
-			<a href="#{ProjectPath}/create">Create Project</a>			
-			<a href="#{ProjectPath}/configurevisibility">Configure Visible Projects</a>
+		<div id="content-right-header-div">				
+			<a href="#{ConfigurationPath}/#{configuration.id}/edit">Edit configuration</a>	
+			<a href="#{ExecutionPath}/run/#{configuration.id}">Execute Configuration</a>
+		</div>
+				
+		<div id="configuration-div">
+			<div class="configuration-name">Configuration: #{configuration.name}</div>
+			<div class="configuration-description">#{configuration.description}</div>
+		
+			<div class="execution-list-header">Executions:</div>
+			<ui:include src="/WEB-INF/views/elements/items/simulationExecutionListItems.xhtml" />
 		</div>
 		
-		<div id="projects-div">
-			<c:forEach var="project" items="#{projects}">
-				<ui:include src="/WEB-INF/views/elements/items/projectListItem.xhtml" />
-			</c:forEach>
-		</div>
 		<!-- Dialogs -->
 	</ui:define>
 

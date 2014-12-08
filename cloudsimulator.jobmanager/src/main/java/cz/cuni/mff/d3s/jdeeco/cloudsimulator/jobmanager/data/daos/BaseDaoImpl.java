@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.lang.reflect.ParameterizedType;
@@ -50,13 +51,24 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public T findById(int id) {
-		logger.debug("getting SimulationConfiguration instance with id: " + id);
 		try {
 			// not used findUniqueByCriteria for performance purposes
-			T instance = (T) getCriteria().add(Restrictions.idEq(id));
+			T instance = (T) getCriteria().add(Restrictions.idEq(id)).uniqueResult();
 			return instance;
 		} catch (RuntimeException re) {
-			logger.error("get failed", re);
+			logger.error("findById failed", re);
+			throw re;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public T findLastAdded() {
+		try {
+			T instance = (T) getCriteria().addOrder(Order.desc("id")).setMaxResults(1).uniqueResult();
+			return instance;
+		} catch (RuntimeException re) {
+			logger.error("findLastAdded failed", re);
 			throw re;
 		}
 	}
@@ -91,5 +103,4 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		}
 		return (T)crit.uniqueResult();
 	}
-
 }

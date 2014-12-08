@@ -10,12 +10,20 @@
 
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
-		<!-- <link rel="stylesheet" type="text/css" href="#{SiteStyles}/index.css?version=#{AppVersion}" /> -->
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/projectList.less?version=#{AppVersion}" />
 	</ui:define>
 
 	<ui:define name="MiddleContent">
-		simulation configuration
+		<div id="content-right-header-div">
+			<a href="#{ProjectPath}/create">Create Project</a>			
+			<a href="#{ProjectPath}/configurevisibility">Configure Visible Projects</a>
+		</div>
 		
+		<div id="projects-div">
+			<c:forEach var="project" items="#{projects}">
+				<ui:include src="/WEB-INF/views/elements/items/projectListItem.xhtml" />
+			</c:forEach>
+		</div>
 		<!-- Dialogs -->
 	</ui:define>
 

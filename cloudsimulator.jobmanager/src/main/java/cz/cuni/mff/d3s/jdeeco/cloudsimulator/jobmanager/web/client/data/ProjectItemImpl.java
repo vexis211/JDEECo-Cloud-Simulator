@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.Project;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationStatus;
 
 public class ProjectItemImpl implements ProjectItem {
 	private int id;
 	private String name;
 	private String description;
-	private List<ConfigurationItem> configurations = new ArrayList<ConfigurationItem>();
+	private List<SimulationConfigurationItem> configurations = new ArrayList<SimulationConfigurationItem>();
 
 	public ProjectItemImpl() {
 	}
@@ -37,23 +38,21 @@ public class ProjectItemImpl implements ProjectItem {
 
 	@Override
 	public int getFailingConfigurationsCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return (int) configurations.stream().filter(x -> x.getStatus() == SimulationStatus.ErrorOccured).count();
 	}
 
 	@Override
 	public int getSuccessfulConfigurationsCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return (int) configurations.stream().filter(x -> x.getStatus() == SimulationStatus.Completed).count();
 	}
 
 	@Override
-	public List<ConfigurationItem> getConfigurations() {
+	public List<SimulationConfigurationItem> getConfigurations() {
 		return configurations;
 	}
 
 	@Override
-	public void addConfiguration(ConfigurationItem configuration) {
+	public void addConfiguration(SimulationConfigurationItem configuration) {
 		this.configurations.add(configuration);
 	}
 
