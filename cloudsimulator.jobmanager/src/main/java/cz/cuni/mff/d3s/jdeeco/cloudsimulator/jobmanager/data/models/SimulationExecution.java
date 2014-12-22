@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
+
 public class SimulationExecution implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7158964600876801749L;

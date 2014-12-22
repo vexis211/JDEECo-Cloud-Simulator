@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationExecution;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
 
 public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 

@@ -52,7 +52,6 @@ public class WorkerConnectorImpl implements WorkerConnector {
 
 	private void processIncomingMessage(Message message) {
 		if (message instanceof ObjectMessage) {
-			// message.getStringProperty(name) // TODO get worker id
 			try {
 				Serializable data = ((ObjectMessage) message).getObject();
 
@@ -77,8 +76,8 @@ public class WorkerConnectorImpl implements WorkerConnector {
 	}
 
 	@Override
-	public void sendTask(String machineName, WorkerTask task) {
-		jmsTemplate.convertAndSend(outgoingQueuePrefix + machineName, task);
+	public void sendTask(String workerId, WorkerTask task) {
+		jmsTemplate.convertAndSend(outgoingQueuePrefix + workerId, task);
 	}
 
 	public void setIncomingQueue(String incomingQueue) {

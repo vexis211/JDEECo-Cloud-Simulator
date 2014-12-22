@@ -10,7 +10,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationConf
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationExecutionDao;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationConfiguration;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationExecution;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.UserHelper;
 

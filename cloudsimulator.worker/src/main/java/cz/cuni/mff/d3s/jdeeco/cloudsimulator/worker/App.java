@@ -1,8 +1,8 @@
-package cloudsimulator.worker;
+package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import cloudsimulator.worker.engine.WorkerEngine;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine.WorkerEngine;
 
 public class App {
 

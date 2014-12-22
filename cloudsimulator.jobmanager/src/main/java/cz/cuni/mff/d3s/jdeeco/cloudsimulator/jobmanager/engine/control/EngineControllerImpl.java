@@ -10,7 +10,7 @@ public class EngineControllerImpl implements EngineController {
 	private JobManagerUpdateQueue jobManagerUpdateQueue;
 	
 	@Override
-	public void processNewExecution(int executionId) {
-		jobManagerUpdateQueue.add(new ProcessNewExecutionCommand(executionId));
+	public void updateExecutions() {
+		jobManagerUpdateQueue.add(new UpdateExecutionsCommandImpl());
 	}
 }

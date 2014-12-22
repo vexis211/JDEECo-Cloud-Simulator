@@ -1,9 +1,8 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks;
 
-public class RunSimulationTask implements WorkerTask {
-
-	private static final long serialVersionUID = -956877781050491072L;
-
-	public RunSimulationTask() {
-	}
+public interface RunSimulationTask extends WorkerTask {
+	int getSimulationRunId();
+	String getDataUri();
+	String getLogFileUri();
+	String getResultsUri();
 }

@@ -6,5 +6,5 @@ public interface WorkerConnector {
 	void connect();
 	void disconnect();
 	
-	void sendTask(String machineName, WorkerTask task);
+	void sendTask(String workerId, WorkerTask task);
 }

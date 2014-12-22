@@ -19,7 +19,7 @@
         <property name="status">
             <column name="Status" not-null="true" />
             <type name="org.hibernate.type.EnumType">
-            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationStatus</param>
+            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus</param>
             </type>
         </property>
         <property name="created" type="timestamp" insert="false">
