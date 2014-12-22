@@ -1,0 +1,20 @@
+@import "../common/globalVars";
+
+#content-right-header-div {
+	margin: 3px 10px 6px 0;
+	text-align: right;
+	
+	a {	
+		text-decoration: none;
+		padding: 0 5px 0 5px;
+		border-left: 1px solid @control-color;
+		
+		&:hover {
+			text-decoration: underline;
+		}
+		
+		&:nth-of-type(1) {
+			border-left: 0;
+		}
+	}
+}

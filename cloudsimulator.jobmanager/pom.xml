@@ -1,42 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
 	<artifactId>cloudsimulator.jobmanager</artifactId>
 	<name>cloudsimulator.jobmanager</name>
 	<packaging>war</packaging>
-	<version>1.0.0-BUILD-SNAPSHOT</version>
+
+	<parent>
+		<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
+		<artifactId>cloudsimulator.servers</artifactId>
+		<relativePath>../cloudsimulator.servers/pom.xml</relativePath>
+		<version>${project.version}</version>
+	</parent>
 
 	<properties>
-		<project.encoding>UTF-8</project.encoding>
-		<project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
-
 		<war.name>jdeeco-simulator-jobmanager</war.name>
 
 		<!-- versions -->
-		<java.version>1.8</java.version>
 		<javax-servlet.version>2.5</javax-servlet.version>
 		<javax-servlet-jsp.version>2.3.1</javax-servlet-jsp.version>
 		<javax-servlet-jstl.version>1.2</javax-servlet-jstl.version>
-		<spring.version>4.1.1.RELEASE</spring.version>
 		<spring-security.version>3.2.5.RELEASE</spring-security.version>
 		<spring-webflow.version>2.4.1.RELEASE</spring-webflow.version>
-		<aspectj.version>1.8.2</aspectj.version>
 		<jsf.version>2.2.8-02</jsf.version>
 		<el-impl.version>2.2</el-impl.version>
-		<log4j.version>1.2.17</log4j.version>
-		<slf4j.version>1.7.7</slf4j.version>
 		<jackson-mapper.version>1.9.13</jackson-mapper.version>
-		<mysql-connector.version>5.1.33</mysql-connector.version>
-		<hibernate.version>4.3.6.Final</hibernate.version>
-		<hibernate-validator.version>5.1.2.Final</hibernate-validator.version>
-		<commons-dbcp.version>1.4</commons-dbcp.version>
 		<javax.version>1.4.7</javax.version>
 		<javax-validation.version>1.1.0.Final</javax-validation.version>
 
 		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
+		
 	</properties>
 
 	<scm>
@@ -208,35 +202,10 @@
 
 	<url>http://maven.apache.org</url>
 
-	<repositories>
-		<repository>
-			<id>prime-repo</id>
-			<name>PrimeFaces Maven Repository</name>
-			<url>http://repository.primefaces.org</url>
-			<layout>default</layout>
-		</repository>
-	</repositories>
 	<!-- <profiles> <profile> <id>development</id> <activation> <activeByDefault>true</activeByDefault> 
 		</activation> </profile> </profiles> -->
 
 	<dependencies>
-		<!-- Log4j - logging -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
 
 		<!-- Servlet -->
 		<dependency>
@@ -276,45 +245,6 @@
 			<version>${javax-servlet-jstl.version}</version>
 		</dependency>
 
-		<!-- Hibernate library -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-ehcache</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>${hibernate-validator.version}</version>
-		</dependency>
-
-		<!-- MySQL driver connector library -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql-connector.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>${commons-dbcp.version}</version>
-		</dependency>
-		<!-- Spring ORM -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
 		<!-- Spring Web -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -326,23 +256,6 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
 
 		<!-- Security -->
 		<dependency>
@@ -366,12 +279,6 @@
 			<version>${spring-security.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		
 		<!-- Webflow -->
 		<dependency>
 			<groupId>org.springframework.webflow</groupId>

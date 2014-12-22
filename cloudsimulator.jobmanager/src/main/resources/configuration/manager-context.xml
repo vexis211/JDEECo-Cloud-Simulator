@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="
+	    http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		http://activemq.apache.org/schema/core
+		http://activemq.apache.org/schema/core/activemq-core-5.10.0.xsd">
+		
+	<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.EngineStartup" scope="singleton" lazy-init="false" />
+	<bean id="jobManagerEngine" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerEngineImpl"
+		scope="singleton" />
+
+	<bean id="jobManagerUpdateQueue" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerUpdateQueue"
+		scope="singleton" />
+
+	<bean id="engineController" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.control.EngineControllerImpl"
+		scope="singleton" />
+
+
+	<!-- lets create an embedded ActiveMQ Broker -->
+	<amq:broker xmlns="http://activemq.apache.org/schema/core" useJmx="false" persistent="false" start="true">
+		<transportConnectors>
+			<transportConnector uri="tcp://localhost:9876" />
+		</transportConnectors>
+	</amq:broker>
+
+	<!-- ActiveMQ destinations to use -->
+	<amq:queue id="destination" physicalName="org.apache.activemq.spring.Test.spring.embedded" />
+
+	<!-- JMS ConnectionFactory to use, configuring the embedded broker using XML -->
+	<amq:connectionFactory id="jmsFactory" brokerURL="vm://transport" />
+
+	<!-- Spring JMS Template -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory">
+			<!-- lets wrap in a pool to avoid creating a connection per send -->
+			<bean class="org.springframework.jms.connection.CachingConnectionFactory">
+				<property name="targetConnectionFactory" ref="jmsFactory" />
+			</bean>
+		</property>
+	</bean>
+
+</beans>

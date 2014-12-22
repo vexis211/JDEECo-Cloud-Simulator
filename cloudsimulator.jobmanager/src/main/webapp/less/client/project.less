@@ -1,0 +1,63 @@
+@import "../common/globalVars";
+@import "../elements/contentRightHeader";
+
+#project-div {
+	margin: 10px;
+
+	.project-name {
+		margin: 5px;
+		font-size: 20px;
+		font-weight: bold;
+	}
+
+	.project-description {
+		margin: 10px 5px 10px 5px;
+	}
+	
+	.configuration-list-header{
+		margin: 20px 5px 1px 5px;
+		font-size: 16px;
+		font-weight: bold;
+	}
+	
+	.project-configurations-div {
+
+		@import "../elements/commonItemStyles";
+		
+		.configuration-list-item-div {
+			table {
+				padding: 3px;
+				width: 100%;
+				border-bottom: 1px solid @control-color;
+			}
+
+			.configuration-name-td {
+				.tds ();
+			}
+
+			.configuration-status-td {
+				.status-tds;				
+				padding-right: 20px;
+			}
+
+			.configuration-last-run-date-td {
+				.tds ();
+				width: 150px;
+				text-align: right;					
+			}
+
+			.run-configuration-td {
+				.action-tds;
+			}
+
+			.edit-configuration-td {
+				.action-tds;
+			}
+
+			.hide-configuration-td {
+				.action-tds;
+			}
+		}
+	}
+}
+

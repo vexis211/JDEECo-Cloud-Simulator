@@ -7,9 +7,18 @@
 	</configSuffixes>
 	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
-		<config>src/main/resources/configuration/application-context.xml</config>
+		<config>src/main/resources/application-context.xml</config>
 	</configs>
 	<autoconfigs>
+		<config>src/main/resources/configuration/application-security.xml</config>
+		<config>src/main/resources/configuration/manager-context.xml</config>
+		<config>src/main/resources/configuration/application-tasks.xml</config>
+		<config>src/main/resources/configuration/application-view.xml</config>
+		<config>src/main/resources/configuration/mail-context.xml</config>
+		<config>src/main/resources/configuration/application-webmvc.xml</config>
+		<config>src/main/resources/configuration/hibernate-daos.xml</config>
+		<config>src/main/webapp/WEB-INF/jdeeco-simulator-servlet.xml</config>
+		<config>src/main/resources/configuration/hibernate-session.xml</config>
 	</autoconfigs>
 	<configSets>
 	</configSets>

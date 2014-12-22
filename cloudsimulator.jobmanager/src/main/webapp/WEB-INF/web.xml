@@ -14,7 +14,6 @@
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>
-    		classpath:configuration/manager-context.xml
 			classpath:configuration/hibernate-session.xml
 			classpath:configuration/hibernate-daos.xml
 			classpath:configuration/application-context.xml
