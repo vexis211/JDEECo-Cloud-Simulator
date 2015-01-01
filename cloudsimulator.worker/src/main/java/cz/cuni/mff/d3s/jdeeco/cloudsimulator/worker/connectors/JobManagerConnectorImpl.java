@@ -2,7 +2,6 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors;
 
 import java.io.Serializable;
 
-import javax.annotation.Resource;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
@@ -17,28 +16,29 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpd
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdate;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdateImpl;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.WorkerInfoProvider;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine.WorkerTaskQueue;
 
 public class JobManagerConnectorImpl implements JobManagerConnector {
 
 	private final String workerId;
-	
+
 	private boolean isConnected = false;
 	private Thread thread;
 
 	private String incomingQueue;
 	private String outgoingQueue;
 
-	@Resource
 	private WorkerTaskQueue workerTaskQueue;
-
-	@Resource
 	private JmsTemplate jmsTemplate;
 
-	public JobManagerConnectorImpl(String workerId) {
-		this.workerId = workerId;
+	public JobManagerConnectorImpl(WorkerTaskQueue workerTaskQueue, WorkerInfoProvider workerInfoProvider,
+			JmsTemplate jmsTemplate) {
+		this.workerId = workerInfoProvider.getWorkerId();
+		this.workerTaskQueue = workerTaskQueue;
+		this.jmsTemplate = jmsTemplate;
 	}
-	
+
 	@Override
 	public void connect() {
 		if (isConnected)
@@ -96,13 +96,13 @@ public class JobManagerConnectorImpl implements JobManagerConnector {
 	@Override
 	public void sendSimulationStatusUpdate(int simulationRunId, Exception e) {
 		SimulationStatusUpdate update = new SimulationStatusUpdateImpl(workerId, simulationRunId, e.getMessage());
-		sendUpdate(update);		
+		sendUpdate(update);
 	}
 
 	@Override
 	public void sendWorkerStatusUpdate(WorkerStatus status) {
 		WorkerStatusUpdate update = new WorkerStatusUpdateImpl(workerId, status);
-		sendUpdate(update);		
+		sendUpdate(update);
 	}
 
 	private void sendUpdate(JobManagerUpdate update) {

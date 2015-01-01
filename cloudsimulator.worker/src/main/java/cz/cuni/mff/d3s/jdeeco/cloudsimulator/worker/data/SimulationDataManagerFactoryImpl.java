@@ -10,13 +10,13 @@ public class SimulationDataManagerFactoryImpl implements SimulationDataManagerFa
 	private FutureExecutor futureExecutor;
 
 	@Resource
-	private SimulationDataRepository dataRepository;
+	private SimulationDataRepository simulationDataRepository;
 
 	@Override
 	public SimulationDataManager create(String dataParentDirectory, String logParentDirectory,
 			SimulationDataListener listener) {
 		SimulationDataManager manager = new SimulationDataManagerImpl(dataParentDirectory, logParentDirectory,
-				futureExecutor, dataRepository, listener);
+				futureExecutor, simulationDataRepository, listener);
 		return manager;
 	}
 }

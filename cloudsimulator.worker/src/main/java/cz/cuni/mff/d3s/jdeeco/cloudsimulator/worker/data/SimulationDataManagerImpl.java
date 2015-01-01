@@ -20,7 +20,7 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 
 	private String logParentDirectory;
 
-	private SimulationDataRepository dataRepository;
+	private SimulationDataRepository simulationDataRepository;
 
 	public SimulationDataManagerImpl(String dataParentDirectory, String logParentDirectory, FutureExecutor executor,
 			SimulationDataRepository dataRepository, SimulationDataListener listener) {
@@ -28,7 +28,7 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 		this.logParentDirectory = logParentDirectory;
 
 		this.executor = executor;
-		this.dataRepository = dataRepository;
+		this.simulationDataRepository = dataRepository;
 
 		this.listener = listener;
 	}
@@ -53,7 +53,7 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 		SimulationData preparedData = new SimulationDataImpl(executionPath, logPath);
 
 		try {
-			String templateDataDir = dataRepository.getData(sourceUri);
+			String templateDataDir = simulationDataRepository.getData(sourceUri);
 			Files.copy(Paths.get(templateDataDir), Paths.get(executionPath)); // TODO check if this copy correctly
 
 			listener.dataPrepared(simulationRunId, preparedData);
@@ -68,7 +68,7 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 	}
 
 	private void saveResultsCore(int simulationRunId, SimulationData data, String targetUri, String targetLogsUri) {
-		dataRepository.saveResults(data, targetUri, targetLogsUri);
+		simulationDataRepository.saveResults(data, targetUri, targetLogsUri);
 		listener.resultsSaved(simulationRunId);
 	}
 
