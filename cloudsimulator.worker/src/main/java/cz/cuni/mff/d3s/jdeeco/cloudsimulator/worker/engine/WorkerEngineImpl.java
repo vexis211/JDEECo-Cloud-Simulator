@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.ResetMachineTask;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.StopSimulationsTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.WorkerTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnector;
@@ -50,10 +50,10 @@ public class WorkerEngineImpl implements WorkerEngine {
 	private void processTask(WorkerTask task) {
 		
 		if (task instanceof RunSimulationTask) {
-			simulationManager.runSimulation();
+			simulationManager.runSimulation((RunSimulationTask)task);
 		}
-		else if (task instanceof ResetMachineTask) {
-			simulationManager.stopAndCleanSimulations();
+		else if (task instanceof StopSimulationsTask) {
+			simulationManager.stopSimulations();
 		}
 		else {
 			throw new UnknownWorkerTaskException("Unknown worker task: " + task);

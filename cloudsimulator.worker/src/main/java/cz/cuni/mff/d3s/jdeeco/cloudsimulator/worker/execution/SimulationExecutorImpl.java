@@ -16,6 +16,11 @@ public class SimulationExecutorImpl implements SimulationExecutor {
 	}
 
 	@Override
+	public SimulationExecutorParameters getParameters() {
+		return parameters;
+	}
+
+	@Override
 	public void start() {
 		ProcessBuilder processBuilder = new ProcessBuilder(parameters.getExecutionPath());
 		
@@ -33,7 +38,7 @@ public class SimulationExecutorImpl implements SimulationExecutor {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			listener.exceptionOccured(this);
+			listener.exceptionOccured(this, e);
 		}
 	}
 

@@ -70,6 +70,13 @@
 		</activation> </profile> </profiles> -->
 
 	<dependencies>
+		<!-- solution items -->
+		<dependency>
+			<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
+			<artifactId>cloudsimulator.common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	
 		<!-- Log4j - logging -->
 		<dependency>
 			<groupId>log4j</groupId>

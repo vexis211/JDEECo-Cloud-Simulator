@@ -1,23 +1,34 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationData;
+
 public class SimulationExecutorParametersImpl implements SimulationExecutorParameters {
 
-	private String executionPath;
-	private String logPath;
+	private SimulationData data;
+	private int simulationRunId;
 
-	public SimulationExecutorParametersImpl(String executionPath, String logPath) {
-		this.executionPath = executionPath;
-		this.logPath = logPath;
+	public SimulationExecutorParametersImpl(int simulationRunId, SimulationData data) {
+		this.simulationRunId = simulationRunId;
+		this.data = data;
 	}
-	
+
+	@Override
+	public int getSimulationRunId() {
+		return simulationRunId;
+	}
+
 	@Override
 	public String getExecutionPath() {
-		return executionPath;
+		return data.getExecutionPath();
 	}
 
 	@Override
 	public String getLogPath() {
-		return logPath;
+		return data.getLogPath();
 	}
 
+	@Override
+	public SimulationData getSimulationData() {
+		return data;
+	}
 }

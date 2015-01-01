@@ -9,12 +9,20 @@ import javax.jms.ObjectMessage;
 
 import org.springframework.jms.core.JmsTemplate;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.WorkerTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.JobManagerUpdate;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpdate;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpdateImpl;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdate;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdateImpl;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine.WorkerTaskQueue;
 
 public class JobManagerConnectorImpl implements JobManagerConnector {
 
+	private final String workerId;
+	
 	private boolean isConnected = false;
 	private Thread thread;
 
@@ -27,9 +35,14 @@ public class JobManagerConnectorImpl implements JobManagerConnector {
 	@Resource
 	private JmsTemplate jmsTemplate;
 
+	public JobManagerConnectorImpl(String workerId) {
+		this.workerId = workerId;
+	}
+	
 	@Override
 	public void connect() {
-		if (isConnected) return;
+		if (isConnected)
+			return;
 		this.isConnected = true;
 
 		Runnable listen = () -> this.listenToMessages();
@@ -58,8 +71,7 @@ public class JobManagerConnectorImpl implements JobManagerConnector {
 				if (data instanceof WorkerTask) {
 					workerTaskQueue.add((WorkerTask) data);
 				} else {
-					throw new RuntimeException("Incorrect message data (receiving only WorkerTask): "
-							+ data.toString());
+					throw new RuntimeException("Incorrect message data (receiving only WorkerTask): " + data.toString());
 				}
 			} catch (JMSException e) {
 				throw new RuntimeException("Error occured while getting data from message.", e);
@@ -75,11 +87,27 @@ public class JobManagerConnectorImpl implements JobManagerConnector {
 		this.isConnected = false;
 	}
 
+	@Override
+	public void sendSimulationStatusUpdate(int simulationRunId, SimulationStatus status) {
+		SimulationStatusUpdate update = new SimulationStatusUpdateImpl(workerId, simulationRunId, status);
+		sendUpdate(update);
+	}
 
 	@Override
-	public void sendUpdate(JobManagerUpdate update) {
+	public void sendSimulationStatusUpdate(int simulationRunId, Exception e) {
+		SimulationStatusUpdate update = new SimulationStatusUpdateImpl(workerId, simulationRunId, e.getMessage());
+		sendUpdate(update);		
+	}
+
+	@Override
+	public void sendWorkerStatusUpdate(WorkerStatus status) {
+		WorkerStatusUpdate update = new WorkerStatusUpdateImpl(workerId, status);
+		sendUpdate(update);		
+	}
+
+	private void sendUpdate(JobManagerUpdate update) {
 		jmsTemplate.convertAndSend(outgoingQueue, update);
-		
+
 	}
 
 	public void setIncomingQueue(String incomingQueue) {

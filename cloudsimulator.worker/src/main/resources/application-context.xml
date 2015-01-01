@@ -20,4 +20,8 @@
 
 	<bean id="workerEngine" class="cloudsimulator.worker.engine.WorkerEngineImpl" />
 
+	<bean id="threadPoolExecutor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.CustomThreadPoolExecutor">
+		<constructor-arg>3</constructor-arg>
+	</bean>
+
 </beans>

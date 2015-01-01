@@ -1,32 +1,41 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.FutureExecutor;
+
 public class AsyncSimulationExecutorDecorator implements SimulationExecutor {
 
-	private final SimulationExecutor executor;
-	private Thread thread;
-	private boolean isStarted;
+	private final SimulationExecutor simulationExecutor;
+	private Future<?> future;
+	private FutureExecutor futureExecutor;
 
-	public AsyncSimulationExecutorDecorator(SimulationExecutor executor) {
-		this.executor = executor;
+	public AsyncSimulationExecutorDecorator(SimulationExecutor simulationExecutor, FutureExecutor futureExecutor) {
+		this.simulationExecutor = simulationExecutor;
+		this.futureExecutor = futureExecutor;
 	}
 
+
+	@Override
+	public SimulationExecutorParameters getParameters() {
+		return simulationExecutor.getParameters();
+	}
+	
 	@Override
 	public void start() {
-		if (isStarted)
-			return;
-		this.isStarted = true;
+		if (future != null) return;
 
-		Runnable startInternalRunnable = () -> this.executor.start();
-		this.thread = new Thread(startInternalRunnable); // TODO thread pool
-		thread.start();
+		Runnable startInternalRunnable = () -> this.simulationExecutor.start();
+		this.future = this.futureExecutor.executeWithFuture(startInternalRunnable);
 	}
 
 	@Override
 	public void stop() {
-		executor.stop();
+		simulationExecutor.stop();
 		try {
-			thread.join();
-		} catch (InterruptedException e) {
+			future.get(); // wait for end
+		} catch (ExecutionException | InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

@@ -4,5 +4,5 @@ public interface ExecutionListener {
 	
 	void executionEnded(SimulationExecutor simulationExecutor);
 	void executionStopped(SimulationExecutor simulationExecutor);
-	void exceptionOccured(SimulationExecutor simulationExecutor);
+	void exceptionOccured(SimulationExecutor simulationExecutor, Exception e);
 }
