@@ -23,12 +23,12 @@
 
 			classpath:configuration/application-view.xml
 			classpath:configuration/mail-context.xml
-    		classpath:configuration/manager-context.xml
-			
+    		
 			/WEB-INF/jdeeco-simulator-servlet.xml
 		</param-value>
   </context-param>
-  
+  <!--  classpath:configuration/manager-context.xml
+			 -->
   <session-config>
     <session-timeout>60</session-timeout>
   </session-config>

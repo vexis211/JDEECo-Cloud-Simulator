@@ -28,10 +28,10 @@
 
 
 	<!-- lets create an embedded ActiveMQ Broker -->
-	<amq:broker xmlns="http://activemq.apache.org/schema/core" useJmx="false" persistent="false" start="true">
-		<transportConnectors>
-			<transportConnector uri="tcp://localhost:9876" />
-		</transportConnectors>
+	<amq:broker useJmx="false" persistent="false" start="true">
+		<amq:transportConnectors>
+			<amq:transportConnector uri="tcp://localhost:9876" />
+		</amq:transportConnectors>
 	</amq:broker>
 
 	<!-- ActiveMQ destinations to use -->

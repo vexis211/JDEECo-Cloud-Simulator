@@ -7,23 +7,20 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-import javax.annotation.Resource;
-
 public class SimulationDataRepositoryImpl implements SimulationDataRepository {
 
 	private final HashMap<String, String> simulationDataCache = new HashMap<>();
 
 	private final String dataParentDirectory;
 
-	@Resource
-	private SimulationDataLoader simulationDataLoader;
+	private final SimulationDataLoader simulationDataLoader;
+	private final SimulationDataArchiver simulationDataArchiver;
 
-	@Resource
-	private SimulationDataArchiver simulationDataArchiver;
-
-	
-	public SimulationDataRepositoryImpl(String dataParentDirectory) {
+	public SimulationDataRepositoryImpl(String dataParentDirectory, SimulationDataLoader simulationDataLoader,
+			SimulationDataArchiver simulationDataArchiver) {
 		this.dataParentDirectory = dataParentDirectory;
+		this.simulationDataLoader = simulationDataLoader;
+		this.simulationDataArchiver = simulationDataArchiver;
 	}
 
 	@Override

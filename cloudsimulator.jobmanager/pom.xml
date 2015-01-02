@@ -9,8 +9,8 @@
 
 	<parent>
 		<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
-		<artifactId>cloudsimulator.servers</artifactId>
-		<relativePath>../cloudsimulator.servers/pom.xml</relativePath>
+		<artifactId>cloudsimulator.servers.parent</artifactId>
+		<relativePath>../cloudsimulator.servers/serverParentPom.xml</relativePath>
 		<version>${project.version}</version>
 	</parent>
 
@@ -18,6 +18,11 @@
 		<war.name>jdeeco-simulator-jobmanager</war.name>
 
 		<!-- versions -->
+		<mysql-connector.version>5.1.33</mysql-connector.version>
+		<hibernate.version>4.3.6.Final</hibernate.version>
+		<hibernate-validator.version>5.1.2.Final</hibernate-validator.version>
+		<commons-dbcp.version>1.4</commons-dbcp.version>
+		
 		<javax-servlet.version>2.5</javax-servlet.version>
 		<javax-servlet-jsp.version>2.3.1</javax-servlet-jsp.version>
 		<javax-servlet-jstl.version>1.2</javax-servlet-jstl.version>
@@ -206,6 +211,45 @@
 		</activation> </profile> </profiles> -->
 
 	<dependencies>
+		<!-- Hibernate library -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-validator.version}</version>
+		</dependency>
+
+		<!-- MySQL driver connector library -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-connector.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>${commons-dbcp.version}</version>
+		</dependency>
+		<!-- Spring ORM -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 
 		<!-- Servlet -->
 		<dependency>
@@ -314,11 +358,6 @@
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<version>${javax-validation.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.scala-lang</groupId>
-			<artifactId>scala-library</artifactId>
-			<version>2.10.4</version>
 		</dependency>
 	</dependencies>
 

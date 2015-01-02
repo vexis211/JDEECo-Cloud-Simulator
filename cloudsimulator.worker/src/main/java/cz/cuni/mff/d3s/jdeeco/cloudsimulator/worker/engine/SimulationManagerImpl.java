@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.PathEx;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnector;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationData;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataListener;
@@ -23,20 +21,20 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution.SimulationExecutor
 
 public class SimulationManagerImpl implements SimulationManager, ExecutionListener, SimulationDataListener {
 
-	@Resource
-	private JobManagerConnector jobManagerConnector;
-
-	@Resource
-	private SimulationDataManagerFactory simulationDataManagerFactory;
-
-	@Resource
-	private SimulationExecutorFactory simulationExecutorFactory;
+	private final JobManagerConnector jobManagerConnector;
+	private final SimulationExecutorFactory simulationExecutorFactory;
 
 	private final SimulationDataManager simulationDataManager;
 	private final HashMap<Integer, RunSimulationTask> incompleteTasks = new HashMap<Integer, RunSimulationTask>();
 	private final List<SimulationExecutor> runningExecutors = new ArrayList<SimulationExecutor>();
 
-	public SimulationManagerImpl(String executionParentDirectory) {
+	public SimulationManagerImpl(String executionParentDirectory, JobManagerConnector jobManagerConnector,
+			SimulationDataManagerFactory simulationDataManagerFactory,
+			SimulationExecutorFactory simulationExecutorFactory) {
+
+		this.jobManagerConnector = jobManagerConnector;
+		this.simulationExecutorFactory = simulationExecutorFactory;
+
 		this.simulationDataManager = simulationDataManagerFactory.create(
 				PathEx.combine(executionParentDirectory, "data"), PathEx.combine(executionParentDirectory, "logs"),
 				this);
@@ -76,7 +74,8 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 		SimulationExecutorParameters parameters = simulationExecutor.getParameters();
 		RunSimulationTask task = incompleteTasks.get(parameters.getSimulationRunId());
 
-		simulationDataManager.saveResults(parameters.getSimulationRunId(), parameters.getSimulationData(), task.getResultsUri(), task.getLogFileUri());
+		simulationDataManager.saveResults(parameters.getSimulationRunId(), parameters.getSimulationData(),
+				task.getResultsUri(), task.getLogFileUri());
 		removeExecutor(simulationExecutor);
 	}
 

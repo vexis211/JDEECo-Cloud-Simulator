@@ -3,6 +3,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:amq="http://activemq.apache.org/schema/core"
 	xsi:schemaLocation="
 	    http://www.springframework.org/schema/beans
 	    http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -11,7 +12,9 @@
 		http://www.springframework.org/schema/context 
 		http://www.springframework.org/schema/context/spring-context-4.1.xsd
 		http://www.springframework.org/schema/tx
-		http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+		http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		http://activemq.apache.org/schema/core
+		http://activemq.apache.org/schema/core/activemq-core-5.10.0.xsd">
 
 	<!-- Properties in Spring configuration files -->
 	<context:property-placeholder location="classpath:properties/profile.properties" />
@@ -22,20 +25,14 @@
 
 	<bean id="jobManagerConnector" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnectorImpl" />
 	<bean id="workerInfoProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.WorkerInfoProviderImpl" />
-	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate" />
-
 
 	<bean id="simulationDataManagerFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataManagerFactoryImpl" />
 	<bean id="simulationManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine.SimulationManagerImpl">
-		<constructor-arg>
-			${simulation.executionParentDirectory}
-		</constructor-arg>
+		<constructor-arg name="executionParentDirectory" value="${simulation.executionParentDirectory}" />
 	</bean>
 
 	<bean id="simulationDataRepository" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataRepositoryImpl">
-		<constructor-arg>
-			${simulation.dataParentDirectory}
-		</constructor-arg>
+		<constructor-arg name="dataParentDirectory" value="${simulation.dataParentDirectory}" />
 	</bean>
 	<bean id="simulationDataLoader" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataLoaderImpl" />
 	<bean id="simulationDataArchiver" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataArchiverImpl" />
@@ -44,8 +41,33 @@
 
 
 	<bean id="futureExecutor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.CustomThreadPoolExecutor">
-		<constructor-arg>
-			${threadPool.coreSize}
-		</constructor-arg>
+		<constructor-arg name="corePoolSize" value="${threadPool.coreSize}" />
 	</bean>
+
+
+
+	<!-- lets create an embedded ActiveMQ Broker -->
+	<amq:broker useJmx="false" persistent="false" start="true">
+		<amq:transportConnectors>
+			<amq:transportConnector uri="tcp://localhost:9876" />
+		</amq:transportConnectors>
+	</amq:broker>
+
+	<!-- ActiveMQ destinations to use -->
+	<amq:queue id="destination" physicalName="org.apache.activemq.spring.Test.spring.embedded" />
+
+	<!-- JMS ConnectionFactory to use, configuring the embedded broker using XML -->
+	<amq:connectionFactory id="jmsFactory" brokerURL="vm://transport" />
+
+	<!-- Spring JMS Template -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory">
+			<!-- lets wrap in a pool to avoid creating a connection per send -->
+			<bean class="org.springframework.jms.connection.CachingConnectionFactory">
+				<property name="targetConnectionFactory" ref="jmsFactory" />
+			</bean>
+		</property>
+	</bean>
+
+
 </beans>
