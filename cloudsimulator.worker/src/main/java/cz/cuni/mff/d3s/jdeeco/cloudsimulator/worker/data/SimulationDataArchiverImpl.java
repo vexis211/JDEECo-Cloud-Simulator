@@ -1,27 +1,22 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.ZipHelper;
 
 public class SimulationDataArchiverImpl implements SimulationDataArchiver {
 
 	@Override
-	public void extract(InputStream archiveStream, String targetDir) {
-		ZipInputStream zipStream = new ZipInputStream(archiveStream);
-//		zipStream.
-		
-		 // TODO implement
+	public void extract(InputStream archiveStream, String targetDir) throws IOException {
+		ZipHelper.unzip(archiveStream, new File(targetDir));
 	}
 
 	@Override
-	public OutputStream compress(String sourceDir) {
-		InputStream outputStream = null; // TODO implement
-//		ZipOutputStream zipStream = new ZipOutputStream(outputStream);
-		
-		
-		return null;
+	public void compress(String sourcePath, OutputStream outputStream) throws IOException {
+		ZipHelper.zipRecursively(new File(sourcePath), outputStream);
 	}
 
 }

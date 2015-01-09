@@ -20,10 +20,13 @@
 		<aspectj.version>1.8.2</aspectj.version>
 		<log4j.version>1.2.17</log4j.version>
 		<slf4j.version>1.7.7</slf4j.version>
+		<commons-io.version>2.4</commons-io.version>
 
 		<junit.version>4.12</junit.version>
 
 		<activemq.version>5.10.0</activemq.version>
+
+		<openstack4j.version>2.0.0</openstack4j.version>
 	</properties>
 
 	<url>http://maven.apache.org</url>
@@ -32,6 +35,13 @@
 		</activation> </profile> </profiles> -->
 
 	<dependencies>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+
+
 		<!-- Log4j - logging -->
 		<dependency>
 			<groupId>log4j</groupId>
@@ -98,7 +108,27 @@
 			<artifactId>activemq-broker</artifactId>
 			<version>${activemq.version}</version>
 		</dependency>
+
+		<!-- OpenStack -->
+		<dependency>
+			<groupId>org.pacesys</groupId>
+			<artifactId>openstack4j</artifactId>
+			<version>${openstack4j.version}</version>
+			<classifier>withdeps</classifier>
+		</dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
 

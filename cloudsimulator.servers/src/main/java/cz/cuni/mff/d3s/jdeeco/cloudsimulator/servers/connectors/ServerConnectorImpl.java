@@ -14,14 +14,12 @@ public abstract class ServerConnectorImpl implements ServerConnector {
 	private Thread thread;
 
 	private final String incomingQueue;
-	private final String outgoingQueuePrefix;
 
 	protected final JmsTemplate jmsTemplate;
 
-	protected ServerConnectorImpl(JmsTemplate jmsTemplate, String incomingQueue, String outgoingQueuePrefix) {
+	protected ServerConnectorImpl(JmsTemplate jmsTemplate, String incomingQueue) {
 		this.jmsTemplate = jmsTemplate;
 		this.incomingQueue = incomingQueue;
-		this.outgoingQueuePrefix = outgoingQueuePrefix;
 	}
 
 	@Override
@@ -64,8 +62,8 @@ public abstract class ServerConnectorImpl implements ServerConnector {
 
 	protected abstract void processIncomingMessageData(Serializable data);
 
-	protected void sendMessage(String workerId, Serializable data) {
-		jmsTemplate.convertAndSend(outgoingQueuePrefix + workerId, data);
+	protected void sendMessage(String outgoingQueue, Serializable data) {
+		jmsTemplate.convertAndSend(outgoingQueue, data);
 	}
 
 	@Override

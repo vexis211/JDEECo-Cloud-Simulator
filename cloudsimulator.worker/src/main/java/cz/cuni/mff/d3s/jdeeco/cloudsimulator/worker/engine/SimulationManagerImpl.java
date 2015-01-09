@@ -47,7 +47,7 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 		synchronized (incompleteTasks) {
 			incompleteTasks.put(task.getSimulationRunId(), task);
 		}
-		simulationDataManager.prepareData(task.getSimulationRunId(), task.getDataUri());
+		simulationDataManager.prepareData(task.getSimulationRunId(), task.getDataSource());
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 		RunSimulationTask task = incompleteTasks.get(parameters.getSimulationRunId());
 
 		simulationDataManager.saveResults(parameters.getSimulationRunId(), parameters.getSimulationData(),
-				task.getResultsUri(), task.getLogFileUri());
+				task.getResultsTarget(), task.getLogsTarget());
 		removeExecutor(simulationExecutor);
 	}
 

@@ -11,11 +11,14 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.JobManagerUpdate;
 
 public class WorkerConnectorImpl extends ServerConnectorImpl implements WorkerConnector {
 
-	private JobManagerUpdateQueue jobManagerUpdateQueue;
+	private final JobManagerUpdateQueue jobManagerUpdateQueue;
+	private final String outgoingQueuePrefix;
 
 	protected WorkerConnectorImpl(JmsTemplate jmsTemplate, String incomingQueue, String outgoingQueuePrefix,
 			JobManagerUpdateQueue jobManagerUpdateQueue) {
-		super(jmsTemplate, incomingQueue, outgoingQueuePrefix);
+		super(jmsTemplate, incomingQueue);
+		
+		this.outgoingQueuePrefix = outgoingQueuePrefix;
 		this.jobManagerUpdateQueue = jobManagerUpdateQueue;
 	}
 
@@ -30,6 +33,6 @@ public class WorkerConnectorImpl extends ServerConnectorImpl implements WorkerCo
 
 	@Override
 	public void sendTask(String workerId, WorkerTask task) {
-		sendMessage(workerId, task);
+		sendMessage(outgoingQueuePrefix + workerId, task);
 	}
 }

@@ -1,3 +1,4 @@
+
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;

@@ -1,11 +1,12 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
+
+import org.apache.commons.io.FileUtils;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.PathEx;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.FutureExecutor;
@@ -42,19 +43,19 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 	}
 
 	@Override
-	public void prepareData(int simulationRunId, String sourceUri) {
-		startFuture(() -> prepareDataCore(simulationRunId, sourceUri));
+	public void prepareData(int simulationRunId, String source) {
+		startFuture(() -> prepareDataCore(simulationRunId, source));
 	}
 
-	private void prepareDataCore(int simulationRunId, String sourceUri) {
+	private void prepareDataCore(int simulationRunId, String source) {
 
 		String executionPath = PathEx.combine(dataParentDirectory, simulationRunId);
 		String logPath = PathEx.combine(logParentDirectory, simulationRunId);
 		SimulationData preparedData = new SimulationDataImpl(executionPath, logPath);
 
 		try {
-			String templateDataDir = simulationDataRepository.getData(sourceUri);
-			Files.copy(Paths.get(templateDataDir), Paths.get(executionPath)); // TODO check if this copy correctly
+			String templateDataDir = simulationDataRepository.getData(source);
+			FileUtils.copyDirectory(new File(templateDataDir), new File(executionPath));
 
 			listener.dataPrepared(simulationRunId, preparedData);
 		} catch (IOException e) {
@@ -63,12 +64,12 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 	}
 
 	@Override
-	public void saveResults(int simulationRunId, SimulationData data, String targetUri, String targetLogsUri) {
-		startFuture(() -> saveResultsCore(simulationRunId, data, targetUri, targetLogsUri));
+	public void saveResults(int simulationRunId, SimulationData data, String resultsTarget, String logsTarget) {
+		startFuture(() -> saveResultsCore(simulationRunId, data, resultsTarget, logsTarget));
 	}
 
-	private void saveResultsCore(int simulationRunId, SimulationData data, String targetUri, String targetLogsUri) {
-		simulationDataRepository.saveResults(data, targetUri, targetLogsUri);
+	private void saveResultsCore(int simulationRunId, SimulationData data, String resultsTarget, String logsTarget) {
+		simulationDataRepository.saveResults(data, resultsTarget, logsTarget);
 		listener.resultsSaved(simulationRunId);
 	}
 

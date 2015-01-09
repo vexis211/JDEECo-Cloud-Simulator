@@ -1,11 +1,14 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class SimulationDataRepositoryImpl implements SimulationDataRepository {
 
@@ -24,31 +27,54 @@ public class SimulationDataRepositoryImpl implements SimulationDataRepository {
 	}
 
 	@Override
-	public String getData(String sourceUri) {
-		if (simulationDataCache.containsKey(sourceUri))
-			return simulationDataCache.get(sourceUri);
+	public String getData(String source) {
+		if (simulationDataCache.containsKey(source))
+			return simulationDataCache.get(source);
 
-		InputStream archiveStream = simulationDataLoader.download(sourceUri);
+		String dataPath = generateDataPath();
 
-		String dataPath = generateDataPath(sourceUri);
-		simulationDataArchiver.extract(archiveStream, dataPath);
+		try (InputStream archiveStream = simulationDataLoader.download(source)) {
+			simulationDataArchiver.extract(archiveStream, dataPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-		simulationDataCache.put(sourceUri, dataPath);
+		simulationDataCache.put(source, dataPath);
 		return dataPath;
 	}
 
-	private String generateDataPath(String sourceUri) {
-		return dataParentDirectory + "//" + ""; // TODO generate GUID!!!
+	private String generateDataPath() {
+		return dataParentDirectory + "//" + UUID.randomUUID();
 	}
 
 	@Override
-	public void saveResults(SimulationData data, String targetUri, String targetLogsUri) {
+	public void saveResults(SimulationData data, String resultsTarget, String logsTarget) {
 		// results
-		OutputStream resultsArchiveStream = simulationDataArchiver.compress(data.getExecutionPath());
-		simulationDataLoader.upload(resultsArchiveStream, targetUri);
+		try {
+			uploaResults(data, resultsTarget);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		// logs
-		simulationDataLoader.upload(data.getLogPath(), targetLogsUri);
+		simulationDataLoader.upload(data.getLogPath(), logsTarget);
+	}
+
+	private void uploaResults(SimulationData data, String target) throws IOException {
+		// create a temporary file.
+		File tempZipFile = File.createTempFile("simulationResults", ".zip");
+
+		try (OutputStream outputStream = new FileOutputStream(tempZipFile)) {
+			simulationDataArchiver.compress(data.getExecutionPath(), outputStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		simulationDataLoader.upload(tempZipFile.getAbsolutePath(), target);
+		
+		// delete temporary file when you finish to use it.
+		// if streams where not correctly closed this might fail (return false)
+		tempZipFile.delete();
 	}
 
 	@Override

@@ -5,15 +5,15 @@ public class RunSimulationTaskImpl extends WorkerTaskImpl implements RunSimulati
 	private static final long serialVersionUID = -956877781050491072L;
 
 	private final int simulationRunId;
-	private final String dataUri;
-	private final String logFileUri;
-	private final String resultsUri;
+	private final String dataSource;
+	private final String logsTarget;
+	private final String resultsTarget;
 
-	public RunSimulationTaskImpl(int simulationRunId, String dataUri, String logFileUri, String resultsUri) {
+	public RunSimulationTaskImpl(int simulationRunId, String dataSource, String logsTarget, String resultsTarget) {
 		this.simulationRunId = simulationRunId;
-		this.dataUri = dataUri;
-		this.logFileUri = logFileUri;
-		this.resultsUri = resultsUri;
+		this.dataSource = dataSource;
+		this.logsTarget = logsTarget;
+		this.resultsTarget = resultsTarget;
 	}
 
 	@Override
@@ -22,17 +22,17 @@ public class RunSimulationTaskImpl extends WorkerTaskImpl implements RunSimulati
 	}
 
 	@Override
-	public String getDataUri() {
-		return dataUri;
+	public String getDataSource() {
+		return dataSource;
 	}
 
 	@Override
-	public String getLogFileUri() {
-		return logFileUri;
+	public String getLogsTarget() {
+		return logsTarget;
 	}
 
 	@Override
-	public String getResultsUri() {
-		return resultsUri;
+	public String getResultsTarget() {
+		return resultsTarget;
 	}
 }

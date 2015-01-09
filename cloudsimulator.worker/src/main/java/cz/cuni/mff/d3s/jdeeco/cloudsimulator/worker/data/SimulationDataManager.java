@@ -5,7 +5,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.Disposable;
 
 public interface SimulationDataManager extends Disposable {
 
-	void prepareData(int simulationRunId, String sourceUri);
+	void prepareData(int simulationRunId, String source);
 	
-	void saveResults(int simulationRunId, SimulationData data, String targetUri, String targetLogsUri);
+	void saveResults(int simulationRunId, SimulationData data, String resultsTarget, String logsTarget);
 }
