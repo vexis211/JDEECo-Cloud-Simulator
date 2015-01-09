@@ -17,39 +17,69 @@
 		http://activemq.apache.org/schema/core/activemq-core-5.10.0.xsd">
 
 	<!-- Properties in Spring configuration files -->
-	<context:property-placeholder location="classpath:properties/profile.properties" />
+	<context:property-placeholder location="classpath:profile.properties" />
 
 
-	<bean id="workerEngine" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine.WorkerEngineImpl" />
+	<bean id="workerEngine" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine.WorkerEngineImpl">
+		<constructor-arg name="jobManagerConnector" ref="jobManagerConnector" />
+		<constructor-arg name="simulationManager" ref="simulationManager" />
+		<constructor-arg name="workerTaskQueue" ref="workerTaskQueue" />
+	</bean>
 	<bean id="workerTaskQueue" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine.WorkerTaskQueue" />
 
-	<bean id="jobManagerConnector" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnectorImpl" />
+	<bean id="jobManagerConnector" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnectorImpl">
+		<constructor-arg name="jmsTemplate" ref="jmsTemplate" />
+		<constructor-arg name="workerInfoProvider" ref="workerInfoProvider" />
+		<constructor-arg name="workerTaskQueue" ref="workerTaskQueue" />
+		<constructor-arg name="incomingQueuePrefix" value="${jms.incomingQueuePrefix}" />
+		<constructor-arg name="outgoingQueue" value="${jms.outgoingQueue}" />
+	</bean>
 	<bean id="workerInfoProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.WorkerInfoProviderImpl" />
 
-	<bean id="simulationDataManagerFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataManagerFactoryImpl" />
+	<bean id="simulationDataManagerFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataManagerFactoryImpl">
+		<constructor-arg name="futureExecutor" ref="futureExecutor" />
+		<constructor-arg name="simulationDataRepository" ref="simulationDataRepository" />
+	</bean>
+
 	<bean id="simulationManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine.SimulationManagerImpl">
+		<constructor-arg name="jobManagerConnector" ref="jobManagerConnector" />
+		<constructor-arg name="simulationDataManagerFactory" ref="simulationDataManagerFactory" />
+		<constructor-arg name="simulationExecutorFactory" ref="simulationExecutorFactory" />
 		<constructor-arg name="executionParentDirectory" value="${simulation.executionParentDirectory}" />
 	</bean>
 
 	<bean id="simulationDataRepository" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataRepositoryImpl">
+		<constructor-arg name="simulationDataLoader" ref="simulationDataLoader" />
+		<constructor-arg name="simulationDataArchiver" ref="simulationDataArchiver" />
 		<constructor-arg name="dataParentDirectory" value="${simulation.dataParentDirectory}" />
 	</bean>
-	<bean id="simulationDataLoader" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataLoaderImpl" />
+	<bean id="simulationDataLoader" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataLoaderImpl">
+		<constructor-arg name="openStackConnector" ref="openStackConnector" />
+		<constructor-arg name="dataContainerName" value="${openStack.storage.dataContainerName}" />
+		<constructor-arg name="resultsContainerName" value="${openStack.storage.resultsContainerName}" />
+		<constructor-arg name="logsContainerName" value="${openStack.storage.logsContainerName}" />
+	</bean>
+	<bean id="openStackConnector" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.openstack.OpenStackConnectorImpl">
+		<constructor-arg name="endpoint" value="${openStack.connect.endpoint}" />
+		<constructor-arg name="domainName" value="${openStack.connect.domainName}" />
+		<constructor-arg name="user" value="${openStack.connect.user}" />
+		<constructor-arg name="password" value="${openStack.connect.password}" />
+	</bean>
 	<bean id="simulationDataArchiver" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataArchiverImpl" />
 
-	<bean id="simulationExecutorFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution.AsyncSimulationExecutorFactory" />
-
+	<bean id="simulationExecutorFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution.AsyncSimulationExecutorFactory">
+		<constructor-arg name="futureExecutor" ref="futureExecutor" />
+	</bean>
 
 	<bean id="futureExecutor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.CustomThreadPoolExecutor">
 		<constructor-arg name="corePoolSize" value="${threadPool.coreSize}" />
 	</bean>
 
 
-
 	<!-- lets create an embedded ActiveMQ Broker -->
 	<amq:broker useJmx="false" persistent="false" start="true">
 		<amq:transportConnectors>
-			<amq:transportConnector uri="tcp://localhost:9876" />
+			<amq:transportConnector uri="${jms.brokerUri}" />
 		</amq:transportConnectors>
 	</amq:broker>
 
@@ -68,6 +98,5 @@
 			</bean>
 		</property>
 	</bean>
-
 
 </beans>

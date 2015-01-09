@@ -12,11 +12,4 @@
 		<relativePath>../cloudsimulator.servers/serverParentPom.xml</relativePath>
 		<version>${project.version}</version>
 	</parent>
-	<dependencies>
-		<dependency>
-			<groupId>org.neo4j</groupId>
-			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
-			<version>2.1.5</version>
-		</dependency>
-	</dependencies>
 </project>

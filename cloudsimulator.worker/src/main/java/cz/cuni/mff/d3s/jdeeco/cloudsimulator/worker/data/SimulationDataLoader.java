@@ -4,5 +4,6 @@ import java.io.InputStream;
 
 public interface SimulationDataLoader {
 	InputStream download(String source);
-	void upload(String sourceUri, String target);
+	void uploadLogs(String sourcePath, String target);
+	void uploadResults(String sourcePath, String target);
 }

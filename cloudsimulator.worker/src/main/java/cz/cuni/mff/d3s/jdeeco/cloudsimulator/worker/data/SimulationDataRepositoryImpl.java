@@ -51,16 +51,16 @@ public class SimulationDataRepositoryImpl implements SimulationDataRepository {
 	public void saveResults(SimulationData data, String resultsTarget, String logsTarget) {
 		// results
 		try {
-			uploaResults(data, resultsTarget);
+			saveResultsInternal(data, resultsTarget);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		// logs
-		simulationDataLoader.upload(data.getLogPath(), logsTarget);
+		simulationDataLoader.uploadLogs(data.getLogPath(), logsTarget);
 	}
 
-	private void uploaResults(SimulationData data, String target) throws IOException {
+	private void saveResultsInternal(SimulationData data, String target) throws IOException {
 		// create a temporary file.
 		File tempZipFile = File.createTempFile("simulationResults", ".zip");
 
@@ -70,7 +70,7 @@ public class SimulationDataRepositoryImpl implements SimulationDataRepository {
 			e.printStackTrace();
 		}
 		
-		simulationDataLoader.upload(tempZipFile.getAbsolutePath(), target);
+		simulationDataLoader.uploadResults(tempZipFile.getAbsolutePath(), target);
 		
 		// delete temporary file when you finish to use it.
 		// if streams where not correctly closed this might fail (return false)
