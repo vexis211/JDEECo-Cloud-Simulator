@@ -87,7 +87,7 @@
 	<amq:queue id="destination" physicalName="org.apache.activemq.spring.Test.spring.embedded" />
 
 	<!-- JMS ConnectionFactory to use, configuring the embedded broker using XML -->
-	<amq:connectionFactory id="jmsFactory" brokerURL="vm://transport" />
+	<amq:connectionFactory id="jmsFactory" brokerURL="${jms.brokerUri}" />
 
 	<!-- Spring JMS Template -->
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
