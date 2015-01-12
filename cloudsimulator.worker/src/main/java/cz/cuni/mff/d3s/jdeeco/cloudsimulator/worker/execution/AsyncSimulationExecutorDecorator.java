@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.FutureExecutor;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
 
 public class AsyncSimulationExecutorDecorator implements SimulationExecutor {
 

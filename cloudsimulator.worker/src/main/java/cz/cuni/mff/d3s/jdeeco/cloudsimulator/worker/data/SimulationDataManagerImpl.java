@@ -9,7 +9,7 @@ import java.util.concurrent.Future;
 import org.apache.commons.io.FileUtils;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.PathEx;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.FutureExecutor;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
 
 public class SimulationDataManagerImpl implements SimulationDataManager {
 

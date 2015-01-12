@@ -30,5 +30,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="/cloudsimulator.servers"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/cloudsimulator.common"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

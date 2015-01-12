@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cloudsimulator.jobmanager</artifactId>
 	<name>cloudsimulator.jobmanager</name>
@@ -22,7 +22,7 @@
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<hibernate-validator.version>5.1.2.Final</hibernate-validator.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
-		
+
 		<javax-servlet.version>2.5</javax-servlet.version>
 		<javax-servlet-jsp.version>2.3.1</javax-servlet-jsp.version>
 		<javax-servlet-jstl.version>1.2</javax-servlet-jstl.version>
@@ -34,8 +34,10 @@
 		<javax.version>1.4.7</javax.version>
 		<javax-validation.version>1.1.0.Final</javax-validation.version>
 
+		<jgit.version>3.6.0.201412230720-r</jgit.version>
+		<maven-invoker.version>2.1.1</maven-invoker.version>
 		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
-		
+
 	</properties>
 
 	<scm>
@@ -100,12 +102,11 @@
 						<phase>compile</phase>
 						<configuration>
 							<tasks>
-								<!-- Generate property file build.properties with buildNumber, buildTimestamp 
+								<!-- Generate property file build.properties with buildNumber, buildTimestamp
 									and revision parameters. Revision is set from changeSet parameter from buildnumber-maven-plugin. -->
 								<!-- <echo file="src/main/resources/properties/build.properties">build.buildNumber=${timestamp}${line.separator}</echo> -->
 								<echo file="src/main/resources/properties/build.properties">build.buildTimestamp=${timestamp}${line.separator}</echo>
-								<echo file="src/main/resources/properties/build.properties"
-									append="true">build.revision=${changeSet}</echo>
+								<echo file="src/main/resources/properties/build.properties" append="true">build.revision=${changeSet}</echo>
 
 								<copy todir="target/classes">
 									<fileset dir="src/main/resources">
@@ -152,7 +153,7 @@
 
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -173,14 +174,14 @@
 									</pluginExecutionFilter>
 									<action>
 										<execute>
-											<!-- Do not run on incremental builds - makes build cycle when 
-												on every change build.properties is generated. This also trigger change event 
+											<!-- Do not run on incremental builds - makes build cycle when
+												on every change build.properties is generated. This also trigger change event
 												and starts build again which generates build.properties... -->
 											<runOnIncremental>false</runOnIncremental>
 										</execute>
 									</action>
 								</pluginExecution>
-								<!-- Allow executing of buildnumber plugin from eclipse (default 
+								<!-- Allow executing of buildnumber plugin from eclipse (default
 									is no). -->
 								<pluginExecution>
 									<pluginExecutionFilter>
@@ -207,7 +208,7 @@
 
 	<url>http://maven.apache.org</url>
 
-	<!-- <profiles> <profile> <id>development</id> <activation> <activeByDefault>true</activeByDefault> 
+	<!-- <profiles> <profile> <id>development</id> <activation> <activeByDefault>true</activeByDefault>
 		</activation> </profile> </profiles> -->
 
 	<dependencies>
@@ -359,6 +360,21 @@
 			<artifactId>validation-api</artifactId>
 			<version>${javax-validation.version}</version>
 		</dependency>
+
+		<!-- Git -->
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<version>${jgit.version}</version>
+		</dependency>
+
+		<!-- Maven -->
+		<dependency>
+			<groupId>org.apache.maven.shared</groupId>
+			<artifactId>maven-invoker</artifactId>
+			<version>${maven-invoker.version}</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

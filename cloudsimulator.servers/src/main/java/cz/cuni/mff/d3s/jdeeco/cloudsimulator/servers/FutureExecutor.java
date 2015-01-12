@@ -1,4 +1,4 @@
-package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker;
+package cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;

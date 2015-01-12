@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.FutureExecutor;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
 
 public class SimulationDataManagerFactoryImpl implements SimulationDataManagerFactory {
 

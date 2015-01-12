@@ -16,6 +16,12 @@ public class ZipHelper {
 
 	private static final int BUFFER_SIZE = 4096;
 
+	public static void zipRecursively(File srcFile, File targetFile) throws IOException {
+		try (FileOutputStream fileOutputStream = new FileOutputStream(targetFile)) {
+			zipRecursively(srcFile, fileOutputStream);
+		}
+	}
+	
 	public static void zipRecursively(File srcFile, OutputStream outputStream) throws IOException {
 		try (ZipOutputStream zipStream = new ZipOutputStream(outputStream)) {
 			addFileToZipRecursively(srcFile, zipStream, "");
