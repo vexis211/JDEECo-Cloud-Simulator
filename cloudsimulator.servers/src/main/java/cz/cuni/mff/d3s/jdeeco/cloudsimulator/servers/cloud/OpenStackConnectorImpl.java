@@ -8,17 +8,17 @@ public class OpenStackConnectorImpl implements OpenStackConnector {
 	private final String endpoint;
 	private final String user;
 	private final String password;
-	private final String domainName;
+	private final String tenantName;
 
-	public OpenStackConnectorImpl(String endpoint, String user, String password, String domainName) {
+	public OpenStackConnectorImpl(String endpoint, String user, String password, String tenantName) {
 		this.endpoint = endpoint;
 		this.user = user;
 		this.password = password;
-		this.domainName = domainName;
+		this.tenantName = tenantName;
 	}
 
 	public OSClient connect() {
-		OSClient os = OSFactory.builderV3().endpoint(endpoint).credentials(user, password).domainName(domainName)
+		OSClient os = OSFactory.builder().endpoint(endpoint).credentials(user, password).tenantName(tenantName)
 				.authenticate();
 		return os;
 	}
