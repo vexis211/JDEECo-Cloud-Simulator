@@ -4,7 +4,7 @@ Init.call_me_when_ready(function () {
 		// Check ajax responses for session timeout
 		dataFilter: function (data, type) {
 	       	if (data.indexOf('login-form-page') != -1) {
-	       		// TODO: use variable here
+	       		// TODO improvement - use variable here
 	    		location.href=getAppNs().config.siteRoot + "/client/login";
 	    		return false;
 	        }
@@ -49,7 +49,7 @@ Init.call_me_when_ready(function () {
 
 	// Autologout widget currently does not support container.
 	// It will after dialog design changes.
-	// TODO If design wont change rename to AutologoutManager.
+	// TODO improvement - If design wont change rename to AutologoutManager.
 	var autologoutWidget = new mainWidgetsNs.AutologoutWidget();
 	autologoutWidget.setEventManager(getAppNs());
 	autologoutWidget.init();

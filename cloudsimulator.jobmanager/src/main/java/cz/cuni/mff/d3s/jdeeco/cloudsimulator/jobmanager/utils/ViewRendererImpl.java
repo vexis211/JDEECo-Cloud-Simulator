@@ -18,7 +18,7 @@ public class ViewRendererImpl implements ViewRenderer {
 	@Override
 	public String render(String viewName, Map<String, Object> params)
 			throws Exception {
-		View view = resolver.resolveViewName(viewName, Locale.ENGLISH); // TODO localization
+		View view = resolver.resolveViewName(viewName, Locale.ENGLISH); // TODO improvement - localization
 		ResponseCatcher response = new ResponseCatcher(new MockHttpServletResponse());
 		view.render(params, new MockHttpServletRequest(), response);
 		String data = response.getOutput();

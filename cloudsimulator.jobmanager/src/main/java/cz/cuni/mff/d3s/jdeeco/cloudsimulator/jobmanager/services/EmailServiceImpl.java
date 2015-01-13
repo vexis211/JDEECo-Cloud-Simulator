@@ -43,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
 		Map<String, Object> params = prepareGeneralParams();
 		params.put("email", user.getEmail());
 		params.put(ACTIVATEACCOUNT_IDENT + "Link", createAccountActivationLink(activationCode));
-		String subject = "Account activation!"; // TODO localize
+		String subject = "Account activation!"; // TODO improvement - localization
 
 		ExtendedMimeMessagePreparator msg = emailPreparator.prepareMessage(user.getEmail(), subject,
 				ACTIVATEACCOUNT_IDENT, params);
@@ -51,7 +51,7 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	/**
-	 * Generates link for logging into unactivated registered account and activating it immediatelly.
+	 * Generates link for logging into unactivated registered account and activating it immediately.
 	 *
 	 * @param activationCode
 	 *            Activation login code.
@@ -69,7 +69,7 @@ public class EmailServiceImpl implements EmailService {
 		Map<String, Object> params = prepareGeneralParams();
 		params.put("email", user.getEmail());
 		params.put(RESETPASSWORD_IDENT + "Link", createResetPasswordLink(resetPasswordCode));
-		String subject = "Reset password!"; // TODO localize
+		String subject = "Reset password!"; // TODO improvement - localize
 
 		ExtendedMimeMessagePreparator msg = emailPreparator.prepareMessage(user.getEmail(), subject,
 				RESETPASSWORD_IDENT, params);

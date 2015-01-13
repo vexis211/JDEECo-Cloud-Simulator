@@ -31,7 +31,7 @@ public class LoginController {
 		User user = userService.anonymousLogin(request, anonymousLoginCode);
 		if (user == null) {
 			// Anonymous login failed.
-			// TODO page with message link is forbidden to use.
+			// TODO improvement - page with message link is forbidden to use.
 		}
 		return "redirect:" + MappingSettings.MAIN;
 	}

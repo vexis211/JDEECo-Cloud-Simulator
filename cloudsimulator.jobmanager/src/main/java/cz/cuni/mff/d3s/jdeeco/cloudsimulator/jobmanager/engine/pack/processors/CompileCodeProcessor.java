@@ -53,7 +53,7 @@ public class CompileCodeProcessor extends PackageTaskProcessorBase {
 	}
 
 	private void processInternalCore(PackageTask task) throws PackagingException {
-		// TODO make universal - not only maven
+		// TODO improvement - make universal - not only maven
 		String pathToPom = PathEx.combine(task.getRepositoryLocalPath(), task.getRelativePathToPomFile());
 
 		InvocationRequest request = new DefaultInvocationRequest();
@@ -65,7 +65,7 @@ public class CompileCodeProcessor extends PackageTaskProcessorBase {
 		InvocationResult result;
 		try {
 			result = invoker.execute(request);
-			task.setCompileTargetDirectory("TODO"); // TODO compile target directory
+			task.setCompileTargetDirectory("target"); // TODO improvement - other build managers?
 		} catch (MavenInvocationException e) {
 			e.printStackTrace();
 			throw new PackagingException(String.format(

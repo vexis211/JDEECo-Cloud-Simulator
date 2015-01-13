@@ -28,7 +28,8 @@ public class PackagePreparatorImpl implements PackagePreparator, PackagingExcept
 		CompileCodeProcessor compileCodeProcessor = new CompileCodeProcessor(executor, this);
 		CopyCompiledToPreparingDirectoryProcessor copyCompiledToPreparingDirectoryProcessor = new CopyCompiledToPreparingDirectoryProcessor(
 				executor, this);
-		// TODO
+		
+		// TODO - run script processor
 		ZipDataProcessor zipDataProcessor = new ZipDataProcessor(executor, this);
 		UploadPackageProcessor uploadPackageProcessor = new UploadPackageProcessor(executor, this,
 				packageContainerName, cloudDataService);

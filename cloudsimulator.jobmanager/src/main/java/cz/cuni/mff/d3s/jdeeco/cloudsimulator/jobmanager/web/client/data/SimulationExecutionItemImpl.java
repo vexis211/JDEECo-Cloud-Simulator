@@ -25,7 +25,7 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 		this.id = execution.getId();
 		this.description = execution.getDescription();
 		this.status = execution.getStatus();
-		this.statusDesc = execution.getStatus().toString(); // TODO % done??
+		this.statusDesc = execution.getStatus().toString(); // TODO improvement - % done??
 		this.createdDate = execution.getCreated();
 		this.startedDate = execution.getStarted();
 		this.endedDate = execution.getEnded();

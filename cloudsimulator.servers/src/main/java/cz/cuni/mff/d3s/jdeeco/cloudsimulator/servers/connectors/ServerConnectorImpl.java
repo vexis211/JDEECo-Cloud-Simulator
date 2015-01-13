@@ -68,7 +68,7 @@ public abstract class ServerConnectorImpl implements ServerConnector {
 
 	@Override
 	public void disconnect() {
-		this.thread.interrupt(); // TODO do better
+		this.thread.interrupt(); // TODO improvement - do better
 		this.isConnected = false;
 	}
 }
