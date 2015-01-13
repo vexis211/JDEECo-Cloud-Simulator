@@ -16,5 +16,27 @@
             </key>
             <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationConfiguration" />
         </set>
+        
+        <property name="description" type="string">
+            <column name="Description" length="1000" not-null="true" />
+        </property>
+        <property name="created" type="timestamp" insert="false">
+            <column name="Created" length="19" not-null="true" />
+        </property>
+        <property name="vcsType">
+            <column name="VCSType" not-null="true" />
+            <type name="org.hibernate.type.EnumType">
+            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.vcs.VCSType</param>
+            </type>
+        </property>
+        <property name="repositoryURL" type="string">
+            <column name="RepositoryURL" length="2000" not-null="true" />
+        </property>
+        <property name="pathToPom" type="string">
+            <column name="PathToPom" length="256" not-null="true" />
+        </property>
+        <property name="mavenGoals" type="string">
+            <column name="MavenGoals" length="1000" not-null="true" />
+        </property>
     </class>
 </hibernate-mapping>

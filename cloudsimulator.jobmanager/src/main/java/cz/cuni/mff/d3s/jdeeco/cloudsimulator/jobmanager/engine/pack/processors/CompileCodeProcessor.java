@@ -1,4 +1,4 @@
-package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack;
+package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors;
 
 import java.io.File;
 import java.util.HashMap;
@@ -11,6 +11,9 @@ import org.apache.maven.shared.invoker.Invoker;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.PathEx;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackageTask;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackagingException;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackagingExceptionHandler;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
 
 public class CompileCodeProcessor extends PackageTaskProcessorBase {
@@ -40,6 +43,9 @@ public class CompileCodeProcessor extends PackageTaskProcessorBase {
 		} finally {
 			synchronized (unfinishedTasks) {
 				unfinishedTasks.remove(localRepoPath);
+				// set to identical tasks
+				task.getIdenticalTasksForProcessingStep().forEach(
+						x -> x.setCompileTargetDirectory(task.getCompileTargetDirectory()));
 			}
 		}
 
@@ -59,6 +65,7 @@ public class CompileCodeProcessor extends PackageTaskProcessorBase {
 		InvocationResult result;
 		try {
 			result = invoker.execute(request);
+			task.setCompileTargetDirectory("TODO"); // TODO compile target directory
 		} catch (MavenInvocationException e) {
 			e.printStackTrace();
 			throw new PackagingException(String.format(
