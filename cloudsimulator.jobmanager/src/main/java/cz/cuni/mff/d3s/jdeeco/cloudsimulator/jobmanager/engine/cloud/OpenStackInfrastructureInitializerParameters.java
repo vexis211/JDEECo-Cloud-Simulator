@@ -3,10 +3,10 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.cloud;
 public class OpenStackInfrastructureInitializerParameters {
 
 	// login
-	public static final String ENDPOINT = "";
-	public static final String USER = "";
-	public static final String PASSWORD = "";
-	public static final String TENANT_NAME = "";
+	public static final String ENDPOINT = "TODO"; // TODO
+	public static final String USER = "TODO"; // TODO
+	public static final String PASSWORD = "TODO"; // TODO
+	public static final String TENANT_NAME = "TODO"; // TODO
 
     // networking
     public static final String INNER_NETWORK_NAME = "working_network";
@@ -24,6 +24,7 @@ public class OpenStackInfrastructureInitializerParameters {
     public static final int INITIAL_WORKER_COUNT = 3;
     public static final String WORKER_TEMPLATE_NAME = "TODO"; // TODO
     public static final String WORKER_NAME_PREFIX = "worker_";
+    public static final String WORKER_FLAVOR_NAME = "Worker Flavor";
     
     // storage
 	public static final String STORAGE_DATAPACKAGE_CONTAINER = "";

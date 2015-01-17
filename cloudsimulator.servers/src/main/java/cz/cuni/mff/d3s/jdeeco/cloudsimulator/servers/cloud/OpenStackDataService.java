@@ -3,28 +3,13 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud;
 import java.io.File;
 import java.io.InputStream;
 
-import org.openstack4j.api.OSClient;
 import org.openstack4j.model.common.DLPayload;
 import org.openstack4j.model.common.payloads.FilePayload;
 
-public class OpenStackDataService implements CloudDataService {
-
-	private final OpenStackConnector openStackConnector;
-	private OSClient client;
+public class OpenStackDataService extends OpenStackComponent implements CloudDataService {
 
 	public OpenStackDataService(OpenStackConnector openStackConnector) {
-		this.openStackConnector = openStackConnector;
-	}
-
-	private OSClient getClient() {
-		if (client == null) {
-			synchronized (client) {
-				if (client == null) {
-					this.client = openStackConnector.connect();
-				}
-			}
-		}
-		return client;
+		super(openStackConnector);
 	}
 
 	@Override

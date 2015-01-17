@@ -132,7 +132,7 @@ public class OpenStackInfrastructureInitializer {
 	private void createInitialWorkers(OSClient os, Tenant tenant) {
 
 		// create flavor
-		Flavor flavor = Builders.flavor().name("Worker Flavor").ram(2048).vcpus(2).disk(120).build();
+		Flavor flavor = Builders.flavor().name(OpenStackInfrastructureInitializerParameters.WORKER_FLAVOR_NAME).ram(2048).vcpus(2).disk(120).build();
 		flavor = os.compute().flavors().create(flavor);
 
 		for (int i = 0; i < OpenStackInfrastructureInitializerParameters.INITIAL_WORKER_COUNT; i++) {
@@ -155,6 +155,7 @@ public class OpenStackInfrastructureInitializer {
 		os.compute().servers().boot(workerCreate);
 	}
 
+	@SuppressWarnings("unused")
 	private void clean() {
 		OSClient os = connect();
 		Tenant tenant = getTenant(os);
@@ -196,6 +197,7 @@ public class OpenStackInfrastructureInitializer {
 		removeServer(os, tenant, jobManager);
 	}
 
+	@SuppressWarnings("unused")
 	private void cleanStorage(OSClient os, Tenant tenant) {
 		os.objectStorage().containers()
 				.delete(OpenStackInfrastructureInitializerParameters.STORAGE_DATAPACKAGE_CONTAINER);
