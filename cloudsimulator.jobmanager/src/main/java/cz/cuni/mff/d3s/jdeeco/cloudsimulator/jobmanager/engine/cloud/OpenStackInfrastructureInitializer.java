@@ -1,8 +1,12 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.cloud;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient;
 import org.openstack4j.model.compute.Flavor;
+import org.openstack4j.model.compute.FloatingIP;
 import org.openstack4j.model.compute.Image;
 import org.openstack4j.model.compute.SecGroupExtension;
 import org.openstack4j.model.compute.Server;
@@ -153,31 +157,89 @@ public class OpenStackInfrastructureInitializer {
 
 	private void clean() {
 		OSClient os = connect();
+		Tenant tenant = getTenant(os);
 
-		cleanNetworkInfrastructure(os);
-//		cleanStorage(os);
+		cleanWorkers(os, tenant);
+		cleanJobManager(os, tenant);
 
-		cleanJobManager(os);
-		cleanInitialWorkers(os);
+		// cleanStorage(os, tenant);
+		cleanNetworkInfrastructure(os, tenant);
 	}
 
-	private void cleanNetworkInfrastructure(OSClient os) {
-		// TODO Auto-generated method stub
+	private void cleanWorkers(OSClient os, Tenant tenant) {
+		List<? extends Server> workers = os.compute().servers().list().stream()
+				.filter(x -> x.getName().startsWith(OpenStackInfrastructureInitializerParameters.WORKER_NAME_PREFIX))
+				.collect(Collectors.toList());
 
+		for (Server worker : workers) {
+			removeWorker(os, tenant, worker);
+		}
 	}
 
-	private void cleanStorage(OSClient os) {
+	private void removeWorker(OSClient os, Tenant tenant, Server worker) {
+		removeServer(os, tenant, worker);
+	}
+
+	private void removeServer(OSClient os, Tenant tenant, Server server) {
+		os.compute().servers().delete(server.getId());
+	}
+
+	private void cleanJobManager(OSClient os, Tenant tenant) {
+		Server jobManager = os.compute().servers().list().stream()
+				.filter(x -> x.getName().equals(OpenStackInfrastructureInitializerParameters.JOB_MANAGER_NAME))
+				.findFirst().get();
+
+		FloatingIP floatingIP = os.compute().floatingIps().list().get(0);
+		os.compute().floatingIps().removeFloatingIP(jobManager, floatingIP.getFloatingIpAddress());
+		os.networking().floatingip().delete(floatingIP.getId());
+
+		removeServer(os, tenant, jobManager);
+	}
+
+	private void cleanStorage(OSClient os, Tenant tenant) {
 		os.objectStorage().containers()
 				.delete(OpenStackInfrastructureInitializerParameters.STORAGE_DATAPACKAGE_CONTAINER);
 	}
 
-	private void cleanJobManager(OSClient os) {
-		// TODO Auto-generated method stub
+	private void cleanNetworkInfrastructure(OSClient os, Tenant tenant) {
 
-	}
+		// delete security groups and rules
+		SecGroupExtension httpSecurityGroup = os.compute().securityGroups().list().stream()
+				.filter(x -> x.getName().equals("http")).findFirst().get();
+		os.networking().securityrule().delete(httpSecurityGroup.getId());
 
-	private void cleanInitialWorkers(OSClient os) {
-		// TODO Auto-generated method stub
+		SecGroupExtension sshSecurityGroup = os.compute().securityGroups().list().stream()
+				.filter(x -> x.getName().equals("ssh")).findFirst().get();
+		os.networking().securityrule().delete(sshSecurityGroup.getId());
 
+		// detach an external interface
+		Router router = os.networking().router().list().stream()
+				.filter(x -> x.getName().equals(OpenStackInfrastructureInitializerParameters.ROUTER_NAME)).findFirst()
+				.get();
+
+		Subnet innerNetworkSubnet = os
+				.networking()
+				.subnet()
+				.list()
+				.stream()
+				.filter(x -> x.getName().equals(OpenStackInfrastructureInitializerParameters.INNER_NETWORK_SUBNET_NAME))
+				.findFirst().get();
+		
+		os.networking().router().detachInterface(router.getId(), innerNetworkSubnet.getId(), null);
+
+		// delete router
+		os.networking().router().delete(router.getId());
+
+		// delete inner network subnet
+		os.networking().subnet().delete(innerNetworkSubnet.getId());
+		
+		// delete inner network
+		Network innerNetwork = os
+				.networking()
+				.network().list()
+				.stream()
+				.filter(x -> x.getName().equals(OpenStackInfrastructureInitializerParameters.INNER_NETWORK_NAME))
+				.findFirst().get();
+		os.networking().network().delete(innerNetwork.getId());
 	}
 }
