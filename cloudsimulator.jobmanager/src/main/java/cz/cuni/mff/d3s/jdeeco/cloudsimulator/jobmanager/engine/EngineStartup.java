@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 
 public class EngineStartup {
@@ -20,5 +21,16 @@ public class EngineStartup {
 		
 		this.engineThread = new Thread(runEngine);
 		this.engineThread.start();
+	}
+	
+	@PreDestroy
+	public void destroy() {
+		this.jobManagerEngine.stop();
+		
+		try {
+			this.engineThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

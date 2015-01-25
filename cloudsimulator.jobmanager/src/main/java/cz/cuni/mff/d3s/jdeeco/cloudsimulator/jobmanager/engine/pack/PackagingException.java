@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack;
 
-public class PackagingException extends Exception {
+public class PackagingException extends RuntimeException {
 
 	private static final long serialVersionUID = 677170036635818094L;
 

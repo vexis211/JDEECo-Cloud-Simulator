@@ -19,6 +19,8 @@ import org.openstack4j.model.network.Network;
 import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.Subnet;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerIdGenerator;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerIdGeneratorImpl;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackConnector;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackConnectorImpl;
 
@@ -132,16 +134,18 @@ public class OpenStackInfrastructureInitializer {
 	private void createInitialWorkers(OSClient os, Tenant tenant) {
 
 		// create flavor
-		Flavor flavor = Builders.flavor().name(OpenStackInfrastructureInitializerParameters.WORKER_FLAVOR_NAME).ram(2048).vcpus(2).disk(120).build();
+		Flavor flavor = Builders.flavor().name(OpenStackInfrastructureInitializerParameters.WORKER_FLAVOR_NAME)
+				.ram(2048).vcpus(2).disk(120).build();
 		flavor = os.compute().flavors().create(flavor);
 
 		for (int i = 0; i < OpenStackInfrastructureInitializerParameters.INITIAL_WORKER_COUNT; i++) {
-			createInitialWorker(os, tenant, i, flavor);
+			createInitialWorker(os, tenant, flavor);
 		}
 	}
 
-	private void createInitialWorker(OSClient os, Tenant tenant, int workerIndex, Flavor flavor) {
-		String workerName = OpenStackInfrastructureInitializerParameters.WORKER_NAME_PREFIX + workerIndex;
+	private void createInitialWorker(OSClient os, Tenant tenant, Flavor flavor) {
+		WorkerIdGeneratorImpl workerIdGeneratorImpl = new WorkerIdGeneratorImpl();
+		String workerName = workerIdGeneratorImpl.generate();
 
 		// get image
 		Image workerImage = os.compute().images()
@@ -169,8 +173,7 @@ public class OpenStackInfrastructureInitializer {
 
 	private void cleanWorkers(OSClient os, Tenant tenant) {
 		List<? extends Server> workers = os.compute().servers().list().stream()
-				.filter(x -> x.getName().startsWith(OpenStackInfrastructureInitializerParameters.WORKER_NAME_PREFIX))
-				.collect(Collectors.toList());
+				.filter(x -> x.getName().startsWith(WorkerIdGenerator.ID_PREFIX)).collect(Collectors.toList());
 
 		for (Server worker : workers) {
 			removeWorker(os, tenant, worker);
@@ -226,7 +229,7 @@ public class OpenStackInfrastructureInitializer {
 				.stream()
 				.filter(x -> x.getName().equals(OpenStackInfrastructureInitializerParameters.INNER_NETWORK_SUBNET_NAME))
 				.findFirst().get();
-		
+
 		os.networking().router().detachInterface(router.getId(), innerNetworkSubnet.getId(), null);
 
 		// delete router
@@ -234,12 +237,9 @@ public class OpenStackInfrastructureInitializer {
 
 		// delete inner network subnet
 		os.networking().subnet().delete(innerNetworkSubnet.getId());
-		
+
 		// delete inner network
-		Network innerNetwork = os
-				.networking()
-				.network().list()
-				.stream()
+		Network innerNetwork = os.networking().network().list().stream()
 				.filter(x -> x.getName().equals(OpenStackInfrastructureInitializerParameters.INNER_NETWORK_NAME))
 				.findFirst().get();
 		os.networking().network().delete(innerNetwork.getId());

@@ -23,7 +23,6 @@ public class OpenStackInfrastructureInitializerParameters {
 
     public static final int INITIAL_WORKER_COUNT = 3;
     public static final String WORKER_TEMPLATE_NAME = "TODO"; // TODO
-    public static final String WORKER_NAME_PREFIX = "worker_";
     public static final String WORKER_FLAVOR_NAME = "Worker Flavor";
     
     // storage

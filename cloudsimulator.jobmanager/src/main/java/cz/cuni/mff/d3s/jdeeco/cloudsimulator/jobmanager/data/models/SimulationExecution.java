@@ -18,22 +18,26 @@ public class SimulationExecution implements java.io.Serializable {
 	private Date created;
 	private Date started;
 	private Date ended;
+    private ExecutionEndSpecificationType endSpecificationType;
+	private Date endDate;
 	private Set<SimulationRun> simulationRuns = new HashSet<SimulationRun>(0);
 
 	public SimulationExecution() {
 	}
 
 	public SimulationExecution(SimulationConfiguration simulationConfiguration, User creator, String description,
-			SimulationStatus status, Date created) {
+			SimulationStatus status, Date created, Date ended, ExecutionEndSpecificationType endSpecificationType, Date endDate) {
 		this.simulationConfiguration = simulationConfiguration;
 		this.creator = creator;
 		this.description = description;
 		this.status = status;
 		this.created = created;
+		this.endSpecificationType = endSpecificationType;
+		this.endDate = endDate;
 	}
 
 	public SimulationExecution(SimulationConfiguration simulationConfiguration, User creator, String description,
-			SimulationStatus status, Date created, Date started, Date ended, Set<SimulationRun> simulationRuns) {
+			SimulationStatus status, Date created, Date started, Date ended, ExecutionEndSpecificationType endSpecificationType, Date endDate, Set<SimulationRun> simulationRuns) {
 		this.simulationConfiguration = simulationConfiguration;
 		this.creator = creator;
 		this.description = description;
@@ -41,6 +45,8 @@ public class SimulationExecution implements java.io.Serializable {
 		this.created = created;
 		this.started = started;
 		this.ended = ended;
+		this.endSpecificationType = endSpecificationType;
+		this.endDate = endDate;
 		this.simulationRuns = simulationRuns;
 	}
 
@@ -106,6 +112,22 @@ public class SimulationExecution implements java.io.Serializable {
 
 	public void setEnded(Date ended) {
 		this.ended = ended;
+	}
+
+	public ExecutionEndSpecificationType getEndSpecificationType() {
+		return endSpecificationType;
+	}
+
+	public void setEndSpecificationType(ExecutionEndSpecificationType endSpecificationType) {
+		this.endSpecificationType = endSpecificationType;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 	
 	public Set<SimulationRun> getSimulationRuns() {

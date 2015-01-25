@@ -31,6 +31,15 @@
         <property name="ended" type="timestamp">
             <column name="Ended" length="19" />
         </property>
+        <property name="endSpecificationType">
+            <column name="EndSpecificationType" not-null="true" />
+            <type name="org.hibernate.type.EnumType">
+            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.ExecutionEndSpecificationType</param>
+            </type>
+        </property>
+        <property name="endDate" type="timestamp">
+            <column name="EndDate" length="19" />
+        </property>
         <set name="simulationRuns" table="simulation_run" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="ExecutionID" not-null="true" />
