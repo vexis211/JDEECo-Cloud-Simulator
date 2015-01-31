@@ -9,9 +9,9 @@
 
 	<parent>
 		<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
-		<artifactId>cloudsimulator.servers.parent</artifactId>
-		<relativePath>../cloudsimulator.servers/serverParentPom.xml</relativePath>
-		<version>${project.version}</version>
+		<artifactId>cloudsimulator.parent</artifactId>
+		<relativePath>../cloudsimulator.parent/pom.xml</relativePath>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -49,15 +49,7 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
-					<downloadSources>true</downloadSources>
-					<downloadJavadocs>true</downloadJavadocs>
-				</configuration>
-			</plugin>
-
+		
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -67,6 +59,15 @@
 					<encoding>${project.encoding}</encoding>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
+				</configuration>
+			</plugin>
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
 				</configuration>
 			</plugin>
 
@@ -213,6 +214,12 @@
 		</activation> </profile> </profiles> -->
 
 	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>cloudsimulator.servers</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
 		<!-- Hibernate library -->
 		<dependency>
 			<groupId>org.hibernate</groupId>

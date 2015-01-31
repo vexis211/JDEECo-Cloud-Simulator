@@ -2,13 +2,17 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
-	<artifactId>cloudsimulator.servers.parent</artifactId>
+	<artifactId>cloudsimulator.parent</artifactId>
 	<packaging>pom</packaging>
-	<version>${project.version}</version>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<modules>
+		<module>../cloudsimulator.servers</module>
+		<module>../cloudsimulator.worker</module>
+		<module>../cloudsimulator.jobmanager</module>
+	</modules>
 
 	<properties>
-		<project.version>0.0.1-SNAPSHOT</project.version>
-
 		<project.encoding>UTF-8</project.encoding>
 		<project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
@@ -35,6 +39,12 @@
 		</activation> </profile> </profiles> -->
 
 	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>cloudsimulator.common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -73,13 +83,13 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>${spring.version}</version>			
+			<version>${spring.version}</version>
 			<exclusions>
 				<!-- Exclude Commons Logging in favor of SLF4j -->
 				<exclusion>
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
-				 </exclusion>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -100,7 +110,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>${spring.version}</version>
-			<scope>test</scope>
+			<scope>compile</scope> <!-- TODO -->
 		</dependency>
 
 		<!-- JMS -->
@@ -123,13 +133,13 @@
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-spring</artifactId>
-			<version>${activemq.version}</version>			
+			<version>${activemq.version}</version>
 			<exclusions>
 				<!-- Exclude Commons Logging in favor of SLF4j -->
 				<exclusion>
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
-				 </exclusion>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -161,9 +171,13 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+					<encoding>${project.encoding}</encoding>
+					<showWarnings>true</showWarnings>
+					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
 		</plugins>
+
 	</build>
 </project>
 

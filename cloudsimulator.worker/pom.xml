@@ -8,8 +8,16 @@
 
 	<parent>
 		<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
-		<artifactId>cloudsimulator.servers.parent</artifactId>
-		<relativePath>../cloudsimulator.servers/serverParentPom.xml</relativePath>
-		<version>${project.version}</version>
+		<artifactId>cloudsimulator.parent</artifactId>
+		<relativePath>../cloudsimulator.parent/pom.xml</relativePath>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>cloudsimulator.servers</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>
