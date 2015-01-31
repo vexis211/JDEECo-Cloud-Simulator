@@ -59,5 +59,4 @@ public class WorkerEngineImpl implements WorkerEngine {
 			throw new UnknownWorkerTaskException("Unknown worker task: " + task);
 		}
 	}
-
 }

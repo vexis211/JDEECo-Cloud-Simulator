@@ -20,12 +20,12 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 	}
 
 	@Override
-	public String getPackageLocation(SimulationExecution execution) {
+	public String getPackageName(SimulationExecution execution) {
 		Integer executionId = execution.getId();
 
 		synchronized (locker) {
 			if (entries.containsKey(executionId)) {
-				return entries.get(executionId).packageLocation;
+				return entries.get(executionId).packageName;
 			} else {
 				return null;
 			}
@@ -39,10 +39,10 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 		synchronized (locker) {
 			if (entries.containsKey(executionId)) {
 				PackageManagerEntry entry = entries.get(executionId);
-				if (entry.packageLocation == null) {
+				if (entry.packageName == null) {
 					entry.listeners.add(listener);
 				} else {
-					listener.packagePrepared(execution, entry.packageLocation);
+					listener.packagePrepared(execution.getId(), entry.packageName);
 				}
 			} else {
 				// create and add entry
@@ -60,7 +60,7 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 	@Override
 	public void packagePrepared(PackageTask packageTask) {
 		int executionId = packageTask.getId();
-		String packageLocation = packageTask.getUploadName();
+		String packageName = packageTask.getUploadName();
 		List<PackageManagerListener> listeners;
 		SimulationExecution execution;
 
@@ -69,10 +69,10 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 			listeners = new ArrayList<>(entry.listeners);
 			execution = entry.execution;
 
-			entry.packageLocation = packageLocation;
+			entry.packageName = packageName;
 		}
 
-		listeners.forEach(x -> x.packagePrepared(execution, packageLocation));
+		listeners.forEach(x -> x.packagePrepared(execution.getId(), packageName));
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 	private class PackageManagerEntry {
 		private final List<PackageManagerListener> listeners = new ArrayList<>();
 		private final SimulationExecution execution;
-		private String packageLocation;
+		private String packageName;
 
 		public PackageManagerEntry(SimulationExecution execution) {
 			this.execution = execution;

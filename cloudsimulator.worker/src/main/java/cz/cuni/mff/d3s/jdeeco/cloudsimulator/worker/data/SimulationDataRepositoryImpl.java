@@ -48,16 +48,16 @@ public class SimulationDataRepositoryImpl implements SimulationDataRepository {
 	}
 
 	@Override
-	public void saveResults(SimulationData data, String resultsTarget, String logsTarget) {
+	public void saveResults(SimulationData data, String target) {
 		// results
 		try {
-			saveResultsInternal(data, resultsTarget);
+			saveResultsInternal(data, target);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		// logs
-		simulationDataLoader.uploadLogs(data.getLogPath(), logsTarget);
+		simulationDataLoader.uploadLogs(data.getLogPath(), target);
 	}
 
 	private void saveResultsInternal(SimulationData data, String target) throws IOException {

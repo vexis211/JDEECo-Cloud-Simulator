@@ -6,19 +6,23 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationExecution;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackagePreparedUpdate;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.SimplePackageManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpdate;
 
 public class SimulationManagerImpl implements SimulationManager {
 
 	private final HashMap<Integer, SimulationExecutionEntry> simulationExecutions = new HashMap<>();
 
-	private SimulationRepository simulationRepository;
-	private SimulationExecutionEntryFactory simulationExecutionEntryFactory;
+	private final SimulationRepository simulationRepository;
+	private final SimulationExecutionEntryFactory simulationExecutionEntryFactory;
+	private final SimplePackageManager simplePackageManager;
 
 	public SimulationManagerImpl(SimulationRepository simulationRepository,
-			SimulationExecutionEntryFactory simulationExecutionEntryFactory) {
+			SimulationExecutionEntryFactory simulationExecutionEntryFactory, SimplePackageManager simplePackageManager) {
 		this.simulationRepository = simulationRepository;
 		this.simulationExecutionEntryFactory = simulationExecutionEntryFactory;
+		this.simplePackageManager = simplePackageManager;
 
 		refreshExecutionsInternal();
 	}
@@ -29,21 +33,25 @@ public class SimulationManagerImpl implements SimulationManager {
 	}
 
 	@Override
-	public void update(List<SimulationStatusUpdate> updates) {
-		synchronized (simulationExecutions) {
-			for (SimulationStatusUpdate update : updates) {
-				SimulationExecutionEntry executionEntry = getExecutionEntry(update.getSimulationRunId());
-				executionEntry.updateRunStatus(update);
-			}
+	public void updateStatus(List<SimulationStatusUpdate> updates) {
+		for (SimulationStatusUpdate update : updates) {
+			SimulationExecutionEntry executionEntry = getExecutionEntry(update.getSimulationRunId());
+			executionEntry.updateRunStatus(update);
+		}
+	}
+
+	@Override
+	public void updatePackageNames(List<PackagePreparedUpdate> updates) {
+		for (PackagePreparedUpdate update : updates) {
+			SimulationExecutionEntry simulationExecutionEntry = simulationExecutions.get(update.getExecutionId());
+			simulationExecutionEntry.setPackageName(update.getPackageName());
 		}
 	}
 
 	private SimulationExecutionEntry getExecutionEntry(int simulationRunId) {
-		synchronized (simulationExecutions) {
-			Optional<SimulationExecutionEntry> entry = simulationExecutions.values().stream()
-					.filter(x -> x.containsSimulationRun(simulationRunId)).findAny();
-			return entry.get();
-		}
+		Optional<SimulationExecutionEntry> entry = simulationExecutions.values().stream()
+				.filter(x -> x.containsSimulationRun(simulationRunId)).findAny();
+		return entry.get();
 	}
 
 	@Override
@@ -52,20 +60,19 @@ public class SimulationManagerImpl implements SimulationManager {
 	}
 
 	private void refreshExecutionsInternal() {
-		List<SimulationExecution> listNotCompletedExecution = simulationRepository.listNotCompletedExecution();
+		List<SimulationExecution> notCreatedExecutions = simulationRepository.listNotCompletedExecution().stream()
+				.filter(x -> !simulationExecutions.containsKey(x.getId())).collect(Collectors.toList());
 
-		List<SimulationExecution> notCreatedExecutions;
-		synchronized (simulationExecutions) {
-			notCreatedExecutions = listNotCompletedExecution.stream()
-					.filter(x -> !simulationExecutions.containsKey(x.getId())).collect(Collectors.toList());
-		}
-
-		List<SimulationExecutionEntry> newExecutionEntries = notCreatedExecutions.stream()
-				.map(x -> simulationExecutionEntryFactory.create(x)).collect(Collectors.toList());
-
-		synchronized (simulationExecutions) {
-			newExecutionEntries.stream().filter(x -> !simulationExecutions.containsKey(x.getId()))
-					.forEach(x -> simulationExecutions.put(x.getId(), x));
+		for (SimulationExecution notCreatedExecution : notCreatedExecutions) {
+			SimulationExecutionEntry newExecutionEntry = simulationExecutionEntryFactory.create(notCreatedExecution);
+			simulationExecutions.put(newExecutionEntry.getId(), newExecutionEntry);
+			
+			String packageName = simplePackageManager.getPackageName(notCreatedExecution);
+			if (packageName != null) {
+				newExecutionEntry.setPackageName(packageName);
+			} else {
+				simplePackageManager.preparePackage(notCreatedExecution);
+			}
 		}
 	}
 }

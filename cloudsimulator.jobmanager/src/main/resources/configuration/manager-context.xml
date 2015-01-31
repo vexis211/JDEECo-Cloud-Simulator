@@ -18,16 +18,163 @@
 
 	<context:property-placeholder location="classpath:properties/manager.properties" />
 
-	<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.EngineStartup" scope="singleton" lazy-init="false" />
-	<bean id="jobManagerEngine" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerEngineImpl"
-		scope="singleton" />
+	<bean id="executor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.CustomThreadPoolExecutor"
+		scope="singleton">
+		<constructor-arg name="corePoolSize" value="TODO" />
+	</bean>
 
-	<bean id="jobManagerUpdateQueue" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerUpdateQueue"
-		scope="singleton" />
 
 	<bean id="engineController" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.control.EngineControllerImpl"
 		scope="singleton" />
 
+	<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.EngineStartup" scope="singleton" lazy-init="false" />
+
+	<bean id="jobManagerEngine" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerEngineImpl"
+		scope="singleton">
+		<constructor-arg name="jobManagerUpdateQueue" ref="jobManagerUpdateQueue" />
+		<constructor-arg name="simulationManager" ref="simulationManager" />
+		<constructor-arg name="simulationScheduler" ref="simulationScheduler" />
+		<constructor-arg name="workerManager" ref="workerManager" />
+		<constructor-arg name="workerConnector" ref="workerConnector" />
+	</bean>
+
+	<bean id="jobManagerUpdateQueue" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerUpdateQueue"
+		scope="singleton" />
+
+
+	<!-- Simulation data -->
+
+	<bean id="simulationManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.data.SimulationManagerImpl"
+		scope="singleton">
+		<constructor-arg name="simulationRepository" ref="simulationRepository" />
+		<constructor-arg name="simulationExecutionEntryFactory" ref="simulationExecutionEntryFactory" />
+		<constructor-arg name="simplePackageManager" ref="simplePackageManager" />
+	</bean>
+
+	<bean id="simulationRepository" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.data.SimulationRepositoryImpl"
+		scope="singleton">
+		<constructor-arg name="simulationExecutionDao" ref="simulationExecutionDao" />
+	</bean>
+
+	<bean id="simulationExecutionEntryFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.data.SimulationExecutionEntryFactoryImpl">
+		<constructor-arg name="simulationRunEntryFactory" ref="simulationRunEntryFactory" />
+	</bean>
+
+	<bean id="simulationRunEntryFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.data.SimulationRunEntryFactoryImpl" />
+
+
+	<!-- Packaging -->
+
+	<bean id="simplePackageManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.SimplePackageManagerImpl"
+		scope="singleton">
+		<constructor-arg name="jobManagerUpdateQueue" ref="jobManagerUpdateQueue" />
+		<constructor-arg name="packageManager" ref="packageManager" />
+	</bean>
+
+	<bean id="packageManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackageManagerImpl"
+		scope="singleton">
+		<constructor-arg name="packagePreparator" ref="packagePreparator" />
+		<constructor-arg name="packageTaskFactory" ref="packageTaskFactory" />
+	</bean>
+
+	<bean id="packagePreparator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackagePreparatorImpl">
+		<constructor-arg name="cloudDataService" ref="cloudDataService" />
+		<constructor-arg name="codeRepositoryManager" ref="codeRepositoryManager" />
+		<constructor-arg name="executor" ref="executor" />
+		<constructor-arg name="packageContainerName" value="TODO" />
+	</bean>
+
+	<bean id="packageTaskFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackageTaskFactoryImpl" />
+
+
+	<!-- VCS -->
+	<bean id="codeRepositoryManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.vcs.CodeRepositoryManagerImpl">
+		<constructor-arg name="localRootDir" value="TODO" />
+		<constructor-arg name="repositoryProviders">
+			<list>
+				<ref bean="gitRepositoryProvider" />
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="gitRepositoryProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.vcs.GitRepositoryProvider" />
+
+	<!-- OpenStack -->
+
+	<bean id="cloudDataService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackDataService"
+		scope="singleton">
+		<constructor-arg name="openStackConnector" ref="openStackConnector" />
+	</bean>
+
+	<bean id="cloudMachineService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.cloud.OpenStackMachineServiceImpl"
+		scope="singleton">
+		<constructor-arg name="openStackConnector" ref="openStackConnector" />
+	</bean>
+
+	<bean id="openStackConnector" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackConnectorImpl"
+		scope="singleton">
+		<constructor-arg name="endpoint" value="TODO" />
+		<constructor-arg name="tenantName" value="TODO" />
+		<constructor-arg name="user" value="TODO" />
+		<constructor-arg name="password" value="TODO" />
+	</bean>
+
+
+	<!-- Workers -->
+
+	<bean id="workerConnector" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.connectors.WorkerConnectorImpl"
+		scope="singleton">
+		<constructor-arg name="jmsTemplate" ref="jmsTemplate" />
+		<constructor-arg name="jobManagerUpdateQueue" ref="jobManagerUpdateQueue" />
+		<constructor-arg name="incomingQueue" value="TODO" />
+		<constructor-arg name="outgoingQueuePrefix" value="TODO" />
+	</bean>
+
+	<bean id="workerManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerManagerImpl"
+		scope="singleton">
+		<constructor-arg name="cloudMachineService" ref="jmsTemplate" />
+		<constructor-arg name="statisticsFactory" ref="jobManagerUpdateQueue" />
+		<constructor-arg name="workerIdGenerator" ref="workerIdGenerator" />
+		<constructor-arg name="workerTemplateName" value="TODO" />
+	</bean>
+
+	<bean id="workerIdGenerator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerIdGeneratorImpl"
+		scope="singleton" />
+
+
+	<!-- Scheduling -->
+
+	<bean id="simulationScheduler" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.SimulationSchedulerImpl"
+		scope="singleton">
+		<constructor-arg name="simulationManager" ref="simulationManager" />
+		<constructor-arg name="workerManager" ref="workerManager" />
+		<constructor-arg name="simulationPlanFactory" ref="simulationPlanFactory" />
+		<constructor-arg name="simulationTimeEstimator" ref="simulationTimeEstimator" />
+		<constructor-arg name="settings" ref="simulationSchedulerSettings" />
+	</bean>
+
+	<bean id="simulationPlanFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.SimulationPlanFactoryImpl">
+		<constructor-arg name="workerPlanFactory" ref="workerPlanFactory" />
+	</bean>
+
+	<bean id="workerPlanFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.WorkerPlanFactoryImpl">
+		<constructor-arg name="workerManager" ref="workerManager" />
+		<constructor-arg name="workerPlanIdGenerator" ref="workerPlanIdGenerator" />
+	</bean>
+
+	<bean id="workerPlanIdGenerator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.WorkerPlanIdGeneratorImpl"
+		scope="singleton" />
+
+	<bean id="simulationTimeEstimator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.SimulationTimeEstimatorImpl"
+		scope="singleton" />
+
+	<bean id="simulationSchedulerSettings" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.SimulationSchedulerSettingsImpl"
+		scope="singleton">
+		<constructor-arg name="maximumNumberOfWorkers" value="TODO" />
+	</bean>
+
+
+	<!-- JMS -->
 
 	<!-- lets create an embedded ActiveMQ Broker -->
 	<amq:broker useJmx="false" persistent="false" start="true">
@@ -51,16 +198,5 @@
 			</bean>
 		</property>
 	</bean>
-
-	
-	<!-- VCS -->
-<!-- 	<bean id="codeRepositoryManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.vcs.CodeRepositoryManagerImpl">
-		<constructor-arg name="repositoryProviders" >
-			<list>
-				<value></value>
-			</list>
-		</constructor-arg>
-	</bean>
-	<bean  /> -->
 
 </beans>

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.joda.time.DateTime;
+
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.cloud.CloudMachine;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.cloud.CloudMachineService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
@@ -17,7 +19,7 @@ public class WorkerManagerImpl implements WorkerManager {
 	private final String workerTemplateName;
 	private final WorkerIdGenerator workerIdGenerator;
 	private final WorkerStatistics statistics;
-
+	
 	private int desiredCreatedWorkerCount;
 	private int desiredRunningWorkerCount;
 
@@ -29,17 +31,15 @@ public class WorkerManagerImpl implements WorkerManager {
 		this.statistics = statisticsFactory.create();
 
 		this.desiredCreatedWorkerCount = 3; // TODO to settings
-		this.desiredRunningWorkerCount = 3; // TODO to settings
-
+		this.desiredRunningWorkerCount = 1; // TODO to settings
+		
 		initializeWorkerMap();
 	}
 
 	private void initializeWorkerMap() {
-		synchronized (workersById) {
-			for (CloudMachine cloudMachine : cloudMachineService.listMachines()) {
-				WorkerInstance worker = getWorker(cloudMachine.getName(), cloudMachine);
-				workersById.put(worker.getWorkerId(), worker);
-			}
+		for (CloudMachine cloudMachine : cloudMachineService.listMachines()) {
+			WorkerInstance worker = getWorker(cloudMachine.getName(), cloudMachine);
+			workersById.put(worker.getWorkerId(), worker);
 		}
 	}
 
@@ -49,62 +49,56 @@ public class WorkerManagerImpl implements WorkerManager {
 
 	@Override
 	public int getCurrentWorkerCount() {
-		synchronized (workersById) {
-			return workersById.size();
-		}
+		return workersById.size();
 	}
 
 	public int getRunningWorkerCount() {
-		synchronized (workersById) {
-			return workersById.size();
-		}
+		return workersById.size();
 	}
 
 	@Override
-	public void setDesiredWorkerCount(int desiredCreatedWorkerCount, int desiredRunningWorkerCount) {
-		synchronized (workersById) {
-			this.desiredCreatedWorkerCount = desiredCreatedWorkerCount;
-			this.desiredRunningWorkerCount = desiredRunningWorkerCount;
+	public DateTime getNewWorkerStartedTime() {
+		return DateTime.now().plus(statistics.getAverageStartTimeInMillis());
+	}
 
-			checkDesiredWorkerCounts();
-		}
+	@Override
+	public WorkerInstance startNewWorker() {
+		String workerId = workerIdGenerator.generate();
+
+		CloudMachine cloudMachine = cloudMachineService.buildMachineFromTemplate(workerTemplateName, workerId).build();
+		WorkerInstance worker = getWorker(workerId, cloudMachine);
+		setWorkerStatus(worker, WorkerStatus.Starting);
+		return worker;
+	}
+
+	@Override
+	public void stopWorker(WorkerInstance worker) {
+		cloudMachineService.stopMachine(worker.getCloudMachine());
+		setWorkerStatus(worker, WorkerStatus.Stopped);
 	}
 
 	@Override
 	public List<WorkerInstance> listWorkers() {
-		synchronized (workersById) {
-			return workersById.values().stream().collect(Collectors.toList());
-		}
-	}
-
-	@Override
-	public List<WorkerInstance> listPreparedWorkers() {
-		synchronized (workersById) {
-			return workersById.values().stream().filter(x -> x.getStatus() == WorkerStatus.Started)
-					.collect(Collectors.toList());
-		}
-	}
-
-	@Override
-	public List<WorkerInstance> listSimulatingWorkers() {
-		synchronized (workersById) {
-			return workersById
-					.values()
-					.stream()
-					.filter(x -> x.getStatus() == WorkerStatus.StartingSimulation
-							|| x.getStatus() == WorkerStatus.RunningSimulation).collect(Collectors.toList());
-		}
+		return workersById.values().stream().collect(Collectors.toList());
 	}
 
 	@Override
 	public void update(List<WorkerStatusUpdate> updates) {
-		synchronized (workersById) {
-			for (WorkerStatusUpdate workerStatusUpdate : updates) {
-				setWorkerStatus(workersById.get(workerStatusUpdate.getWorkerId()), workerStatusUpdate.getWorkerStatus());
-			}
+		for (WorkerStatusUpdate workerStatusUpdate : updates) {
+			setWorkerStatus(workersById.get(workerStatusUpdate.getWorkerId()), workerStatusUpdate.getWorkerStatus());
 		}
 	}
 
+
+
+	@Override
+	public void setDesiredWorkerCount(int desiredCreatedWorkerCount, int desiredRunningWorkerCount) {
+		this.desiredCreatedWorkerCount = desiredCreatedWorkerCount;
+		this.desiredRunningWorkerCount = desiredRunningWorkerCount;
+	
+		checkDesiredWorkerCounts();
+	}
+	
 	private void checkDesiredWorkerCounts() {
 
 		int workerCountDiff = desiredCreatedWorkerCount - getCurrentWorkerCount();
@@ -138,64 +132,49 @@ public class WorkerManagerImpl implements WorkerManager {
 		}
 	}
 
-	private WorkerInstance startNewWorker() {
-		String workerId = workerIdGenerator.generate();
-
-		CloudMachine cloudMachine = cloudMachineService.buildMachineFromTemplate(workerTemplateName, workerId).build();
-		WorkerInstance worker = getWorker(workerId, cloudMachine);
-		setWorkerStatus(worker, WorkerStatus.Starting);
-		return worker;
-	}
-
 	private boolean deleteNotSimulatingWorker() {
-		synchronized (workersById) {
-			Optional<WorkerInstance> stoppedMachineOptional = workersById.values().stream()
-					.filter(x -> x.getStatus() == WorkerStatus.Stopped).findAny();
-			if (stoppedMachineOptional.isPresent()) {
-				WorkerInstance worker = stoppedMachineOptional.get();
-				workersById.remove(worker.getWorkerId());
-				cloudMachineService.deleteMachine(worker.getCloudMachine());
-				return true;
-			}
+		Optional<WorkerInstance> stoppedMachineOptional = workersById.values().stream()
+				.filter(x -> x.getStatus() == WorkerStatus.Stopped).findAny();
+		if (stoppedMachineOptional.isPresent()) {
+			WorkerInstance worker = stoppedMachineOptional.get();
+			workersById.remove(worker.getWorkerId());
+			cloudMachineService.deleteMachine(worker.getCloudMachine());
+			return true;
+		}
 
-			Optional<WorkerInstance> startedMachineOptional = workersById.values().stream()
-					.filter(x -> x.getStatus() == WorkerStatus.Started).findAny();
-			if (startedMachineOptional.isPresent()) {
-				WorkerInstance worker = startedMachineOptional.get();
-				workersById.remove(worker.getWorkerId());
-				cloudMachineService.deleteMachine(worker.getCloudMachine());
-				return true;
-			}
+		Optional<WorkerInstance> startedMachineOptional = workersById.values().stream()
+				.filter(x -> x.getStatus() == WorkerStatus.Started).findAny();
+		if (startedMachineOptional.isPresent()) {
+			WorkerInstance worker = startedMachineOptional.get();
+			workersById.remove(worker.getWorkerId());
+			cloudMachineService.deleteMachine(worker.getCloudMachine());
+			return true;
 		}
 
 		return false;
 	}
 
 	private boolean startStoppedWorker() {
-		synchronized (workersById) {
-			Optional<WorkerInstance> stoppedMachineOptional = workersById.values().stream()
-					.filter(x -> x.getStatus() == WorkerStatus.Stopped).findAny();
-			if (stoppedMachineOptional.isPresent()) {
-				WorkerInstance worker = stoppedMachineOptional.get();
-				cloudMachineService.startMachine(worker.getCloudMachine());
-				setWorkerStatus(worker, WorkerStatus.Started);
-				return true;
-			}
+		Optional<WorkerInstance> stoppedMachineOptional = workersById.values().stream()
+				.filter(x -> x.getStatus() == WorkerStatus.Stopped).findAny();
+		if (stoppedMachineOptional.isPresent()) {
+			WorkerInstance worker = stoppedMachineOptional.get();
+			cloudMachineService.startMachine(worker.getCloudMachine());
+			setWorkerStatus(worker, WorkerStatus.Started);
+			return true;
 		}
 
 		return false;
 	}
 
 	private boolean stopNotSimulatingWorker() {
-		synchronized (workersById) {
-			Optional<WorkerInstance> startedMachineOptional = workersById.values().stream()
-					.filter(x -> x.getStatus() == WorkerStatus.Started).findAny();
-			if (startedMachineOptional.isPresent()) {
-				WorkerInstance worker = startedMachineOptional.get();
-				cloudMachineService.stopMachine(worker.getCloudMachine());
-				setWorkerStatus(worker, WorkerStatus.Stopped);
-				return true;
-			}
+		Optional<WorkerInstance> startedMachineOptional = workersById.values().stream()
+				.filter(x -> x.getStatus() == WorkerStatus.Started).findAny();
+		if (startedMachineOptional.isPresent()) {
+			WorkerInstance worker = startedMachineOptional.get();
+			cloudMachineService.stopMachine(worker.getCloudMachine());
+			setWorkerStatus(worker, WorkerStatus.Stopped);
+			return true;
 		}
 
 		return false;

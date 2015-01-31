@@ -8,9 +8,17 @@ import java.util.stream.Stream;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.connectors.WorkerConnector;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.control.UpdateExecutionsCommand;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.data.SimulationExecutionEntry;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.data.SimulationManager;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.data.SimulationRunEntry;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackagePreparedUpdate;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.SimulationPlan;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.SimulationScheduler;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.WorkerPlan;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.WorkerPlanItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerManager;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTaskImpl;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.JobManagerUpdate;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpdate;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdate;
@@ -81,7 +89,9 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 
 		// update simulation manager
 		Stream<SimulationStatusUpdate> simulationStatusUpdates = takeUpdates(updates, SimulationStatusUpdate.class);
-		simulationManager.update(simulationStatusUpdates.collect(Collectors.toList()));
+		simulationManager.updateStatus(simulationStatusUpdates.collect(Collectors.toList()));
+		Stream<PackagePreparedUpdate> packagePreparedUpdates = takeUpdates(updates, PackagePreparedUpdate.class);
+		simulationManager.updatePackageNames(packagePreparedUpdates.collect(Collectors.toList()));
 
 		// commands
 		// are there any other updates?
@@ -103,6 +113,42 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 	}
 
 	private void updateWorkers() {
-		// TODO implement
+		SimulationPlan simulationPlan = simulationScheduler.getSimulationPlan();
+		List<WorkerPlan> workerPlans = simulationPlan.getWorkerPlans();
+		for (WorkerPlan workerPlan : workerPlans) {
+			WorkerPlanItem itemToRun = getPlanItemToRun(workerPlan);
+			if (itemToRun != null) {
+				SimulationRunEntry run = itemToRun.getSimulationRun();
+				SimulationExecutionEntry execution = run.getExecution();
+
+				// set run as started
+				execution.startSimulationRun(run);
+
+				// send run simulation task
+				String workerId = workerPlan.getWorker().getWorkerId();
+				RunSimulationTask task = new RunSimulationTaskImpl(run.getId(), execution.getPackageName());
+				workerConnector.sendTask(workerId, task);
+			}
+		}
+	}
+
+	private WorkerPlanItem getPlanItemToRun(WorkerPlan workerPlan) {
+		WorkerPlanItem currentItem = workerPlan.getCurrentItem();
+		if (hasPreparedPackage(currentItem)) {
+			return currentItem;
+		}
+
+		// TODO is this OK?
+		for (WorkerPlanItem planItem : workerPlan) {
+			if (hasPreparedPackage(planItem)) {
+				return planItem;
+			}
+		}
+
+		return null;
+	}
+
+	private boolean hasPreparedPackage(WorkerPlanItem workerPlanItem) {
+		return workerPlanItem.getSimulationRun().getExecution().getPackageName() != null;
 	}
 }

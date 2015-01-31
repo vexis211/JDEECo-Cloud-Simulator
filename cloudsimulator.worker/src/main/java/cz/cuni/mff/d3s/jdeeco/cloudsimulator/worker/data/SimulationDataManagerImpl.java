@@ -64,12 +64,12 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 	}
 
 	@Override
-	public void saveResults(int simulationRunId, SimulationData data, String resultsTarget, String logsTarget) {
-		startFuture(() -> saveResultsCore(simulationRunId, data, resultsTarget, logsTarget));
+	public void saveResults(int simulationRunId, SimulationData data, String target) {
+		startFuture(() -> saveResultsCore(simulationRunId, data, target));
 	}
 
-	private void saveResultsCore(int simulationRunId, SimulationData data, String resultsTarget, String logsTarget) {
-		simulationDataRepository.saveResults(data, resultsTarget, logsTarget);
+	private void saveResultsCore(int simulationRunId, SimulationData data, String target) {
+		simulationDataRepository.saveResults(data, target);
 		listener.resultsSaved(simulationRunId);
 	}
 

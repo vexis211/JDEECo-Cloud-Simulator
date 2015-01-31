@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 
 public class SimulationExecutionStatisticsImpl implements SimulationExecutionStatistics {
 
-	private final Object locker = new Object();
 	private final HashMap<Integer, DateTime> startedSimulationRunIds = new HashMap<>();
 
 	private int completedSimulationsCount;
@@ -14,40 +13,30 @@ public class SimulationExecutionStatisticsImpl implements SimulationExecutionSta
 
 	@Override
 	public int getCompletedSimulationsCount() {
-		synchronized (locker) {
-			return completedSimulationsCount;
-		}
+		return completedSimulationsCount;
 	}
 
 	@Override
 	public long getAverageSimulationTimeInMillis() {
-		synchronized (locker) {
-			return completedSimulationsCount == 0 ? 0 : simulationsTimeSumInMillis / completedSimulationsCount;
-		}
+		return completedSimulationsCount == 0 ? 0 : simulationsTimeSumInMillis / completedSimulationsCount;
 	}
 
 	@Override
 	public long getSimulationsTimeSumInMillis() {
-		synchronized (locker) {
-			return simulationsTimeSumInMillis;
-		}
+		return simulationsTimeSumInMillis;
 	}
 
 	@Override
 	public void simulationStarted(int simulationRunId) {
-		synchronized (locker) {
-			startedSimulationRunIds.put(simulationRunId, DateTime.now());
-		}
+		startedSimulationRunIds.put(simulationRunId, DateTime.now());
 	}
 
 	@Override
 	public void simulationCompleted(int simulationRunId) {
-		synchronized (locker) {
-			DateTime startTime = startedSimulationRunIds.remove(simulationRunId);
-			long diffInMillis = DateTime.now().getMillis() - startTime.getMillis();
-			simulationsTimeSumInMillis += diffInMillis;
+		DateTime startTime = startedSimulationRunIds.remove(simulationRunId);
+		long diffInMillis = DateTime.now().getMillis() - startTime.getMillis();
+		simulationsTimeSumInMillis += diffInMillis;
 
-			completedSimulationsCount++;
-		}
+		completedSimulationsCount++;
 	}
 }
