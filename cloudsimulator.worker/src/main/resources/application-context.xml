@@ -59,9 +59,9 @@
 		<constructor-arg name="resultsContainerName" value="${openStack.storage.resultsContainerName}" />
 		<constructor-arg name="logsContainerName" value="${openStack.storage.logsContainerName}" />
 	</bean>
-	<bean id="openStackConnector" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.openstack.OpenStackConnectorImpl">
+	<bean id="openStackConnector" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackConnectorImpl">
 		<constructor-arg name="endpoint" value="${openStack.connect.endpoint}" />
-		<constructor-arg name="domainName" value="${openStack.connect.domainName}" />
+		<constructor-arg name="tenantName" value="${openStack.connect.tenantName}" />
 		<constructor-arg name="user" value="${openStack.connect.user}" />
 		<constructor-arg name="password" value="${openStack.connect.password}" />
 	</bean>
