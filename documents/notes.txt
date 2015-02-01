@@ -1,0 +1,3 @@
+set JAVA_HOME
+git to environment variable: path
+- install console git

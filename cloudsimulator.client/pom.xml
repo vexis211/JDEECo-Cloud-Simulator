@@ -2,43 +2,23 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
+	<name>cloudsimulator.client</name>
+
 	<artifactId>cloudsimulator.client</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>cloudsimulator.client</name>
-	<url>http://maven.apache.org</url>
-
-	<properties>
-		<java.version>1.8</java.version>
-
-		<project.encoding>UTF-8</project.encoding>
-		<project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
-	</properties>
-
-
+	<parent>
+		<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
+		<artifactId>cloudsimulator.parent</artifactId>
+		<relativePath>../cloudsimulator.parent/pom.xml</relativePath>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>cloudsimulator.common</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
-
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

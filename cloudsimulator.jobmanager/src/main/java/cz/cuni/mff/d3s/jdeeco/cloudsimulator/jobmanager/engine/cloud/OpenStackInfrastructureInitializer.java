@@ -1,7 +1,7 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.cloud;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient;
@@ -172,12 +172,10 @@ public class OpenStackInfrastructureInitializer {
 	}
 
 	private void cleanWorkers(OSClient os, Tenant tenant) {
-		List<? extends Server> workers = os.compute().servers().list().stream()
-				.filter(x -> x.getName().startsWith(WorkerIdGenerator.ID_PREFIX)).collect(Collectors.toList());
-
-		for (Server worker : workers) {
-			removeWorker(os, tenant, worker);
-		}
+		List<? extends Server> serverList = os.compute().servers().list();
+		Stream<? extends Server> workers = serverList.stream()
+				.filter(x -> x.getName().startsWith(WorkerIdGenerator.ID_PREFIX));
+		workers.forEach(worker -> removeWorker(os, tenant, worker));
 	}
 
 	private void removeWorker(OSClient os, Tenant tenant, Server worker) {
