@@ -1,7 +1,7 @@
-/.metadata
 /Servers
 /cloudsimulator.worker/activemq-data/transport/KahaDB
-.settings
+.metadata/
+.settings/
 .classpath
 .project
 .springBeans
