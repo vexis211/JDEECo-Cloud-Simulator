@@ -1,3 +1,10 @@
 set JAVA_HOME
 git to environment variable: path
 - install console git
+
+
+
+after import maven projects
+edit deployment assembly
+add to server
+change to root /

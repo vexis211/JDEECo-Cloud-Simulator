@@ -16,9 +16,14 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.Simulati
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.SimulationScheduler;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.WorkerPlan;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.WorkerPlanItem;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerInstance;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerManager;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTaskImpl;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.StopSimulationTask;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.StopSimulationTaskImpl;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.JobManagerUpdate;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpdate;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdate;
@@ -116,20 +121,47 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 		SimulationPlan simulationPlan = simulationScheduler.getSimulationPlan();
 		List<WorkerPlan> workerPlans = simulationPlan.getWorkerPlans();
 		for (WorkerPlan workerPlan : workerPlans) {
-			WorkerPlanItem itemToRun = getPlanItemToRun(workerPlan);
-			if (itemToRun != null) {
-				SimulationRunEntry run = itemToRun.getSimulationRun();
-				SimulationExecutionEntry execution = run.getExecution();
 
-				// set run as started
-				execution.startSimulationRun(run);
-
-				// send run simulation task
-				String workerId = workerPlan.getWorker().getWorkerId();
-				RunSimulationTask task = new RunSimulationTaskImpl(run.getId(), execution.getPackageName());
-				workerConnector.sendTask(workerId, task);
+			WorkerPlanItem planItemRunning = getPlanItemRunning(workerPlan);
+			if (planItemRunning != null) {
+				SimulationRunEntry simulationRun = planItemRunning.getSimulationRun();
+				if (simulationRun.getStatus() == SimulationStatus.Stopped) {
+					stopSimulationRun(workerPlan.getWorker(), simulationRun);
+				}
+			} else {
+				WorkerPlanItem itemToRun = getPlanItemToRun(workerPlan);
+				if (itemToRun != null) {
+					startSimulationRun(workerPlan.getWorker(), itemToRun.getSimulationRun());
+				}
 			}
 		}
+	}
+
+	private void stopSimulationRun(WorkerInstance worker, SimulationRunEntry simulationRun) {
+		// send stop simulation task
+		String workerId = worker.getWorkerId();
+		StopSimulationTask task = new StopSimulationTaskImpl(simulationRun.getId());
+		workerConnector.sendTask(workerId, task);
+	}
+
+	private void startSimulationRun(WorkerInstance worker, SimulationRunEntry simulationRun) {
+		SimulationExecutionEntry execution = simulationRun.getExecution();
+
+		// set run as started
+		execution.startSimulationRun(simulationRun);
+
+		// send run simulation task
+		String workerId = worker.getWorkerId();
+		RunSimulationTask task = new RunSimulationTaskImpl(simulationRun.getId(), execution.getPackageName());
+		workerConnector.sendTask(workerId, task);
+	}
+
+	private WorkerPlanItem getPlanItemRunning(WorkerPlan workerPlan) {
+		WorkerStatus workerStatus = workerPlan.getWorker().getStatus();
+		if (workerStatus == WorkerStatus.StartingSimulation || workerStatus == WorkerStatus.RunningSimulation) { // TODO should I test against both?
+			return workerPlan.getCurrentItem();
+		}
+		return null;
 	}
 
 	private WorkerPlanItem getPlanItemToRun(WorkerPlan workerPlan) {

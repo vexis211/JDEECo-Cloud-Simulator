@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -15,4 +16,9 @@ public class SimulationExecutionDaoImpl extends BaseDaoImpl<SimulationExecution>
 				SimulationStatus.Started }));
 	}
 
+	@Override
+	public List<SimulationExecution> findStoppedExecutionsWithIds(Collection<Integer> executionIds) {
+		return findListByCriteria(Restrictions.eq("status", SimulationStatus.Stopped),
+				Restrictions.in("id", executionIds));
+	}
 }

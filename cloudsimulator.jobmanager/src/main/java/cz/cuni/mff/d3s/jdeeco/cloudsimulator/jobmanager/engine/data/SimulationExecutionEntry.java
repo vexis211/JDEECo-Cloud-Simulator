@@ -23,4 +23,6 @@ public interface SimulationExecutionEntry {
 
 	String getPackageName();
 	void setPackageName(String packageName);
+	
+	void stop();
 }

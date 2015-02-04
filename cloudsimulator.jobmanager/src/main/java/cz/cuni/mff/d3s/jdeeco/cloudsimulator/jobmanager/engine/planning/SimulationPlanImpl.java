@@ -102,8 +102,9 @@ public class SimulationPlanImpl implements SimulationPlan, WorkerPlanChangeListe
 			Set<WorkerInstance> currentWorkersSet = new HashSet<>(currentWorkers);
 			List<WorkerInstance> toRemove = new ArrayList<>();
 			for (WorkerInstance workerAsKey : worker2plan.keySet()) {
-				if (!currentWorkersSet.contains(workerAsKey))
+				if (!currentWorkersSet.contains(workerAsKey)) {
 					toRemove.add(workerAsKey);
+				}
 			}
 			toRemove.forEach(x -> worker2plan.remove(x));
 		}

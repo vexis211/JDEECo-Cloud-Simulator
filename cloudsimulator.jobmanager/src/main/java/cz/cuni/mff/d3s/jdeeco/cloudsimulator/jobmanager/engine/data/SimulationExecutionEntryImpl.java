@@ -26,6 +26,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 	private String packageName;
 
 	private boolean repeatedlyThrowsError = false;
+	private boolean stopped = false;
 
 	public SimulationExecutionEntryImpl(SimulationExecution data, SimulationExecutionStatistics statistics,
 			SimulationRunEntryFactory simulationRunEntryFactory) {
@@ -47,6 +48,8 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 
 	@Override
 	public SimulationStatus getStatus() {
+		if (stopped) return SimulationStatus.Stopped;
+		
 		if (repeatedlyThrowsError) {
 			return SimulationStatus.ErrorOccured;
 		} else if (startedRuns.isEmpty() && completedRuns.isEmpty()) {
@@ -76,6 +79,8 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 
 	@Override
 	public void startSimulationRun(SimulationRunEntry toStartEntry) {
+		if (stopped) return;
+		
 		int entryId = toStartEntry.getId();
 		notStartedRuns.remove(entryId);
 		toStartEntry.setStatus(SimulationStatus.Started);
@@ -85,6 +90,8 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 
 	@Override
 	public void updateRunStatus(SimulationStatusUpdate update) {
+		if (stopped) return;
+		
 		int simulationRunId = update.getSimulationRunId();
 
 		SimulationRunEntry simulationRunEntry;
@@ -137,5 +144,21 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 	@Override
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
+	}
+
+	@Override
+	public void stop() {
+		this.stopped = true;
+		
+		stopRuns(notStartedRuns);
+		stopRuns(startedRuns);
+	}
+
+	private void stopRuns(HashMap<Integer,SimulationRunEntry> runs) {
+		runs.forEach((key, value) -> {
+			value.setStatus(SimulationStatus.Stopped);
+			completedRuns.put(key, value);
+		});
+		runs.clear();
 	}
 }

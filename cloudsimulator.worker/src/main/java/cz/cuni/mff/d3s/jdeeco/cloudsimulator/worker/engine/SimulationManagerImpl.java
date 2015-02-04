@@ -3,11 +3,14 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.PathEx;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.StopSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnector;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationData;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data.SimulationDataListener;
@@ -62,10 +65,14 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 	}
 
 	@Override
-	public void stopSimulations() {
+	public void stopSimulation(StopSimulationTask task) {
 		synchronized (runningExecutors) {
-			runningExecutors.forEach(x -> x.stop());
-			runningExecutors.clear();
+			List<SimulationExecutor> executorsToStop = runningExecutors.stream()
+					.filter(x -> x.getParameters().getSimulationRunId() == task.getSimulationRunId())
+					.collect(Collectors.toList());
+			for (SimulationExecutor simulationExecutor : executorsToStop) {
+				simulationExecutor.stop();
+			}
 		}
 	}
 
@@ -74,7 +81,8 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 		SimulationExecutorParameters parameters = simulationExecutor.getParameters();
 		RunSimulationTask task = incompleteTasks.get(parameters.getSimulationRunId());
 
-		simulationDataManager.saveResults(parameters.getSimulationRunId(), parameters.getSimulationData(), task.getDataName());
+		simulationDataManager.saveResults(parameters.getSimulationRunId(), parameters.getSimulationData(),
+				task.getDataName());
 		removeExecutor(simulationExecutor);
 	}
 

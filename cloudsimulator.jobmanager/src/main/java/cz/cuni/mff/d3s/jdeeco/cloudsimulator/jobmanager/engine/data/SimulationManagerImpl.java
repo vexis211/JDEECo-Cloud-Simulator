@@ -60,13 +60,23 @@ public class SimulationManagerImpl implements SimulationManager {
 	}
 
 	private void refreshExecutionsInternal() {
-		List<SimulationExecution> notCreatedExecutions = simulationRepository.listNotCompletedExecution().stream()
+		// check stopped executions
+		List<SimulationExecutionEntry> toStopExecutions = simulationRepository
+				.listStoppedExecutions(simulationExecutions.keySet()).stream()
+				.map(x -> simulationExecutions.get(x.getId())).collect(Collectors.toList());
+		for (SimulationExecutionEntry toStopExecution : toStopExecutions) {
+			toStopExecution.stop();
+			simulationExecutions.remove(toStopExecution.getId());
+		}
+
+		// add new executions
+		List<SimulationExecution> notCreatedExecutions = simulationRepository.listNotCompletedExecutions().stream()
 				.filter(x -> !simulationExecutions.containsKey(x.getId())).collect(Collectors.toList());
 
 		for (SimulationExecution notCreatedExecution : notCreatedExecutions) {
 			SimulationExecutionEntry newExecutionEntry = simulationExecutionEntryFactory.create(notCreatedExecution);
 			simulationExecutions.put(newExecutionEntry.getId(), newExecutionEntry);
-			
+
 			String packageName = simplePackageManager.getPackageName(notCreatedExecution);
 			if (packageName != null) {
 				newExecutionEntry.setPackageName(packageName);
