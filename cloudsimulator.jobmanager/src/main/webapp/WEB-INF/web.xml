@@ -22,8 +22,6 @@
 			classpath:configuration/application-webmvc.xml
 			classpath:configuration/application-security.xml
 
-			classpath:configuration/manager-context.xml
-
 			classpath:configuration/application-view.xml
 			classpath:configuration/mail-context.xml
     		
@@ -31,6 +29,8 @@
 		</param-value>
 	</context-param>
 	<!--
+			classpath:configuration/manager-context.xml
+	
 	-->
 	<session-config>
 		<session-timeout>60</session-timeout>

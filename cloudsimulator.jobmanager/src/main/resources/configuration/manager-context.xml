@@ -15,12 +15,12 @@
 		http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
 		http://activemq.apache.org/schema/core
 		http://activemq.apache.org/schema/core/activemq-core-5.10.0.xsd">
-
+<!-- 
 	<context:property-placeholder location="classpath:properties/manager.properties" />
-
+ --> 
 	<bean id="executor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.CustomThreadPoolExecutor"
 		scope="singleton">
-		<constructor-arg name="corePoolSize" value="${executor.corePoolSize}" />
+		<constructor-arg name="corePoolSize" value="${executor.corePoolSize}"/>
 	</bean>
 
 

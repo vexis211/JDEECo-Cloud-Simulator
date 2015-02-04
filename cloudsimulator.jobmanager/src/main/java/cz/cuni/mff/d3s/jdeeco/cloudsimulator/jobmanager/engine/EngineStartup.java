@@ -1,11 +1,11 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine;
-
+/*
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
-
+*/
 public class EngineStartup {
-
+	/*
 	@Resource
 	private JobManagerEngine jobManagerEngine;
 	
@@ -33,4 +33,5 @@ public class EngineStartup {
 			e.printStackTrace();
 		}
 	}
+	*/
 }

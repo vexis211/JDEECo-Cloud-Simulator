@@ -15,7 +15,7 @@
 
 	<!-- Properties in Spring configuration files -->
 	<context:property-placeholder
-		location="classpath:properties/profile.properties, classpath:properties/hibernate.properties, classpath:properties/mail.properties, classpath:properties/build.properties" />
+		location="classpath:properties/profile.properties, classpath:properties/hibernate.properties, classpath:properties/mail.properties, classpath:properties/build.properties, classpath:properties/manager.properties" />
 
 	<bean id="appContext" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContextImpl" scope="singleton">
 		<property name="appVersionNumber" value="${build.buildTimestamp}" />
