@@ -21,6 +21,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserOperationEx
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.utils.HTMLHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.MappingSettings;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.ViewParameters;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged.data.RegisterForm;
 
 /**
@@ -44,21 +45,6 @@ public class RegisterController {
 	 * email link sent
 	 */
 	private static final String REGISTER_STATE_VAR = "registerState";
-
-	/**
-	 * Registration error message.
-	 */
-	private static final String ERROR_MSG_VAR = "errorMsg";
-
-	/**
-	 * Variable with values for register form.
-	 */
-	private static final String ERROR_MODEL_VAR = "model";
-
-	/**
-	 * Where to go after form is canceled.
-	 */
-	private static final String CANCEL_URI = "cancelUri";
 
 	/**
 	 * Logged user.
@@ -142,9 +128,9 @@ public class RegisterController {
 	 */
 	private ModelAndView renderErrors(final RegisterForm form, final BindingResult result) {
 		ModelAndView model = defaultModel().addObject(REGISTER_STATE_VAR, FORM_ERROR_STATE);
-		model.addObject(ERROR_MODEL_VAR, form);
+		model.addObject(ViewParameters.MODEL_VAR, form);
 		FieldError er = result.getFieldError();
-		model.addObject(ERROR_MSG_VAR, er.getDefaultMessage());
+		model.addObject(ViewParameters.ERROR_MSG_VAR, er.getDefaultMessage());
 		return model;
 	}
 
@@ -173,6 +159,6 @@ public class RegisterController {
 	 * @return New instance of default register ModelAndView.
 	 */
 	private ModelAndView defaultModel() {
-		return new ModelAndView(REGISTER_VIEW).addObject(CANCEL_URI, appContext.getSiteRoot());
+		return new ModelAndView(REGISTER_VIEW).addObject(ViewParameters.CANCEL_URI, appContext.getSiteRoot());
 	}
 }

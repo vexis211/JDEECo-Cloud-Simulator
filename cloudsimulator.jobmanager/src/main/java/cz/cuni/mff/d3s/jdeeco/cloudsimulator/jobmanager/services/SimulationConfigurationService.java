@@ -6,10 +6,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationCo
 
 public interface SimulationConfigurationService {
 	List<SimulationConfiguration> listConfigurations();
-	List<SimulationConfiguration> listVisibleConfigurations();
-	List<SimulationConfiguration> listHiddenConfigurations();
-	List<SimulationConfiguration> listVisibleConfigurations(int projectId);
-	List<SimulationConfiguration> listHiddenConfigurations(int projectId);
+	List<SimulationConfiguration> listProjectConfigurations(int projectId);
 
 	SimulationConfiguration getConfigurationById(int configurationId);
 	

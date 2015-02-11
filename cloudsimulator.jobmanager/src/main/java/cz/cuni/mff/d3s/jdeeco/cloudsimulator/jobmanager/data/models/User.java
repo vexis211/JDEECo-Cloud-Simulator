@@ -19,7 +19,6 @@ public class User implements java.io.Serializable {
 	private Set<AuthenticationToken> authenticationTokens = new HashSet<AuthenticationToken>(0);
 
 	private Set<Project> visibleProjects = new HashSet<Project>(0);
-	private Set<SimulationConfiguration> visibleSimulationConfigurations = new HashSet<SimulationConfiguration>(0);
 
 	public User() {
 	}
@@ -34,7 +33,7 @@ public class User implements java.io.Serializable {
 
 	public User(String email, String password, int role, Date registrationDate, Date lastActivityDate,
 			int activationState, Set<UserInfo> userInfos, Set<AuthenticationToken> authenticationTokens,
-			Set<Project> visibleProjects, Set<SimulationConfiguration> visibleSimulationConfigurations) {
+			Set<Project> visibleProjects) {
 		this.email = email;
 		this.password = password;
 		this.role = role;
@@ -44,7 +43,6 @@ public class User implements java.io.Serializable {
 		this.userInfos = userInfos;
 		this.authenticationTokens = authenticationTokens;
 		this.visibleProjects = visibleProjects;
-		this.visibleSimulationConfigurations = visibleSimulationConfigurations;
 	}
 
 	public Integer getId() {
@@ -125,13 +123,5 @@ public class User implements java.io.Serializable {
 
 	public void setVisibleProjects(Set<Project> projects) {
 		this.visibleProjects = projects;
-	}
-
-	public Set<SimulationConfiguration> getVisibleSimulationConfigurations() {
-		return this.visibleSimulationConfigurations;
-	}
-
-	public void setVisibleSimulationConfigurations(Set<SimulationConfiguration> simulationConfigurations) {
-		this.visibleSimulationConfigurations = simulationConfigurations;
 	}
 }

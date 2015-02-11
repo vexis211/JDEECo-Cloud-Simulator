@@ -24,8 +24,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 
 	@SuppressWarnings("unchecked")
 	public BaseDaoImpl() {
-		this.classType = (Class<T>) ((ParameterizedType) getClass()
-				.getGenericSuperclass()).getActualTypeArguments()[0];
+		this.classType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
 	@Override
@@ -33,7 +32,17 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		try {
 			getSession().saveOrUpdate(item);
 		} catch (RuntimeException re) {
-			logger.error("persist failed", re);
+			logger.error("saveOrUpdate failed", re);
+			throw re;
+		}
+	}
+
+	@Override
+	public void merge(T item) {
+		try {
+			getSession().merge(item);
+		} catch (RuntimeException re) {
+			logger.error("merge failed", re);
 			throw re;
 		}
 	}
@@ -101,6 +110,6 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		for (Criterion c : criterion) {
 			crit.add(c);
 		}
-		return (T)crit.uniqueResult();
+		return (T) crit.uniqueResult();
 	}
 }

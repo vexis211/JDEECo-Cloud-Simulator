@@ -39,27 +39,27 @@ public class SimulationConfigurationController {
 
 	@Resource
 	private SimulationConfigurationValidator simulationConfigurationValidator;
-	
-	
+
 	@RequestMapping(value = MappingSettings.CONFIGURATION)
 	public ModelAndView showConfiguration(HttpServletRequest request, @PathVariable int configurationId) {
 
 		SimulationConfiguration configuration = simulationConfigurationService.getConfigurationById(configurationId);
-		
-		if (configuration != null) {		
+
+		if (configuration != null) {
 			ModelAndView modelAndView = ClientHelper.getDefaultModel(CONFIGURATION_VIEW);
 			SimulationConfigurationItem configurationItem = getConfigurationItem(configuration);
 			modelAndView.addObject(ViewParameters.SIMULATION_CONFIGURATION, configurationItem);
-						
+
 			return modelAndView;
-		}
-		else return ProjectController.RedirectToProjectList();
+		} else
+			return ProjectController.RedirectToProjectList();
 	}
 
 	@RequestMapping(value = MappingSettings.CONFIGURATION_ADD, method = RequestMethod.GET)
 	public ModelAndView addConfiguration(HttpServletRequest request, @PathVariable int projectId) {
 
-		ModelAndView modelAndView = ClientHelper.getDefaultModel(ADDCONFIGURATION_VIEW);
+		ModelAndView modelAndView = ClientHelper.getDefaultModel(ADDCONFIGURATION_VIEW).addObject(
+				ViewParameters.CANCEL_URI, String.format("%s/%s", MappingSettings.PROJECT_ROOT, projectId));
 		modelAndView.addObject(ViewParameters.PROJECT_ID, projectId);
 		return modelAndView;
 	}
@@ -70,16 +70,18 @@ public class SimulationConfigurationController {
 
 		simulationConfigurationValidator.validate(simulationConfigurationItem, result);
 		if (result.hasErrors()) {
-			ModelAndView modelAndView = ClientHelper.getDefaultModel(ADDCONFIGURATION_VIEW);
+			ModelAndView modelAndView = ClientHelper.getDefaultModel(ADDCONFIGURATION_VIEW).addObject(
+					ViewParameters.CANCEL_URI, String.format("%s/%s", MappingSettings.PROJECT_ROOT, projectId));
 			modelAndView.addObject(ViewParameters.PROJECT_ID, projectId);
 			modelAndView.addObject(ViewParameters.MODEL_VAR, simulationConfigurationItem);
 			FieldError er = result.getFieldError();
 			modelAndView.addObject(ViewParameters.ERROR_MSG_VAR, er.getDefaultMessage());
 			return modelAndView;
 		}
-		
-		simulationConfigurationService.createConfiguration(projectId, simulationConfigurationItem.getName(), simulationConfigurationItem.getDescription());
-		
+
+		simulationConfigurationService.createConfiguration(projectId, simulationConfigurationItem.getName(),
+				simulationConfigurationItem.getDescription());
+
 		return ProjectController.RedirectToProject(projectId);
 	}
 
@@ -87,32 +89,37 @@ public class SimulationConfigurationController {
 	public ModelAndView editConfiguration(HttpServletRequest request, @PathVariable int configurationId) {
 
 		SimulationConfiguration configuration = simulationConfigurationService.getConfigurationById(configurationId);
-		
-		if (configuration != null) {					
-			ModelAndView modelAndView = ClientHelper.getDefaultModel(EDITCONFIGURATION_VIEW);
+
+		if (configuration != null) {
+			ModelAndView modelAndView = ClientHelper.getDefaultModel(EDITCONFIGURATION_VIEW).addObject(
+					ViewParameters.CANCEL_URI,
+					String.format("%s/%s", MappingSettings.CONFIGURATION_ROOT, configurationId));
 			SimulationConfigurationItem configurationItem = getConfigurationItem(configuration);
 			modelAndView.addObject(ViewParameters.MODEL_VAR, configurationItem);
-						
+
 			return modelAndView;
-		}
-		else return ProjectController.RedirectToProjectList();
+		} else
+			return ProjectController.RedirectToProjectList();
 	}
-	
+
 	@RequestMapping(value = MappingSettings.CONFIGURATION_EDIT, method = RequestMethod.POST)
 	public ModelAndView editConfiguration(HttpServletRequest request, @PathVariable int configurationId,
 			@ModelAttribute SimulationConfigurationItemImpl configurationItem, BindingResult result) {
-			
+
 		simulationConfigurationValidator.validate(configurationItem, result);
 		if (result.hasErrors()) {
-			ModelAndView modelAndView = ClientHelper.getDefaultModel(EDITCONFIGURATION_VIEW);
+			ModelAndView modelAndView = ClientHelper.getDefaultModel(EDITCONFIGURATION_VIEW).addObject(
+					ViewParameters.CANCEL_URI,
+					String.format("%s/%s", MappingSettings.CONFIGURATION_ROOT, configurationId));
 			modelAndView.addObject(ViewParameters.MODEL_VAR, configurationItem);
 			FieldError er = result.getFieldError();
 			modelAndView.addObject(ViewParameters.ERROR_MSG_VAR, er.getDefaultMessage());
 			return modelAndView;
 		}
-		
-		simulationConfigurationService.editConfiguration(configurationId, configurationItem.getName(), configurationItem.getDescription());
-		
+
+		simulationConfigurationService.editConfiguration(configurationId, configurationItem.getName(),
+				configurationItem.getDescription());
+
 		return RedirectToConfiguration(configurationId);
 	}
 
@@ -121,7 +128,8 @@ public class SimulationConfigurationController {
 	}
 
 	public static ModelAndView RedirectToConfiguration(int configurationId) {
-		
-		return ClientHelper.getDefaultModel(String.format("redirect:%s/%s", MappingSettings.CONFIGURATION_ROOT, configurationId));
+
+		return ClientHelper.getDefaultModel(String.format("redirect:%s/%s", MappingSettings.CONFIGURATION_ROOT,
+				configurationId));
 	}
 }

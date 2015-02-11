@@ -35,7 +35,6 @@ public class MappingSettings {
 	public static final String CONFIGURATION = CONFIGURATION_ROOT + "/{configurationId}";
 	public static final String CONFIGURATION_ADD = CONFIGURATION_ROOT + "/add/{projectId}";
 	public static final String CONFIGURATION_EDIT = CONFIGURATION + "/edit";
-	public static final String CONFIGURATION_CONFIGUREVISIBILITY = CONFIGURATION_ROOT + "/configurevisibility/{projectId}";
 
 	public static final String EXECUTION_ROOT = MAIN + "/execution";
 	public static final String EXECUTION = EXECUTION_ROOT + "/{executionId}";

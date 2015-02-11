@@ -15,4 +15,9 @@ public class ViewParameters {
 	
 	
 	public static final String SIMULATION_EXECUTION_ID = "executionId";
+
+	/**
+	 * Where to go after form is canceled.
+	 */
+	public static final String CANCEL_URI = "cancelUri";
 }

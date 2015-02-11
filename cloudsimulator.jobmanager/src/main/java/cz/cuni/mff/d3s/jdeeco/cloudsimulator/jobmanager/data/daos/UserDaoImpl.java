@@ -11,9 +11,7 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
 
 	@Override
 	public User findByEmail(String email) {
-		User user = (User) sessionFactory.getCurrentSession().createCriteria(User.class)
-				.add(Restrictions.eq("email", email)).uniqueResult();
-		return user;
+		return findUniqueByCriteria(Restrictions.eq("email", email));
 	}
 
 	public boolean isUserActivated(User user) {

@@ -1,6 +1,9 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -22,6 +25,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.MappingSettings;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.ViewParameters;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.ProjectItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.ProjectItemImpl;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.ProjectListVisibilitySettings;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.ProjectVisibilitySettings;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.ProjectItemFactory;
 
 @Controller
@@ -34,6 +39,7 @@ public class ProjectController {
 	private static final String PROJECT_VIEW = "main/project/project";
 	private static final String CREATEPROJECT_VIEW = "main/project/createProject";
 	private static final String EDITPROJECT_VIEW = "main/project/editProject";
+	private static final String CONFIGUREPROJECTSVISIBILITY_VIEW = "main/project/configureProjectsVisibility";
 	
 	@Resource
 	private ProjectService projectService;
@@ -75,7 +81,8 @@ public class ProjectController {
 	@RequestMapping(value = MappingSettings.PROJECT_CREATE, method = RequestMethod.GET)
 	public ModelAndView createProject(HttpServletRequest request) {
 
-		return ClientHelper.getDefaultModel(CREATEPROJECT_VIEW);
+		return ClientHelper.getDefaultModel(CREATEPROJECT_VIEW)
+				.addObject(ViewParameters.CANCEL_URI, MappingSettings.MAIN);
 	}
 	
 	@RequestMapping(value = MappingSettings.PROJECT_CREATE, method = RequestMethod.POST)
@@ -83,7 +90,8 @@ public class ProjectController {
 			
 		projectValidator.validate(projectItem, result);
 		if (result.hasErrors()) {
-			ModelAndView modelAndView = ClientHelper.getDefaultModel(CREATEPROJECT_VIEW);
+			ModelAndView modelAndView = ClientHelper.getDefaultModel(CREATEPROJECT_VIEW)
+					.addObject(ViewParameters.CANCEL_URI, MappingSettings.MAIN);
 			modelAndView.addObject(ViewParameters.MODEL_VAR, projectItem);
 			FieldError er = result.getFieldError();
 			modelAndView.addObject(ViewParameters.ERROR_MSG_VAR, er.getDefaultMessage());
@@ -101,7 +109,8 @@ public class ProjectController {
 		Project project = projectService.getProjectById(projectId);
 		
 		if (project != null) {		
-			ModelAndView modelAndView = ClientHelper.getDefaultModel(EDITPROJECT_VIEW);
+			ModelAndView modelAndView = ClientHelper.getDefaultModel(EDITPROJECT_VIEW)
+					.addObject(ViewParameters.CANCEL_URI, String.format("%s/%s", MappingSettings.PROJECT_ROOT, projectId));
 			ProjectItem projectItem = getProjectItem(project);
 			modelAndView.addObject(ViewParameters.PROJECT, projectItem);
 						
@@ -116,7 +125,8 @@ public class ProjectController {
 			
 		projectValidator.validate(projectItem, result);
 		if (result.hasErrors()) {
-			ModelAndView modelAndView = ClientHelper.getDefaultModel(CREATEPROJECT_VIEW);
+			ModelAndView modelAndView = ClientHelper.getDefaultModel(CREATEPROJECT_VIEW)
+					.addObject(ViewParameters.CANCEL_URI, String.format("%s/%s", MappingSettings.PROJECT_ROOT, projectId));
 			modelAndView.addObject(ViewParameters.MODEL_VAR, projectItem);
 			FieldError er = result.getFieldError();
 			modelAndView.addObject(ViewParameters.ERROR_MSG_VAR, er.getDefaultMessage());
@@ -126,6 +136,35 @@ public class ProjectController {
 		projectService.editProject(projectId, projectItem.getName(), projectItem.getDescription());
 
 		return RedirectToProject(projectId);
+	}
+
+
+	@RequestMapping(value = MappingSettings.PROJECT_CONFIGUREVISIBILITY)
+	public ModelAndView configureVisibility(HttpServletRequest request) {
+
+			ModelAndView modelAndView = ClientHelper.getDefaultModel(CONFIGUREPROJECTSVISIBILITY_VIEW)
+					.addObject(ViewParameters.CANCEL_URI, MappingSettings.MAIN);
+
+			Set<Project> visibleProjects = new HashSet<Project>(projectService.listVisibleProjects());
+			
+			List<ProjectVisibilitySettings> visibilitySettings = new ArrayList<>();
+			for (Project project : projectService.listProjects()) {
+				visibilitySettings.add(new ProjectVisibilitySettings(
+						project.getId(), project.getName(), visibleProjects.contains(project)
+						));
+			}
+			modelAndView.addObject("projectListVisibilitySettings", new ProjectListVisibilitySettings(visibilitySettings));
+			
+			return modelAndView;
+	}
+	
+	@RequestMapping(value = MappingSettings.PROJECT_CONFIGUREVISIBILITY, method = RequestMethod.POST)
+	public ModelAndView configureVisibility(HttpServletRequest request,
+			@ModelAttribute ProjectListVisibilitySettings projectListVisibilitySettings, BindingResult result) {
+		
+		projectService.editProjectsVisibility(projectListVisibilitySettings.getVisibilitySettings());
+		
+		return RedirectToProjectList();
 	}
 
 	
@@ -143,7 +182,7 @@ public class ProjectController {
 	}
 	
 	public static ModelAndView RedirectToProjectList() {
-		return ClientHelper.getDefaultModel("redirect:" + MappingSettings.MAIN);
+		return new ModelAndView("redirect:" + MappingSettings.MAIN);
 	}
 	
 	private List<ProjectItem> getProjectItems(List<Project> projects) {

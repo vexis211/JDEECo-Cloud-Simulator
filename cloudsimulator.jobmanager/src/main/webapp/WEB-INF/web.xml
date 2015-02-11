@@ -144,6 +144,12 @@
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		
+		<init-param>
+			<param-name>development</param-name>
+			<param-value>true</param-value>
+		</init-param>		
+		
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 

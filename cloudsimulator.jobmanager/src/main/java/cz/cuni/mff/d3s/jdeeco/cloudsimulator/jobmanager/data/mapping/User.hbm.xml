@@ -45,13 +45,5 @@
                 <column name="ProjectID" not-null="true" />
             </many-to-many>
         </set>
-        <set name="visibleSimulationConfigurations" table="visible_simulation_configuration" inverse="false" lazy="true" fetch="select">
-            <key>
-                <column name="UserID" not-null="true" />
-            </key>
-            <many-to-many entity-name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationConfiguration">
-                <column name="ConfigurationID" not-null="true" />
-            </many-to-many>
-        </set>
     </class>
 </hibernate-mapping>

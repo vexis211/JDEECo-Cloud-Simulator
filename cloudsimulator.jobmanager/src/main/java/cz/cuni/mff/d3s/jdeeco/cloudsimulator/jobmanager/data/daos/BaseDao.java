@@ -4,13 +4,14 @@ import java.util.List;
 
 public interface BaseDao<T> {
 
-	public void saveOrUpdate(T item);
+	void saveOrUpdate(T item);
+	void merge(T item);
 
-	public void delete(T item);
+	void delete(T item);
 
-	public T findById(int id);
+	T findById(int id);
 	
-	public T findLastAdded();
+	T findLastAdded();
 
-	public List<T> findAll();
+	List<T> findAll();
 }

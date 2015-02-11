@@ -18,6 +18,7 @@ import org.openstack4j.model.network.NetFloatingIP;
 import org.openstack4j.model.network.Network;
 import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.Subnet;
+import org.openstack4j.model.storage.object.SwiftContainer;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerIdGenerator;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerIdGeneratorImpl;
@@ -50,13 +51,21 @@ public class OpenStackInfrastructureInitializer {
 
 	private void initialize() {
 		OSClient os = connect();
-		Tenant tenant = getTenant(os);
+//		Tenant tenant = getTenant(os);
+		
+		List<? extends SwiftContainer> list = os.objectStorage().containers().list();
+		System.out.println(list);
 
-		createNetworkInfrastructure(os, tenant);
-		createStorage(os, tenant);
+		createStorage(os);
+		
+		list = os.objectStorage().containers().list();
+		System.out.println(list);
+		
+//		createNetworkInfrastructure(os, tenant);
+//		createStorage(os, tenant);
 
-		createJobManager(os, tenant);
-		createInitialWorkers(os, tenant);
+//		createJobManager(os, tenant);
+//		createInitialWorkers(os, tenant);
 	}
 
 	private void createNetworkInfrastructure(OSClient os, Tenant tenant) {
@@ -101,7 +110,7 @@ public class OpenStackInfrastructureInitializer {
 						.protocol("tcp").portRangeMin(22).portRangeMax(22).build());
 	}
 
-	private void createStorage(OSClient os, Tenant tenant) {
+	private void createStorage(OSClient os) {
 		os.objectStorage().containers()
 				.create(OpenStackInfrastructureInitializerParameters.STORAGE_DATAPACKAGE_CONTAINER);
 	}

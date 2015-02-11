@@ -14,6 +14,7 @@ public class Project implements java.io.Serializable {
 	private String name;
 	private String description;
 	private Set<SimulationConfiguration> simulationConfigurations = new HashSet<SimulationConfiguration>(0);
+	private Set<User> visibleForUsers;
 
 	public Project() {
 	}
@@ -25,11 +26,12 @@ public class Project implements java.io.Serializable {
 	}
 
 	public Project(User creator, String name, String description,
-			Set<SimulationConfiguration> simulationConfigurations) {
+			Set<SimulationConfiguration> simulationConfigurations, Set<User> visibleForUsers) {
 		this.creator = creator;
 		this.name = name;
 		this.description = description;
 		this.simulationConfigurations = simulationConfigurations;
+		this.setVisibleForUsers(visibleForUsers);
 	}
 
 	public Integer getId() {
@@ -72,4 +74,29 @@ public class Project implements java.io.Serializable {
 		this.simulationConfigurations = simulationConfigurations;
 	}
 
+	public Set<User> getVisibleForUsers() {
+		return visibleForUsers;
+	}
+
+	public void setVisibleForUsers(Set<User> visibleForUsers) {
+		this.visibleForUsers = visibleForUsers;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 31 * 1 + (id == null ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Project other = (Project) obj;
+		if (id == null) {
+			if (other.id != null) return false;
+		} else if (!id.equals(other.id)) return false;
+		return true;
+	}
 }
