@@ -10,15 +10,22 @@ public class ProjectItemFactoryImpl implements ProjectItemFactory {
 
 	@Resource
 	private SimulationConfigurationItemFactory configurationItemFactory;
+	
+	@Resource
+	private SimulationDataItemFactory dataItemFactory;
 
 	@Override
-	public ProjectItem create(Project project, boolean addConfigurations) {
+	public ProjectItem create(Project project, boolean addConfigurations, boolean addData) {
 
 		ProjectItem newProjItem = new ProjectItemImpl(project);
 
 		if (addConfigurations){
 			project.getSimulationConfigurations().stream().sorted((c1, c2) -> c1.getName().compareToIgnoreCase(c2.getName()))
 					.forEach(c -> newProjItem.addConfiguration(configurationItemFactory.create(c, false)));
+		}
+		if (addData){
+			project.getSimulationDatas().stream().sorted((d1, d2) -> d1.getName().compareToIgnoreCase(d2.getName()))
+					.forEach(d -> newProjItem.addData(dataItemFactory.create(d)));
 		}
 		return newProjItem;
 	}

@@ -10,13 +10,51 @@
 
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
-		<!-- <link rel="stylesheet" type="text/css" href="#{SiteStyles}/index.css?version=#{AppVersion}" /> -->
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/editSimulationItem.less?version=#{AppVersion}" />
 	</ui:define>
 
 	<ui:define name="MiddleContent">
-		edit simulation data
-		
-		<!-- Dialogs -->
+		<div class="edit-item-div">					
+			<form class="edit-item-form" method="post" action="#{DataPath}/#{data.id}/edit" name="dataItem">
+				<div class="error-div">
+					<h:outputText value="#{errorMsg}" escape="false" />
+				</div>
+				<table>
+					<tr>
+						<td>Name:</td>						
+						<td><input id="name-input" type="text" name="name" value="#{data.name}" /></td>
+					</tr>
+					<tr>
+						<td>Description:</td>			
+						<td><textarea id="description-area" name="description" rows="5">#{data.description}</textarea></td>
+					</tr>
+					<tr>
+						<td>VCS type:</td>						
+						<td>
+							<select id="name-vcsType" name="vcsType">
+							    <option value="Git" selected="selected">Git</option> <!-- TODO implement -->
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Repository URL:</td>						
+						<td><input id="name-repositoryUrl" type="text" name="repositoryUrl" value="#{data.repositoryUrl}" /></td>
+					</tr>
+					<tr>
+						<td>Path to pom:</td>						
+						<td><input id="name-pathToPom" type="text" name="pathToPom" value="#{data.pathToPom}" /></td>
+					</tr>
+					<tr>
+						<td>Maven goals:</td>						
+						<td><input id="name-mavenGoals" type="text" name="mavenGoals" value="#{data.mavenGoals}" /></td>
+					</tr>
+				</table>
+				<div class="actions-div">
+					<input class="submit-input" type="submit" value="Save" />
+					<a class="cancel" href="#{cancelUri}">Cancel</a>
+				</div>
+			</form>
+		</div>
 	</ui:define>
 
 	<!-- Specific scripts. -->

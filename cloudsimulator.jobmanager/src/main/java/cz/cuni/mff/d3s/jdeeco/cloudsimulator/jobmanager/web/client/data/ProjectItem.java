@@ -3,23 +3,20 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data;
 import java.util.List;
 
 public interface ProjectItem {
+	int getId();
+
+	String getName();
+	void setName(String name);
+
+	String getDescription();
+	void setDescription(String description);
+
+	List<SimulationConfigurationItem> getConfigurations();	
+	void addConfiguration(SimulationConfigurationItem configuration);	
 	
-	public static final String NAME_FIELD = "name";
-	public static final String DESCRIPTION_FIELD = "description";
-	
+	int getFailingConfigurationsCount();
+	int getSuccessfulConfigurationsCount(); 
 
-	public int getId();
-
-	public String getName();
-	public void setName(String name);
-
-	public String getDescription();
-	public void setDescription(String description);
-
-	public List<SimulationConfigurationItem> getConfigurations();	
-	public void addConfiguration(SimulationConfigurationItem configuration);	
-	
-	public int getFailingConfigurationsCount();
-	public int getSuccessfulConfigurationsCount(); 
-
+	List<SimulationDataItem> getDatas();	
+	void addData(SimulationDataItem data);
 }

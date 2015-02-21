@@ -12,11 +12,6 @@ public class UserInfo implements java.io.Serializable {
 	public UserInfo() {
 	}
 
-	public UserInfo(User user, String name) {
-		this.user = user;
-		this.name = name;
-	}
-
 	public UserInfo(User user, String name, String value) {
 		this.user = user;
 		this.name = name;
@@ -54,5 +49,4 @@ public class UserInfo implements java.io.Serializable {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
 }

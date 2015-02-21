@@ -10,12 +10,12 @@
 
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
-		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/addSimulationConfiguration.less?version=#{AppVersion}" />
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/addSimulationItem.less?version=#{AppVersion}" />
 	</ui:define>
 
 	<ui:define name="MiddleContent">
-		<div id="add-configuration-div">					
-			<form id="add-configuration-form" method="post" action="#{ConfigurationPath}/add/#{projectId}" name="projectItem">
+		<div class="add-item-div">					
+			<form class="add-item-form" method="post" action="#{ConfigurationPath}/add/#{projectId}" name="simulationConfigurationItem">
 				<div class="error-div">
 					<h:outputText value="#{errorMsg}" escape="false" />
 				</div>
@@ -23,28 +23,18 @@
 					<tr>
 						<td>Name:</td>						
 						<td>
-							<c:if test="#{model.name == null}">
-								<input id="name-input" type="text" name="name" />
-							</c:if>
-							<c:if test="#{model.name != null}">
-								<input id="name-input" type="text" name="name" value="#{model.name}" />
-							</c:if>
+							<input id="name-input" type="text" name="name" value="#{configuration.name}" />
 						</td>
 					</tr>
 					<tr>
 						<td>Description:</td>			
 						<td>
-							<c:if test="#{model.description == null}">
-								<textarea id="description-area" name="description" rows="5" />
-							</c:if>
-							<c:if test="#{model.description != null}">
-								<textarea id="description-area" name="description" rows="5">#{model.description}</textarea>
-							</c:if>
+							<textarea id="description-area" name="description" rows="5">#{configuration.description}</textarea>
 						</td>
 					</tr>
 				</table>
 				<div class="actions-div">
-					<input class="submit-input" type="submit" value="Create" />
+					<input class="submit-input" type="submit" value="Add" />
 					<a class="cancel" href="#{cancelUri}">Cancel</a>
 				</div>
 			</form>

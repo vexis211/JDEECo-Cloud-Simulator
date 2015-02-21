@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +14,9 @@ public class Project implements java.io.Serializable {
 	private User creator;
 	private String name;
 	private String description;
-	private Set<SimulationConfiguration> simulationConfigurations = new HashSet<SimulationConfiguration>(0);
+	private Date created;
+	private Set<SimulationConfiguration> simulationConfigurations = new HashSet<SimulationConfiguration>();
+	private Set<SimulationData> simulationDatas = new HashSet<SimulationData>();
 	private Set<User> visibleForUsers;
 
 	public Project() {
@@ -23,15 +26,6 @@ public class Project implements java.io.Serializable {
 		this.creator = creator;
 		this.name = name;
 		this.description = description;
-	}
-
-	public Project(User creator, String name, String description,
-			Set<SimulationConfiguration> simulationConfigurations, Set<User> visibleForUsers) {
-		this.creator = creator;
-		this.name = name;
-		this.description = description;
-		this.simulationConfigurations = simulationConfigurations;
-		this.setVisibleForUsers(visibleForUsers);
 	}
 
 	public Integer getId() {
@@ -66,12 +60,28 @@ public class Project implements java.io.Serializable {
 		this.description = description;
 	}
 
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
 	public Set<SimulationConfiguration> getSimulationConfigurations() {
 		return this.simulationConfigurations;
 	}
 
 	public void setSimulationConfigurations(Set<SimulationConfiguration> simulationConfigurations) {
 		this.simulationConfigurations = simulationConfigurations;
+	}
+
+	public Set<SimulationData> getSimulationDatas() {
+		return this.simulationDatas;
+	}
+
+	public void setSimulationDatas(Set<SimulationData> simulationDatas) {
+		this.simulationDatas = simulationDatas;
 	}
 
 	public Set<User> getVisibleForUsers() {

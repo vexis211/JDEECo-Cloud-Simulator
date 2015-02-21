@@ -11,6 +11,7 @@ public class ProjectItemImpl implements ProjectItem {
 	private String name;
 	private String description;
 	private List<SimulationConfigurationItem> configurations = new ArrayList<SimulationConfigurationItem>();
+	private List<SimulationDataItem> datas = new ArrayList<>();
 
 	public ProjectItemImpl() {
 	}
@@ -64,5 +65,15 @@ public class ProjectItemImpl implements ProjectItem {
 	@Override
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Override
+	public List<SimulationDataItem> getDatas() {
+		return datas;
+	}
+
+	@Override
+	public void addData(SimulationDataItem data) {
+		this.datas.add(data);
 	}
 }

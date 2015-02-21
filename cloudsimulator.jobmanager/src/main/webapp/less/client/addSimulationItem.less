@@ -1,10 +1,10 @@
 @import "../common/globalVars.less";
 @import "../common/general.less";
 
-#add-configuration-div {	
+.add-item-div {	
 	margin: 10px;
 	
-	#add-configuration-form {
+	.add-item-form {
 		.error-div {
 			padding: 2px;
 			color: @error-color;
@@ -26,14 +26,24 @@
 				}
 			}
 			
-			input {
+			.control-style {
+				.disable-border-overflow;
+				
 				padding: 2px;
 				width: 100%;
 			}
 			
+			input {
+				.control-style;
+			}
+			
+			select {
+				.control-style;
+			}
+			
 			textarea {
-				padding: 3px;
-				width: 100%;
+				.control-style;
+				
 				resize: none;
 			}
 		}

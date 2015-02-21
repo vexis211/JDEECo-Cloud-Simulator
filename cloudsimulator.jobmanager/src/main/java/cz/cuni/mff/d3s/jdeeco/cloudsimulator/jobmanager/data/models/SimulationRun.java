@@ -29,5 +29,4 @@ public class SimulationRun implements java.io.Serializable {
 	public void setSimulationExecution(SimulationExecution simulationExecution) {
 		this.simulationExecution = simulationExecution;
 	}
-
 }

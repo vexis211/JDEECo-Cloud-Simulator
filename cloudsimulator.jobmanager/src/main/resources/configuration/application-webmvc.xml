@@ -86,10 +86,14 @@
 	
 	<bean id="projectValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.ProjectValidator" />
 	<bean id="simulationConfigurationValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.SimulationConfigurationValidator" />
+	<bean id="simulationDataValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.SimulationDataValidator" />
 	
 	<!-- Item factories. -->
 	<bean id="projectItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.ProjectItemFactoryImpl" />
 	<bean id="configurationItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.SimulationConfigurationItemFactoryImpl" />
+	<bean id="dataItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.SimulationDataItemFactoryImpl" />
 	<bean id="executionItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.SimulationExecutionItemFactoryImpl" />
+	
+	<bean id="navigationPathBuilder" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.NavigationPathBuilderImpl" />
 	
 </beans>

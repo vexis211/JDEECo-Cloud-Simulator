@@ -26,7 +26,7 @@ public class MappingSettings {
 
 	public static final String PROJECT_ROOT = MAIN + "/project";
 	public static final String PROJECT = PROJECT_ROOT + "/{projectId}";
-	public static final String PROJECT_CREATE = PROJECT_ROOT + "/create";
+	public static final String PROJECT_ADD = PROJECT_ROOT + "/add";
 	public static final String PROJECT_EDIT = PROJECT + "/edit";
 	public static final String PROJECT_HIDE = PROJECT + "/hide";
 	public static final String PROJECT_CONFIGUREVISIBILITY = PROJECT_ROOT + "/configurevisibility";
@@ -35,6 +35,11 @@ public class MappingSettings {
 	public static final String CONFIGURATION = CONFIGURATION_ROOT + "/{configurationId}";
 	public static final String CONFIGURATION_ADD = CONFIGURATION_ROOT + "/add/{projectId}";
 	public static final String CONFIGURATION_EDIT = CONFIGURATION + "/edit";
+
+	public static final String DATA_ROOT = MAIN + "/data";
+	public static final String DATA = DATA_ROOT + "/{dataId}";
+	public static final String DATA_ADD = DATA_ROOT + "/add/{projectId}";
+	public static final String DATA_EDIT = DATA + "/edit";
 
 	public static final String EXECUTION_ROOT = MAIN + "/execution";
 	public static final String EXECUTION = EXECUTION_ROOT + "/{executionId}";

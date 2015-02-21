@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ public class SimulationConfiguration implements java.io.Serializable {
 	private User creator;
 	private String name;
 	private String description;
+	private Date created;
 	private Set<SimulationExecution> simulationExecutions = new HashSet<SimulationExecution>(0);
 
 	public SimulationConfiguration() {
@@ -24,17 +26,7 @@ public class SimulationConfiguration implements java.io.Serializable {
 		this.name = name;
 		this.description = description;
 	}
-
-	public SimulationConfiguration(Project project, SimulationData simulationData, User creator, String name,
-			String description, Set<SimulationExecution> simulationExecutions) {
-		this.project = project;
-		this.simulationData = simulationData;
-		this.creator = creator;
-		this.name = name;
-		this.description = description;
-		this.simulationExecutions = simulationExecutions;
-	}
-
+	
 	public Integer getId() {
 		return this.id;
 	}
@@ -81,6 +73,14 @@ public class SimulationConfiguration implements java.io.Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
 	}
 
 	public Set<SimulationExecution> getSimulationExecutions() {

@@ -10,13 +10,13 @@
         <many-to-one name="creator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User" fetch="select">
             <column name="CreatorID" not-null="true" />
         </many-to-one>
-        <set name="simulationConfigurations" table="simulation_configuration" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="DataID" />
-            </key>
-            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationConfiguration" />
-        </set>
+        <many-to-one name="project" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.Project" fetch="select">
+            <column name="ProjectID" not-null="true" />
+        </many-to-one>
         
+        <property name="name" type="string">
+            <column name="Name" not-null="true" />
+        </property>
         <property name="description" type="string">
             <column name="Description" length="1000" not-null="true" />
         </property>
@@ -38,5 +38,12 @@
         <property name="mavenGoals" type="string">
             <column name="MavenGoals" length="1000" not-null="true" />
         </property>
+        
+        <set name="simulationConfigurations" table="simulation_configuration" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DataID" />
+            </key>
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationConfiguration" />
+        </set>
     </class>
 </hibernate-mapping>

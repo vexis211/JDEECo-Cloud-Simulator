@@ -7,7 +7,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.Simulati
 public class SimulationExecutionItemFactoryImpl implements SimulationExecutionItemFactory {
 
 	@Override
-	public SimulationExecutionItem create(SimulationExecution execution, boolean addRuns) {
+	public SimulationExecutionItem create(SimulationExecution execution) {
 		SimulationExecutionItem newExecutionItem = new SimulationExecutionItemImpl(execution);
 		return newExecutionItem;
 	}

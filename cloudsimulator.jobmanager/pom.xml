@@ -54,7 +54,7 @@
 				<version>${buildnumber-maven-plugin.version}</version>
 				<executions>
 					<execution>
-						<phase>validate</phase>
+ 						<phase>validate</phase>
 						<goals>
 							<goal>create</goal>
 						</goals>
@@ -388,7 +388,7 @@
 			<artifactId>joda-time</artifactId>
 			<version>${joda-time.version}</version>
 		</dependency>
-
+		
 	</dependencies>
 
 </project>

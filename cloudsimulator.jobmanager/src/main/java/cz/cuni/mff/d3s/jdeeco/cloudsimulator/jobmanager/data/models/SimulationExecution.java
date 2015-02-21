@@ -36,20 +36,6 @@ public class SimulationExecution implements java.io.Serializable {
 		this.endDate = endDate;
 	}
 
-	public SimulationExecution(SimulationConfiguration simulationConfiguration, User creator, String description,
-			SimulationStatus status, Date created, Date started, Date ended, ExecutionEndSpecificationType endSpecificationType, Date endDate, Set<SimulationRun> simulationRuns) {
-		this.simulationConfiguration = simulationConfiguration;
-		this.creator = creator;
-		this.description = description;
-		this.status = status;
-		this.created = created;
-		this.started = started;
-		this.ended = ended;
-		this.endSpecificationType = endSpecificationType;
-		this.endDate = endDate;
-		this.simulationRuns = simulationRuns;
-	}
-
 	public Integer getId() {
 		return this.id;
 	}

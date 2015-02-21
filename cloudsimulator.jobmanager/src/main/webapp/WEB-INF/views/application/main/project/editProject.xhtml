@@ -10,12 +10,14 @@
 
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
-		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/editProject.less?version=#{AppVersion}" />
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/editSimulationItem.less?version=#{AppVersion}" />
 	</ui:define>
 
 	<ui:define name="MiddleContent">
-		<div id="edit-project-div">					
-			<form id="edit-project-form" method="post" action="#{ProjectPath}/#{project.id}/edit" name="projectItem">
+		<ui:include src="/WEB-INF/views/elements/navigationPathHeader.xhtml" />
+		
+		<div class="edit-item-div">					
+			<form class="edit-item-form" method="post" action="#{ProjectPath}/#{project.id}/edit" name="projectItem">
 				<div class="error-div">
 					<h:outputText value="#{errorMsg}" escape="false" />
 				</div>

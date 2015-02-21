@@ -4,11 +4,11 @@ import java.util.Date;
 
 public interface SimulationRunItem {
 
-	public int getId();
+	int getId();
 
-	public String getStatus();
+	String getStatus();
 	
-	public Date getStartedDate();
+	Date getStartedDate();
 	
-	public Date getEndedDate();
+	Date getEndedDate();
 }

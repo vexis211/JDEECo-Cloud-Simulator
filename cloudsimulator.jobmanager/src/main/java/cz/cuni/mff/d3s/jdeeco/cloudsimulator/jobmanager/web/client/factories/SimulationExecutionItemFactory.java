@@ -5,5 +5,5 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.Simulati
 
 public interface SimulationExecutionItemFactory {
 
-	public SimulationExecutionItem create(SimulationExecution execution, boolean addRuns);
+	public SimulationExecutionItem create(SimulationExecution execution);
 }

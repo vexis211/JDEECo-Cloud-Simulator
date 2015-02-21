@@ -11,7 +11,7 @@ public class SimulationConfigurationItemImpl implements SimulationConfigurationI
 	private int id;
 	private String name;
 	private String description;
-	private List<SimulationExecutionItem> executions = new ArrayList<SimulationExecutionItem>();
+	private final List<SimulationExecutionItem> executions = new ArrayList<>();
 	private SimulationExecutionItem lastExecution;
 	
 	public SimulationConfigurationItemImpl() {

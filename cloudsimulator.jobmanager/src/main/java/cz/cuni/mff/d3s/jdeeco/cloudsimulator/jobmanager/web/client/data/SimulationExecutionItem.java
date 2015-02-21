@@ -7,22 +7,22 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
 
 public interface SimulationExecutionItem {
 
-	public int getId();
+	int getId();
 
-	public String getDescription();
+	String getDescription();
 
-	public void setDescription(String description);
+	void setDescription(String description);
 
-	public SimulationStatus getStatus();
+	SimulationStatus getStatus();
 
-	public String getStatusDesc();
+	String getStatusDesc();
 	
-	public Date getCreatedDate();
+	Date getCreatedDate();
 	
-	public Date getStartedDate();
+	Date getStartedDate();
 	
-	public Date getEndedDate();
+	Date getEndedDate();
 
-	public List<SimulationRunItem> getRuns();	
-	public void addRun(SimulationRunItem run);
+	List<SimulationRunItem> getRuns();	
+	void addRun(SimulationRunItem run);
 }

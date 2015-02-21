@@ -28,6 +28,7 @@
 	<bean id="userService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserServiceImpl" scope="singleton" />
 	<bean id="projectService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.ProjectServiceImpl" scope="singleton" />
 	<bean id="simulationConfigurationService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.SimulationConfigurationServiceImpl" scope="singleton" />
+	<bean id="simulationDataService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.SimulationDataServiceImpl" scope="singleton" />
 	<bean id="simulationExecutionService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.SimulationExecutionServiceImpl" scope="singleton" />
 
 	<!-- Scan for all of Spring components such as Spring Service -->

@@ -12,6 +12,8 @@ public class SimulationData implements java.io.Serializable {
 
 	private Integer id;
 	private User creator;
+	private Project project;
+	private String name;
 	private String description;
 	private Date created;
 	private VCSType vcsType;
@@ -24,27 +26,16 @@ public class SimulationData implements java.io.Serializable {
 	public SimulationData() {
 	}
 
-	public SimulationData(User creator, String description, Date created, VCSType vcsType, String repositoryURL,
+	public SimulationData(User creator, Project project, String name, String description, VCSType vcsType, String repositoryURL,
 			String pathToPom, String mavenGoals) {
 		this.creator = creator;
+		this.project = project;
+		this.name = name;
 		this.description = description;
-		this.created = created;
 		this.vcsType = vcsType;
 		this.repositoryURL = repositoryURL;
 		this.pathToPom = pathToPom;
 		this.mavenGoals = mavenGoals;
-	}
-
-	public SimulationData(User creator, String description, Date created, VCSType vcsType, String repositoryURL,
-			String pathToPom, String mavenGoals, Set<SimulationConfiguration> simulationConfigurations) {
-		this.creator = creator;
-		this.description = description;
-		this.created = created;
-		this.vcsType = vcsType;
-		this.repositoryURL = repositoryURL;
-		this.pathToPom = pathToPom;
-		this.mavenGoals = mavenGoals;
-		this.simulationConfigurations = simulationConfigurations;
 	}
 
 	public Integer getId() {
@@ -61,6 +52,22 @@ public class SimulationData implements java.io.Serializable {
 
 	public void setCreator(User creator) {
 		this.creator = creator;
+	}
+
+	public Project getProject() {
+		return this.project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getDescription() {

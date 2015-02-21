@@ -19,16 +19,16 @@ public class SimulationConfigurationItemFactoryImpl implements SimulationConfigu
 	public SimulationConfigurationItem create(SimulationConfiguration configuration, boolean addExecutions) {
 
 		Optional<SimulationExecution> lastExecutionOptional = configuration.getSimulationExecutions().stream()
-				.max((e1, e2) -> e1.getId().compareTo(e2.getId()));
+				.max((e1, e2) -> e1.getId().compareTo(e2.getId())); // TODO speed up
 		SimulationExecutionItem lastExecutionItem = lastExecutionOptional.isPresent() ? executionItemFactory.create(
-				lastExecutionOptional.get(), false) : null;
+				lastExecutionOptional.get()) : null;
 
 		SimulationConfigurationItem newConfigItem = new SimulationConfigurationItemImpl(configuration,
 				lastExecutionItem);
 
 		if (addExecutions) {
 			configuration.getSimulationExecutions().stream().sorted((c1, c2) -> c1.getId().compareTo(c2.getId()))
-					.forEach(c -> newConfigItem.addExecution(executionItemFactory.create(c, false)));
+					.forEach(c -> newConfigItem.addExecution(executionItemFactory.create(c)));
 		}
 
 		return newConfigItem;

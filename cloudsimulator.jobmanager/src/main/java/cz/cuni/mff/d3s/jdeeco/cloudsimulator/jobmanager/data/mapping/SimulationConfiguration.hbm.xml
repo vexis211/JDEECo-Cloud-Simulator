@@ -22,6 +22,9 @@
         <property name="description" type="string">
             <column name="Description" length="1000" not-null="true" />
         </property>
+        <property name="created" type="timestamp" insert="false">
+            <column name="Created" length="19" not-null="true" />
+        </property>
         <set name="simulationExecutions" table="simulation_execution" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="ConfigurationID" not-null="true" />

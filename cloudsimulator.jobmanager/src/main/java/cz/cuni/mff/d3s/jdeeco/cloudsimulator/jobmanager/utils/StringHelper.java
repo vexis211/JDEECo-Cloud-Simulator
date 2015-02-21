@@ -64,6 +64,23 @@ public abstract class StringHelper {
 	}
 
 	/**
+	 * Makes the first letter upper case.
+	 * 
+	 * @param string
+	 *            String that will have its first letter in upper form.
+	 * @return First letter in upper.
+	 */
+	public static String firstToUpper(final String string) {
+		if (isEmpty(string)) {
+			return string;
+		} else {
+			StringBuilder b = new StringBuilder(string);
+			b.setCharAt(0, Character.toUpperCase(string.charAt(0)));
+			return b.toString();
+		}
+	}
+
+	/**
 	 * Returns string containing only letters, numbers, '-' and '_'.
 	 * 
 	 * @param s
