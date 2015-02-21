@@ -13,14 +13,16 @@
 		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/projectList.less?version=#{AppVersion}" />
 	</ui:define>
 
-	<ui:define name="MiddleContent">
+	<ui:define name="NavigationBarContent">
 		<ui:include src="/WEB-INF/views/elements/navigationPathHeader.xhtml" />
-	
+		
 		<div id="content-right-header-div">
 			<a href="#{ProjectPath}/add">Add Project</a>			
 			<a href="#{ProjectPath}/configurevisibility">Configure Visible Projects</a>
 		</div>
-		
+	</ui:define>
+
+	<ui:define name="MiddleContent">
 		<div id="projects-div">
 			<c:forEach var="project" items="#{projects}">
 				<ui:include src="/WEB-INF/views/elements/items/projectListItem.xhtml" />

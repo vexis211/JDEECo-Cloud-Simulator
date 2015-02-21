@@ -13,9 +13,7 @@
 		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/configureProjectsVisibility.less?version=#{AppVersion}" />
 	</ui:define>
 
-	<ui:define name="MiddleContent">	
-		<ui:include src="/WEB-INF/views/elements/navigationPathHeader.xhtml" />
-					
+	<ui:define name="MiddleContent">
 		<div id="configure-visibility-div">
 			<div class="configure-visibility-title">Configure project visibility:</div>
 	
@@ -27,10 +25,14 @@
 						<input type="hidden" name="visibilitySettings[#{loop.index}].projectName" value="#{projectVisibilitySettings.projectName}" />
 						
 						<c:if test="#{projectVisibilitySettings.visible}">			
-							<input type="checkbox" name="visibilitySettings[#{loop.index}].visible" checked="checked">#{projectVisibilitySettings.projectName}</input>
+							<input type="checkbox" name="visibilitySettings[#{loop.index}].visible" checked="checked">
+								<h:outputText value="#{projectVisibilitySettings.projectName}" />
+							</input>
 						</c:if>
 						<c:if test="#{!(projectVisibilitySettings.visible)}">						
-							<input type="checkbox" name="visibilitySettings[#{loop.index}].visible">#{projectVisibilitySettings.projectName}</input>
+							<input type="checkbox" name="visibilitySettings[#{loop.index}].visible">
+								<h:outputText value="#{projectVisibilitySettings.projectName}" />
+							</input>
 						</c:if>
 						<br />
 					</c:forEach>

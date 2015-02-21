@@ -8,6 +8,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
 public interface SimulationConfigurationItem {
 
 	public int getId();
+	Date getCreated();
+	String getCreator();
 
 	public String getName();
 

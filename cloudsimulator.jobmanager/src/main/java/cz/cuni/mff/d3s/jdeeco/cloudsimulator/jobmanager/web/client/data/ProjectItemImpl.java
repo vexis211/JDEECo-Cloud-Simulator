@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.Project;
@@ -8,6 +9,9 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
 
 public class ProjectItemImpl implements ProjectItem {
 	private int id;
+	private Date created;
+	private String creator;
+	
 	private String name;
 	private String description;
 	private List<SimulationConfigurationItem> configurations = new ArrayList<SimulationConfigurationItem>();
@@ -18,6 +22,9 @@ public class ProjectItemImpl implements ProjectItem {
 
 	public ProjectItemImpl(Project project) {
 		this.id = project.getId();
+		this.created = project.getCreated();
+		this.creator = project.getCreator().getEmail();
+		
 		this.name = project.getName();
 		this.description = project.getDescription();
 	}
@@ -25,6 +32,16 @@ public class ProjectItemImpl implements ProjectItem {
 	@Override
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public Date getCreated() {
+		return created;
+	}
+
+	@Override
+	public String getCreator() {
+		return creator;
 	}
 
 	@Override

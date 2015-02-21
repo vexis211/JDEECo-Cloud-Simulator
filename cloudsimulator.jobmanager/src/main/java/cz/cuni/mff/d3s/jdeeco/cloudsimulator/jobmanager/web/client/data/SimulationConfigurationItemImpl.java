@@ -9,36 +9,52 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
 
 public class SimulationConfigurationItemImpl implements SimulationConfigurationItem {
 	private int id;
+	private Date created;
+	private String creator;
+
 	private String name;
 	private String description;
 	private final List<SimulationExecutionItem> executions = new ArrayList<>();
 	private SimulationExecutionItem lastExecution;
-	
+
 	public SimulationConfigurationItemImpl() {
 	}
-	
-	
+
 	public SimulationConfigurationItemImpl(SimulationConfiguration configuration, SimulationExecutionItem lastExecution) {
 		this.id = configuration.getId();
+		this.created = configuration.getCreated();
+		this.creator = configuration.getCreator().getEmail();
+		
 		this.name = configuration.getName();
 		this.description = configuration.getDescription();
 		this.lastExecution = lastExecution;
 	}
-	
-	
+
 	@Override
 	public int getId() {
 		return id;
 	}
+
+	@Override
+	public Date getCreated() {
+		return created;
+	}
+
+	@Override
+	public String getCreator() {
+		return creator;
+	}
+
 	@Override
 	public String getName() {
 		return name;
 	}
+
 	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	public String getDescription() {
 		return description;

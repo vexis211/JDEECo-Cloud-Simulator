@@ -12,15 +12,27 @@
 		<!-- Stylesheets -->
 		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/simulationConfiguration.less?version=#{AppVersion}" />
 	</ui:define>
-
-	<ui:define name="MiddleContent">
+	
+	<ui:define name="NavigationBarContent">
+		<ui:include src="/WEB-INF/views/elements/navigationPathHeader.xhtml" />
+		
 		<div id="content-right-header-div">				
 			<a href="#{ConfigurationPath}/#{configuration.id}/edit">Edit configuration</a>	
 			<a href="#{ExecutionPath}/run/#{configuration.id}">Execute Configuration</a>
 		</div>
-				
+	</ui:define>
+	
+	<ui:define name="MiddleContent">				
 		<div id="configuration-div">
 			<div class="configuration-name">Configuration: #{configuration.name}</div>
+			<div class="configuration-creation">
+				Created 
+				<h:outputText value="#{configuration.created}">
+	                <f:convertDateTime pattern="dd/MM/yyyy" />
+	            </h:outputText>
+		        by		        
+				<h:outputText value="#{configuration.creator}" />
+            </div>
 			<div class="configuration-description">#{configuration.description}</div>
 		
 			<div class="execution-list-header">Executions:</div>

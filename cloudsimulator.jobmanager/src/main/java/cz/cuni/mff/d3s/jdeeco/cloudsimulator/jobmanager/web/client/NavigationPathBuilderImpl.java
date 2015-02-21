@@ -71,9 +71,9 @@ public class NavigationPathBuilderImpl implements NavigationPathBuilder {
 	@Override
 	public NavigationPath buildFromSimulationExecution(int executionId) {
 		SimulationExecution execution = simulationExecutionService.getExecutionById(executionId);
-		NavigationPath navigationPath = buildFromProject(execution.getSimulationConfiguration().getId());
+		NavigationPath navigationPath = buildFromSimulationConfiguration(execution.getSimulationConfiguration().getId());
 		navigationPath.addStep(new NavigationPathStepImpl(dateFormat.format(execution.getCreated()), String.format(
-				"%s/%s", MappingSettings.DATA_ROOT, executionId)));
+				"%s/%s", MappingSettings.EXECUTION_ROOT, executionId)));
 		return navigationPath;
 	}
 }

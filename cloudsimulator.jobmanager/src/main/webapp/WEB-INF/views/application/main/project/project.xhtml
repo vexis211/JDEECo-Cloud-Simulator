@@ -13,7 +13,7 @@
 		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/project.less?version=#{AppVersion}" />
 	</ui:define>
 
-	<ui:define name="MiddleContent">
+	<ui:define name="NavigationBarContent">
 		<ui:include src="/WEB-INF/views/elements/navigationPathHeader.xhtml" />
 		
 		<div id="content-right-header-div">				
@@ -22,9 +22,19 @@
 			
 			<a href="#{DataPath}/add/#{project.id}" class="startnewcategory">Add data</a>
 		</div>
-				
+	</ui:define>
+
+	<ui:define name="MiddleContent">				
 		<div id="project-div">
-			<div class="project-name">Project: #{project.name}</div>
+			<div class="project-name">Project: <h:outputText value="#{project.name}" /></div>
+			<div class="project-creation">
+				Created 
+				<h:outputText value="#{project.created}">
+	                <f:convertDateTime pattern="dd/MM/yyyy" />
+	            </h:outputText>
+		        by		        
+				<h:outputText value="#{project.creator}" />
+            </div>
 			<div class="project-description">#{project.description}</div>
 		
 			<div class="configuration-list-header">Configurations:</div>

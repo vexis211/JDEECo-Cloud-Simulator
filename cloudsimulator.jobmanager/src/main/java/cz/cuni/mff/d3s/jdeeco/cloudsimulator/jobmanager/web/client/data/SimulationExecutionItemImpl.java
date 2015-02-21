@@ -10,6 +10,9 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
 public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 
 	private int id;
+	private Date created;
+	private String creator;
+	
 	private String description;
 	private SimulationStatus status;
 	private String statusDesc;
@@ -23,6 +26,9 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 	
 	public SimulationExecutionItemImpl(SimulationExecution execution) {
 		this.id = execution.getId();
+		this.created = execution.getCreated();
+		this.creator = execution.getCreator().getEmail();
+		
 		this.description = execution.getDescription();
 		this.status = execution.getStatus();
 		this.statusDesc = execution.getStatus().toString(); // TODO improvement - % done??
@@ -34,6 +40,16 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 	@Override
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public Date getCreated() {
+		return created;
+	}
+
+	@Override
+	public String getCreator() {
+		return creator;
 	}
 
 	@Override

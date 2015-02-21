@@ -13,13 +13,25 @@
 		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/simulationData.less?version=#{AppVersion}" />
 	</ui:define>
 
-	<ui:define name="MiddleContent">
+	<ui:define name="NavigationBarContent">
+		<ui:include src="/WEB-INF/views/elements/navigationPathHeader.xhtml" />
+		
 		<div id="content-right-header-div">				
 			<a href="#{DataPath}/#{data.id}/edit">Edit data</a>
 		</div>
-				
+	</ui:define>
+
+	<ui:define name="MiddleContent">				
 		<div id="data-div">
 			<div class="data-name">Data: #{data.name}</div>
+			<div class="data-creation">
+				Created 
+				<h:outputText value="#{data.created}">
+	                <f:convertDateTime pattern="dd/MM/yyyy" />
+	            </h:outputText>
+		        by		        
+				<h:outputText value="#{data.creator}" />
+            </div>
 			<div class="data-description">#{data.description}</div>
 				
 			<table class="data-properties">

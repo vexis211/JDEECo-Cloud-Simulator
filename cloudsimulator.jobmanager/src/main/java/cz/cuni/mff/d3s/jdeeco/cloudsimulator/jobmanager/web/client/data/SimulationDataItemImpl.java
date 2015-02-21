@@ -1,10 +1,15 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data;
 
+import java.util.Date;
+
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationData;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.vcs.VCSType;
 
 public class SimulationDataItemImpl implements SimulationDataItem {
 	private int id;
+	private Date created;
+	private String creator;
+	
 	private String name;
 	private String description;
 	private VCSType vcsType;
@@ -17,6 +22,9 @@ public class SimulationDataItemImpl implements SimulationDataItem {
 
 	public SimulationDataItemImpl(SimulationData data) {
 		this.id = data.getId();
+		this.created = data.getCreated();
+		this.creator = data.getCreator().getEmail();
+		
 		this.name = data.getName();
 		this.description = data.getDescription();
 		this.vcsType = data.getVcsType();
@@ -28,6 +36,16 @@ public class SimulationDataItemImpl implements SimulationDataItem {
 	@Override
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public Date getCreated() {
+		return created;
+	}
+
+	@Override
+	public String getCreator() {
+		return creator;
 	}
 
 	@Override

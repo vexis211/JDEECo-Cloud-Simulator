@@ -78,7 +78,7 @@
 									and revision parameters. Revision is set from changeSet parameter from buildnumber-maven-plugin. -->
 								<!-- <echo file="src/main/resources/properties/build.properties">build.buildNumber=${timestamp}${line.separator}</echo> -->
 								<echo file="src/main/resources/properties/build.properties">build.buildTimestamp=${timestamp}${line.separator}</echo>
-								<echo file="src/main/resources/properties/build.properties" append="true">build.revision=${changeSet}</echo>
+								<!-- <echo file="src/main/resources/properties/build.properties" append="true">build.revision=${changeSet}</echo> -->
 
 								<copy todir="target/classes">
 									<fileset dir="src/main/resources">

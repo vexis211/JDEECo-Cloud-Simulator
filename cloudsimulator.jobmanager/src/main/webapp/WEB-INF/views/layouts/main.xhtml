@@ -37,6 +37,7 @@
 	
 	<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/main.less?version=#{AppVersion}" />
 	<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/userPanel.less?version=#{AppVersion}" />
+	<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/elements/navigationPathHeader.less?version=#{AppVersion}" />
 		
 	<!-- Templates may change default title if needed. -->
 	<title><ui:insert name="TitleContent">JDEECo Simulator</ui:insert></title>
@@ -76,6 +77,11 @@
 						<ui:param name="user" value="${user}" />
 					</ui:include>
 				</div>
+			</ui:insert>
+		</div>
+		<div id="navigation-bar-content">
+			<ui:insert name="NavigationBarContent">
+				<ui:include src="/WEB-INF/views/elements/navigationPathHeader.xhtml" />
 			</ui:insert>
 		</div>
 		<div id="middle-content">
