@@ -20,13 +20,14 @@ public class SimulationExecution implements java.io.Serializable {
 	private Date ended;
     private ExecutionEndSpecificationType endSpecificationType;
 	private Date endDate;
+	private int runCount;
 	private Set<SimulationRun> simulationRuns = new HashSet<SimulationRun>(0);
 
 	public SimulationExecution() {
 	}
 
 	public SimulationExecution(SimulationConfiguration simulationConfiguration, User creator, String description,
-			SimulationStatus status, Date created, Date ended, ExecutionEndSpecificationType endSpecificationType, Date endDate) {
+			SimulationStatus status, Date created, Date ended, ExecutionEndSpecificationType endSpecificationType, Date endDate, int runCount) {
 		this.simulationConfiguration = simulationConfiguration;
 		this.creator = creator;
 		this.description = description;
@@ -34,6 +35,7 @@ public class SimulationExecution implements java.io.Serializable {
 		this.created = created;
 		this.endSpecificationType = endSpecificationType;
 		this.endDate = endDate;
+		this.runCount = runCount;
 	}
 
 	public Integer getId() {
@@ -42,6 +44,14 @@ public class SimulationExecution implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public int getRunCount() {
+		return runCount;
+	}
+
+	public void setRunCount(int runCount) {
+		this.runCount = runCount;
 	}
 
 	public SimulationConfiguration getSimulationConfiguration() {

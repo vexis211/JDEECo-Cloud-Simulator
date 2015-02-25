@@ -40,6 +40,9 @@
         <property name="endDate" type="timestamp">
             <column name="EndDate" length="19" />
         </property>
+        <property name="runCount" type="int">
+            <column name="RunCount" not-null="true" />
+        </property>
         <set name="simulationRuns" table="simulation_run" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="ExecutionID" not-null="true" />

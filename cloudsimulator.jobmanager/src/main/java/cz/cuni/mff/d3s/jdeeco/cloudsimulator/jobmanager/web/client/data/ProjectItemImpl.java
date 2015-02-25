@@ -35,6 +35,11 @@ public class ProjectItemImpl implements ProjectItem {
 	}
 
 	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
 	public Date getCreated() {
 		return created;
 	}

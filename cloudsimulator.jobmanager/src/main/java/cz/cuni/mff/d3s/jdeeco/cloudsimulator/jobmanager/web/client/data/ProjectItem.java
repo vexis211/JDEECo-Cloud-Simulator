@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface ProjectItem {
 	int getId();
+	void setId(int id);
+	
 	Date getCreated();
 	String getCreator();
 

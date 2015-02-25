@@ -8,9 +8,13 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationCo
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.SimulationConfigurationItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.SimulationConfigurationItemImpl;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.SimulationDataItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.SimulationExecutionItem;
 
 public class SimulationConfigurationItemFactoryImpl implements SimulationConfigurationItemFactory {
+
+	@Resource
+	private SimulationDataItemFactory dataItemFactory;
 
 	@Resource
 	private SimulationExecutionItemFactory executionItemFactory;
@@ -18,12 +22,15 @@ public class SimulationConfigurationItemFactoryImpl implements SimulationConfigu
 	@Override
 	public SimulationConfigurationItem create(SimulationConfiguration configuration, boolean addExecutions) {
 
-		Optional<SimulationExecution> lastExecutionOptional = configuration.getSimulationExecutions().stream()
-				.max((e1, e2) -> e1.getId().compareTo(e2.getId())); // TODO speed up
-		SimulationExecutionItem lastExecutionItem = lastExecutionOptional.isPresent() ? executionItemFactory.create(
-				lastExecutionOptional.get()) : null;
+		SimulationDataItem dataItem = dataItemFactory.create(configuration.getSimulationData());
 
-		SimulationConfigurationItem newConfigItem = new SimulationConfigurationItemImpl(configuration,
+		Optional<SimulationExecution> lastExecutionOptional = configuration.getSimulationExecutions().stream()
+				.max((e1, e2) -> e1.getId().compareTo(e2.getId())); // TODO
+																	// speed up
+		SimulationExecutionItem lastExecutionItem = lastExecutionOptional.isPresent() ? executionItemFactory
+				.create(lastExecutionOptional.get()) : null;
+
+		SimulationConfigurationItem newConfigItem = new SimulationConfigurationItemImpl(configuration, dataItem,
 				lastExecutionItem);
 
 		if (addExecutions) {

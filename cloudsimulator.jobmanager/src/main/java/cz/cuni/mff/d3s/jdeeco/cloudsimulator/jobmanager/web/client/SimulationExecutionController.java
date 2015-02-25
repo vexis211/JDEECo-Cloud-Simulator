@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContext;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.SimulationExecutionService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.MappingSettings;
@@ -35,6 +36,9 @@ public class SimulationExecutionController {
 	@Resource
 	private NavigationPathBuilder navigationPathBuilder;
 
+	@Resource
+	private AppContext appContext;
+
 	@RequestMapping(value = MappingSettings.EXECUTION)
 	public ModelAndView showExecution(HttpServletRequest request, @PathVariable int executionId) {
 
@@ -49,7 +53,7 @@ public class SimulationExecutionController {
 			return modelAndView;
 		}
 
-		return ProjectController.RedirectToProjectList();
+		return ProjectController.RedirectToProjectList(appContext.getSiteRoot());
 	}
 
 	@RequestMapping(value = MappingSettings.EXECUTION_RUN)
@@ -61,7 +65,7 @@ public class SimulationExecutionController {
 
 		// return ClientHelper.getDefaultModel(ADDEXECUTION_VIEW);
 
-		return SimulationConfigurationController.RedirectToConfiguration(configurationId);
+		return SimulationConfigurationController.RedirectToConfiguration(appContext.getSiteRoot(), configurationId);
 	}
 
 	@RequestMapping(value = MappingSettings.EXECUTION_EDIT)

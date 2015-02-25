@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContext;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.Project;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.ProjectService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.MappingSettings;
@@ -52,6 +53,9 @@ public class ProjectController {
 	@Resource
 	private NavigationPathBuilder navigationPathBuilder;
 
+	@Resource
+	private AppContext appContext;
+
 	@RequestMapping(value = MappingSettings.MAIN)
 	public ModelAndView showProjectList(HttpServletRequest request) {
 
@@ -84,7 +88,7 @@ public class ProjectController {
 	@RequestMapping(value = MappingSettings.PROJECT_ADD, method = RequestMethod.GET)
 	public ModelAndView addProject(HttpServletRequest request) {
 
-		return getDefaultModelAnView(ADDPROJECT_VIEW).withCancelUri(MappingSettings.MAIN);
+		return getDefaultModelAnView(ADDPROJECT_VIEW).withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.MAIN));
 	}
 
 	@RequestMapping(value = MappingSettings.PROJECT_ADD, method = RequestMethod.POST)
@@ -95,7 +99,8 @@ public class ProjectController {
 		if (result.hasErrors()) {
 			FieldError er = result.getFieldError();
 
-			ModelAndView modelAndView = getDefaultModelAnView(ADDPROJECT_VIEW).withCancelUri(MappingSettings.MAIN)
+			ModelAndView modelAndView = getDefaultModelAnView(ADDPROJECT_VIEW)
+					.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.MAIN))
 					.withProject(projectItem).withErrorMessage(er.getDefaultMessage())
 					.withNavigationPath(navigationPathBuilder.buildFromHome());
 
@@ -115,13 +120,13 @@ public class ProjectController {
 		if (project != null) {
 			ProjectItem projectItem = projectItemFactory.create(project, false, false);
 
-			ModelAndView modelAndView = getDefaultModelAnView(EDITPROJECT_VIEW).withCancelUri(
-					String.format("%s/%s", MappingSettings.PROJECT_ROOT, projectId)).withProject(projectItem)
-					.withNavigationPath(navigationPathBuilder.buildFromProject(projectId));
+			ModelAndView modelAndView = getDefaultModelAnView(EDITPROJECT_VIEW)
+					.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.PROJECT_ROOT, projectId))
+					.withProject(projectItem).withNavigationPath(navigationPathBuilder.buildFromProject(projectId));
 
 			return modelAndView;
 		}
-		
+
 		return RedirectToProjectList();
 	}
 
@@ -134,7 +139,7 @@ public class ProjectController {
 			FieldError er = result.getFieldError();
 
 			ModelAndView modelAndView = getDefaultModelAnView(EDITPROJECT_VIEW)
-					.withCancelUri(String.format("%s/%s", MappingSettings.PROJECT_ROOT, projectId))
+					.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.PROJECT_ROOT, projectId))
 					.withProject(projectItem).withErrorMessage(er.getDefaultMessage())
 					.withNavigationPath(navigationPathBuilder.buildFromProject(projectId));
 
@@ -157,8 +162,9 @@ public class ProjectController {
 					.contains(project)));
 		}
 
-		ModelAndView modelAndView = getDefaultModelAnView(CONFIGUREPROJECTSVISIBILITY_VIEW).withCancelUri(
-				MappingSettings.MAIN).withProjectListVisibility(new ProjectListVisibilitySettings(visibilitySettings))
+		ModelAndView modelAndView = getDefaultModelAnView(CONFIGUREPROJECTSVISIBILITY_VIEW)
+				.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.MAIN))
+				.withProjectListVisibility(new ProjectListVisibilitySettings(visibilitySettings))
 				.withNavigationPath(navigationPathBuilder.buildFromHome());
 
 		return modelAndView;
@@ -181,13 +187,20 @@ public class ProjectController {
 		return RedirectToProjectList();
 	}
 
-	public static ModelAndView RedirectToProject(int projectId) {
-
-		return new ModelAndView(String.format("redirect:%s/%s", MappingSettings.PROJECT_ROOT, projectId));
+	private ModelAndView RedirectToProject(int projectId){
+		return RedirectToProject(appContext.getSiteRoot(), projectId);
+	}
+	
+	public static ModelAndView RedirectToProject(String siteRoot, int projectId) {
+		return new ModelAndView("redirect:" + MappingSettings.GetFullUri(siteRoot, MappingSettings.PROJECT_ROOT, projectId));
 	}
 
-	public static ModelAndView RedirectToProjectList() {
-		return new ModelAndView("redirect:" + MappingSettings.MAIN);
+	private ModelAndView RedirectToProjectList(){
+		return RedirectToProjectList(appContext.getSiteRoot());
+	}
+	
+	public static ModelAndView RedirectToProjectList(String siteRoot) {
+		return new ModelAndView("redirect:" + MappingSettings.GetFullUri(siteRoot, MappingSettings.MAIN));
 	}
 
 	private List<ProjectItem> getProjectItems(List<Project> projects) {

@@ -112,7 +112,7 @@
 		<security:intercept-url pattern="/main/**" access="ROLE_USER,ROLE_ADMINISTRATOR" />
 
 		<security:form-login login-page="/" login-processing-url="/client/auth"
-			default-target-url="${profile.siteRoot}main" password-parameter="password"
+			default-target-url="${profile.siteRoot}/main" password-parameter="password"
 			username-parameter="email" always-use-default-target="true"
 			authentication-failure-handler-ref="authenticationFailureHandler" />
 

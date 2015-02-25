@@ -10,35 +10,14 @@
 
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
-		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/editSimulationItem.less?version=#{AppVersion}" />
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/simulationItemSettings.less?version=#{AppVersion}" />
 	</ui:define>
 
-	<ui:define name="MiddleContent">
-		<div class="edit-item-div">					
-			<form class="edit-item-form" method="post" action="#{ConfigurationPath}/#{configuration.id}/edit" name="simulationConfigurationItem">
-				<div class="error-div">
-					<h:outputText value="#{errorMsg}" escape="false" />
-				</div>
-				<table>
-					<tr>
-						<td>Name:</td>						
-						<td>
-							<input id="name-input" type="text" name="name" value="#{configuration.name}" />
-						</td>
-					</tr>
-					<tr>
-						<td>Description:</td>			
-						<td>
-							<textarea id="description-area" name="description" rows="5">#{configuration.description}</textarea>
-						</td>
-					</tr>
-				</table>
-				<div class="actions-div">
-					<input class="submit-input" type="submit" value="Save" />
-					<a class="cancel" href="#{cancelUri}">Cancel</a>
-				</div>
-			</form>
-		</div>
+	<ui:define name="MiddleContent">		
+		<ui:param name="Action" value="#{ConfigurationPath}/#{configuration.id}/edit" />
+		<ui:param name="SubmitTitle" value="Save" />
+		
+		<ui:include src="/WEB-INF/views/application/main/configuration/simulationConfigurationSettings.xhtml" />
 	</ui:define>
 
 	<!-- Specific scripts. -->

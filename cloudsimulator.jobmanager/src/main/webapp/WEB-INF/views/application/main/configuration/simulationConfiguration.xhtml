@@ -35,6 +35,21 @@
             </div>
 			<div class="configuration-description">#{configuration.description}</div>
 		
+			<table class="configuration-properties">
+				<tr>
+					<td><span class="label">Data:</span></td>						
+					<td>
+						<a href="#{DataPath}/#{configuration.data.id}" class="value">
+							<h:outputText value="#{configuration.data.name}" />
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td><span class="label">Default run count:</span></td>						
+					<td><span class="value">#{configuration.defaultRunCount}</span></td>
+				</tr>
+			</table>
+		
 			<div class="execution-list-header">Executions:</div>
 			<ui:include src="/WEB-INF/views/elements/items/simulationExecutionListItems.xhtml" />
 		</div>

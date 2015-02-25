@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContext;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationData;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.SimulationDataService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.MappingSettings;
@@ -42,6 +43,10 @@ public class SimulationDataController {
 	@Resource
 	private NavigationPathBuilder navigationPathBuilder;
 
+	@Resource
+	private AppContext appContext;
+	
+
 	@RequestMapping(value = MappingSettings.DATA)
 	public ModelAndView showData(HttpServletRequest request, @PathVariable int dataId) {
 
@@ -56,14 +61,14 @@ public class SimulationDataController {
 			return modelAndView;
 		}
 
-		return ProjectController.RedirectToProjectList();
+		return ProjectController.RedirectToProjectList(appContext.getSiteRoot());
 	}
 
 	@RequestMapping(value = MappingSettings.DATA_ADD, method = RequestMethod.GET)
 	public ModelAndView addData(HttpServletRequest request, @PathVariable int projectId) {
 
 		ClientModelAndView modelAndView = getDefaultModelAnView(ADDDATA_VIEW)
-				.withCancelUri(String.format("%s/%s", MappingSettings.PROJECT_ROOT, projectId))
+				.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.PROJECT_ROOT, projectId))
 				.withProjectId(projectId).withNavigationPath(navigationPathBuilder.buildFromProject(projectId));
 
 		return modelAndView;
@@ -78,7 +83,7 @@ public class SimulationDataController {
 			FieldError er = result.getFieldError();
 
 			ClientModelAndView modelAndView = getDefaultModelAnView(ADDDATA_VIEW)
-					.withCancelUri(String.format("%s/%s", MappingSettings.PROJECT_ROOT, projectId))
+					.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.PROJECT_ROOT, projectId))
 					.withProjectId(projectId).withSimulationData(simulationDataItem)
 					.withErrorMessage(er.getDefaultMessage())
 					.withNavigationPath(navigationPathBuilder.buildFromProject(projectId));
@@ -90,7 +95,7 @@ public class SimulationDataController {
 				simulationDataItem.getVcsType(), simulationDataItem.getRepositoryUrl(),
 				simulationDataItem.getPathToPom(), simulationDataItem.getMavenGoals());
 
-		return ProjectController.RedirectToProject(projectId);
+		return ProjectController.RedirectToProject(appContext.getSiteRoot(), projectId);
 	}
 
 	@RequestMapping(value = MappingSettings.DATA_EDIT, method = RequestMethod.GET)
@@ -102,14 +107,14 @@ public class SimulationDataController {
 			SimulationDataItem dataItem = getDataItem(data);
 
 			ModelAndView modelAndView = getDefaultModelAnView(EDITDATA_VIEW)
-					.withCancelUri(String.format("%s/%s", MappingSettings.DATA_ROOT, dataId))
+					.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.DATA_ROOT, dataId))
 					.withSimulationData(dataItem)
 					.withNavigationPath(navigationPathBuilder.buildFromSimulationData(dataId));
 
 			return modelAndView;
 		}
 
-		return ProjectController.RedirectToProjectList();
+		return ProjectController.RedirectToProjectList(appContext.getSiteRoot());
 	}
 
 	@RequestMapping(value = MappingSettings.DATA_EDIT, method = RequestMethod.POST)
@@ -121,7 +126,7 @@ public class SimulationDataController {
 			FieldError er = result.getFieldError();
 
 			ClientModelAndView modelAndView = getDefaultModelAnView(EDITDATA_VIEW)
-					.withCancelUri(String.format("%s/%s", MappingSettings.DATA_ROOT, dataId))
+					.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.DATA_ROOT, dataId))
 					.withSimulationData(simulationDataItem).withErrorMessage(er.getDefaultMessage())
 					.withNavigationPath(navigationPathBuilder.buildFromSimulationData(dataId));
 
@@ -139,9 +144,12 @@ public class SimulationDataController {
 		return simulationDataItemFactory.create(data);
 	}
 
-	public static ModelAndView RedirectToData(int dataId) {
+	public ModelAndView RedirectToData(int dataId) {
+		return RedirectToData(appContext.getSiteRoot(), dataId);
+	}
 
-		return new ModelAndView(String.format("redirect:%s/%s", MappingSettings.DATA_ROOT, dataId));
+	public static ModelAndView RedirectToData(String siteRoot, int dataId) {
+		return new ModelAndView("redirect:" + MappingSettings.GetFullUri(siteRoot, MappingSettings.DATA_ROOT, dataId));
 	}
 
 	private ClientModelAndView getDefaultModelAnView(String viewName) {

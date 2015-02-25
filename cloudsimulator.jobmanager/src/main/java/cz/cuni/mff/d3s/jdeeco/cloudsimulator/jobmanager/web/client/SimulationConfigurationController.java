@@ -13,11 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContext;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.Project;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationConfiguration;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.ProjectService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.SimulationConfigurationService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.MappingSettings;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.ViewParameters;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.ProjectItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.SimulationConfigurationItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.data.SimulationConfigurationItemImpl;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.ProjectItemFactory;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.SimulationConfigurationItemFactory;
 
 @Controller
@@ -31,6 +37,12 @@ public class SimulationConfigurationController {
 	private static final String EDITCONFIGURATION_VIEW = "main/configuration/editSimulationConfiguration";
 
 	@Resource
+	private ProjectService projectService;
+
+	@Resource
+	private ProjectItemFactory projectItemFactory;
+
+	@Resource
 	private SimulationConfigurationService simulationConfigurationService;
 
 	@Resource
@@ -42,6 +54,9 @@ public class SimulationConfigurationController {
 	@Resource
 	private NavigationPathBuilder navigationPathBuilder;
 
+	@Resource
+	private AppContext appContext;
+
 	@RequestMapping(value = MappingSettings.CONFIGURATION)
 	public ModelAndView showConfiguration(HttpServletRequest request, @PathVariable int configurationId) {
 
@@ -50,21 +65,21 @@ public class SimulationConfigurationController {
 		if (configuration != null) {
 			SimulationConfigurationItem configurationItem = getConfigurationItem(configuration);
 
-			ModelAndView modelAndView = getDefaultModelAnView(CONFIGURATION_VIEW).withSimulationConfiguration(
-					configurationItem)
-					.withNavigationPath(navigationPathBuilder.buildFromSimulationConfiguration(configurationId));
+			ModelAndView modelAndView = getDefaultModelAndView(CONFIGURATION_VIEW).withSimulationConfiguration(
+					configurationItem).withNavigationPath(
+					navigationPathBuilder.buildFromSimulationConfiguration(configurationId));
 
 			return modelAndView;
 		}
 
-		return ProjectController.RedirectToProjectList();
+		return ProjectController.RedirectToProjectList(appContext.getSiteRoot());
 	}
 
 	@RequestMapping(value = MappingSettings.CONFIGURATION_ADD, method = RequestMethod.GET)
 	public ModelAndView addConfiguration(HttpServletRequest request, @PathVariable int projectId) {
 
-		ModelAndView modelAndView = getDefaultModelAnView(ADDCONFIGURATION_VIEW).withCancelUri(
-				String.format("%s/%s", MappingSettings.PROJECT_ROOT, projectId)).withProjectId(projectId)
+		ModelAndView modelAndView = getModelAndViewWithProject(ADDCONFIGURATION_VIEW, projectId).withCancelUri(
+				MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.PROJECT_ROOT, projectId))
 				.withNavigationPath(navigationPathBuilder.buildFromProject(projectId));
 
 		return modelAndView;
@@ -78,19 +93,21 @@ public class SimulationConfigurationController {
 		if (result.hasErrors()) {
 			FieldError er = result.getFieldError();
 
-			ModelAndView modelAndView = getDefaultModelAnView(ADDCONFIGURATION_VIEW)
-					.withCancelUri(String.format("%s/%s", MappingSettings.PROJECT_ROOT, projectId))
-					.withProjectId(projectId).withSimulationConfiguration(simulationConfigurationItem)
+			ModelAndView modelAndView = getModelAndViewWithProject(ADDCONFIGURATION_VIEW, projectId)
+					.withCancelUri(
+							MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.PROJECT_ROOT,
+									projectId)).withSimulationConfiguration(simulationConfigurationItem)
 					.withErrorMessage(er.getDefaultMessage())
 					.withNavigationPath(navigationPathBuilder.buildFromProject(projectId));
 
 			return modelAndView;
 		}
 
-		simulationConfigurationService.createConfiguration(projectId, simulationConfigurationItem.getName(),
-				simulationConfigurationItem.getDescription());
+		simulationConfigurationService.createConfiguration(projectId, simulationConfigurationItem.getDataId(),
+				simulationConfigurationItem.getName(), simulationConfigurationItem.getDescription(),
+				simulationConfigurationItem.getDefaultRunCount());
 
-		return ProjectController.RedirectToProject(projectId);
+		return ProjectController.RedirectToProject(appContext.getSiteRoot(), projectId);
 	}
 
 	@RequestMapping(value = MappingSettings.CONFIGURATION_EDIT, method = RequestMethod.GET)
@@ -102,15 +119,17 @@ public class SimulationConfigurationController {
 
 			SimulationConfigurationItem configurationItem = getConfigurationItem(configuration);
 
-			ModelAndView modelAndView = getDefaultModelAnView(EDITCONFIGURATION_VIEW).withCancelUri(
-					String.format("%s/%s", MappingSettings.CONFIGURATION_ROOT, configurationId))
-					.withSimulationConfiguration(configurationItem)
+			ModelAndView modelAndView = getModelAndViewWithProject(EDITCONFIGURATION_VIEW,
+					configuration.getProject().getId())
+					.withCancelUri(
+							MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.CONFIGURATION_ROOT,
+									configurationId)).withSimulationConfiguration(configurationItem)
 					.withNavigationPath(navigationPathBuilder.buildFromSimulationConfiguration(configurationId));
 
 			return modelAndView;
 		}
 
-		return ProjectController.RedirectToProjectList();
+		return ProjectController.RedirectToProjectList(appContext.getSiteRoot());
 	}
 
 	@RequestMapping(value = MappingSettings.CONFIGURATION_EDIT, method = RequestMethod.POST)
@@ -120,17 +139,22 @@ public class SimulationConfigurationController {
 		simulationConfigurationValidator.validate(simulationConfigurationItem, result);
 		if (result.hasErrors()) {
 			FieldError er = result.getFieldError();
+			SimulationConfiguration configuration = simulationConfigurationService
+					.getConfigurationById(configurationId);
 
-			ModelAndView modelAndView = getDefaultModelAnView(EDITCONFIGURATION_VIEW)
-					.withCancelUri(String.format("%s/%s", MappingSettings.CONFIGURATION_ROOT, configurationId))
-					.withSimulationConfiguration(simulationConfigurationItem).withErrorMessage(er.getDefaultMessage())
+			ModelAndView modelAndView = getModelAndViewWithProject(EDITCONFIGURATION_VIEW,
+					configuration.getProject().getId())
+					.withCancelUri(
+							MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.CONFIGURATION_ROOT,
+									configurationId)).withSimulationConfiguration(simulationConfigurationItem)
+					.withErrorMessage(er.getDefaultMessage())
 					.withNavigationPath(navigationPathBuilder.buildFromSimulationConfiguration(configurationId));
 
 			return modelAndView;
 		}
 
 		simulationConfigurationService.editConfiguration(configurationId, simulationConfigurationItem.getName(),
-				simulationConfigurationItem.getDescription());
+				simulationConfigurationItem.getDescription(), simulationConfigurationItem.getDefaultRunCount());
 
 		return RedirectToConfiguration(configurationId);
 	}
@@ -139,12 +163,27 @@ public class SimulationConfigurationController {
 		return simulationConfigurationItemFactory.create(configuration, true);
 	}
 
-	public static ModelAndView RedirectToConfiguration(int configurationId) {
-
-		return new ModelAndView(String.format("redirect:%s/%s", MappingSettings.CONFIGURATION_ROOT, configurationId));
+	public ModelAndView RedirectToConfiguration(int configurationId) {
+		return RedirectToConfiguration(appContext.getSiteRoot(), configurationId);
 	}
 
-	private ClientModelAndView getDefaultModelAnView(String viewName) {
+	public static ModelAndView RedirectToConfiguration(String siteRoot, int configurationId) {
+		return new ModelAndView("redirect:"
+				+ MappingSettings.GetFullUri(siteRoot, MappingSettings.CONFIGURATION_ROOT, configurationId));
+	}
+
+	private ClientModelAndView getModelAndViewWithProject(String viewName, int projectId) {
+		ClientModelAndView modelAndView = getDefaultModelAndView(viewName).withProjectId(projectId);
+
+		// add datas
+		Project project = projectService.getProjectById(projectId);
+		ProjectItem projectItem = projectItemFactory.create(project, false, true);
+		modelAndView.addObject(ViewParameters.SIMULATION_DATAS, projectItem.getDatas());
+
+		return modelAndView;
+	}
+
+	private ClientModelAndView getDefaultModelAndView(String viewName) {
 		return new ClientModelAndView(viewName);
 	}
 }

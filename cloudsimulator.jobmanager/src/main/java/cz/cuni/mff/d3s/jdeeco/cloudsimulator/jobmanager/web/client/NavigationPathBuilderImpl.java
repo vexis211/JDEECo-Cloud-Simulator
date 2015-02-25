@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 
 import javax.annotation.Resource;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContext;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.Project;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationConfiguration;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationData;
@@ -34,10 +35,14 @@ public class NavigationPathBuilderImpl implements NavigationPathBuilder {
 	@Resource
 	private SimulationExecutionService simulationExecutionService;
 
+	@Resource
+	private AppContext appContext;
+	
 	@Override
 	public NavigationPath buildFromHome() {
 		NavigationPath navigationPath = new NavigationPathImpl();
-		navigationPath.addStep(new NavigationPathStepImpl("Home", MappingSettings.MAIN));
+		String url = MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.MAIN);
+		navigationPath.addStep(new NavigationPathStepImpl("Home", url));
 		return navigationPath;
 	}
 
@@ -45,8 +50,8 @@ public class NavigationPathBuilderImpl implements NavigationPathBuilder {
 	public NavigationPath buildFromProject(int projectId) {
 		Project project = projectService.getProjectById(projectId);
 		NavigationPath navigationPath = buildFromHome();
-		navigationPath.addStep(new NavigationPathStepImpl(project.getName(), String.format("%s/%s",
-				MappingSettings.PROJECT_ROOT, projectId)));
+		String url = MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.PROJECT_ROOT, projectId);
+		navigationPath.addStep(new NavigationPathStepImpl(project.getName(), url));
 		return navigationPath;
 	}
 
@@ -54,8 +59,8 @@ public class NavigationPathBuilderImpl implements NavigationPathBuilder {
 	public NavigationPath buildFromSimulationConfiguration(int configurationId) {
 		SimulationConfiguration configuration = simulationConfigurationService.getConfigurationById(configurationId);
 		NavigationPath navigationPath = buildFromProject(configuration.getProject().getId());
-		navigationPath.addStep(new NavigationPathStepImpl(configuration.getName(), String.format("%s/%s",
-				MappingSettings.CONFIGURATION_ROOT, configurationId)));
+		String url = MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.CONFIGURATION_ROOT, configurationId);
+		navigationPath.addStep(new NavigationPathStepImpl(configuration.getName(), url));
 		return navigationPath;
 	}
 
@@ -63,8 +68,8 @@ public class NavigationPathBuilderImpl implements NavigationPathBuilder {
 	public NavigationPath buildFromSimulationData(int dataId) {
 		SimulationData data = simulationDataService.getDataById(dataId);
 		NavigationPath navigationPath = buildFromProject(data.getProject().getId());
-		navigationPath.addStep(new NavigationPathStepImpl(data.getName(), String.format("%s/%s",
-				MappingSettings.DATA_ROOT, dataId)));
+		String url = MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.DATA_ROOT, dataId);
+		navigationPath.addStep(new NavigationPathStepImpl(data.getName(), url));
 		return navigationPath;
 	}
 
@@ -72,8 +77,8 @@ public class NavigationPathBuilderImpl implements NavigationPathBuilder {
 	public NavigationPath buildFromSimulationExecution(int executionId) {
 		SimulationExecution execution = simulationExecutionService.getExecutionById(executionId);
 		NavigationPath navigationPath = buildFromSimulationConfiguration(execution.getSimulationConfiguration().getId());
-		navigationPath.addStep(new NavigationPathStepImpl(dateFormat.format(execution.getCreated()), String.format(
-				"%s/%s", MappingSettings.EXECUTION_ROOT, executionId)));
+		String url = MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.EXECUTION_ROOT, executionId);
+		navigationPath.addStep(new NavigationPathStepImpl(dateFormat.format(execution.getCreated()), url));
 		return navigationPath;
 	}
 }

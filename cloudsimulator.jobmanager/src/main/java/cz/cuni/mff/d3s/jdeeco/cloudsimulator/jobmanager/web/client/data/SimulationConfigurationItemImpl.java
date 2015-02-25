@@ -14,25 +14,36 @@ public class SimulationConfigurationItemImpl implements SimulationConfigurationI
 
 	private String name;
 	private String description;
+	private int defaultRunCount;
+	
 	private final List<SimulationExecutionItem> executions = new ArrayList<>();
+	private int dataId;
+	private SimulationDataItem dataItem;
 	private SimulationExecutionItem lastExecution;
 
 	public SimulationConfigurationItemImpl() {
 	}
 
-	public SimulationConfigurationItemImpl(SimulationConfiguration configuration, SimulationExecutionItem lastExecution) {
+	public SimulationConfigurationItemImpl(SimulationConfiguration configuration, SimulationDataItem dataItem, SimulationExecutionItem lastExecution) {
 		this.id = configuration.getId();
 		this.created = configuration.getCreated();
 		this.creator = configuration.getCreator().getEmail();
 		
 		this.name = configuration.getName();
 		this.description = configuration.getDescription();
+		this.defaultRunCount = configuration.getDefaultRunCount();
+		this.dataItem = dataItem;
 		this.lastExecution = lastExecution;
 	}
 
 	@Override
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Override
@@ -44,7 +55,8 @@ public class SimulationConfigurationItemImpl implements SimulationConfigurationI
 	public String getCreator() {
 		return creator;
 	}
-
+	
+	
 	@Override
 	public String getName() {
 		return name;
@@ -63,6 +75,34 @@ public class SimulationConfigurationItemImpl implements SimulationConfigurationI
 	@Override
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Override
+	public int getDefaultRunCount() {
+		return defaultRunCount;
+	}
+
+	@Override
+	public void setDefaultRunCount(int defaultRunCount) {
+		this.defaultRunCount = defaultRunCount;
+	}
+
+	@Override
+	public SimulationDataItem getData() {
+		return dataItem;
+	}
+
+	@Override
+	public int getDataId() {
+		return dataId;
+	}
+
+	@Override
+	public void setDataId(int dataId) {
+		if (dataItem != null) {
+			dataItem = null;
+		}
+		this.dataId = dataId;
 	}
 
 	@Override

@@ -39,6 +39,11 @@ public class SimulationDataItemImpl implements SimulationDataItem {
 	}
 
 	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
 	public Date getCreated() {
 		return created;
 	}

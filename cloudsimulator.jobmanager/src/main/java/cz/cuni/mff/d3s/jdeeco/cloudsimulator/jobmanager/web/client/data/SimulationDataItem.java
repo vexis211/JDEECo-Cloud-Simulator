@@ -7,6 +7,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.vcs.VCSType;
 public interface SimulationDataItem {
 
 	int getId();
+	void setId(int id);
+	
 	Date getCreated();
 	String getCreator();
 

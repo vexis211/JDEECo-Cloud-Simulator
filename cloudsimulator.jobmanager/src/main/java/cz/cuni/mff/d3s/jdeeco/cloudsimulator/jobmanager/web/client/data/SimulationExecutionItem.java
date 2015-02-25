@@ -8,6 +8,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
 public interface SimulationExecutionItem {
 
 	int getId();
+	void setId(int id);
+	
 	Date getCreated();
 	String getCreator();
 
@@ -25,6 +27,8 @@ public interface SimulationExecutionItem {
 	
 	Date getEndedDate();
 
+	int getRunCount();
+	
 	List<SimulationRunItem> getRuns();	
 	void addRun(SimulationRunItem run);
 }

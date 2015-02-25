@@ -58,8 +58,7 @@ public class EmailServiceImpl implements EmailService {
 	 * @return HTTP link.
 	 */
 	private String createAccountActivationLink(final String activationCode) {
-		String activateLink = String.format("%s/%s",
-				MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.ACTIVATION), activationCode);
+		String activateLink = MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.ACTIVATION, activationCode);
 		return activateLink;
 	}
 
@@ -84,8 +83,7 @@ public class EmailServiceImpl implements EmailService {
 	 * @return HTTP link.
 	 */
 	private String createResetPasswordLink(final String resetPasswordCode) {
-		String activateLink = String.format("%s/%s",
-				MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.RESETPASSWORD), resetPasswordCode);
+		String activateLink = MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.RESETPASSWORD, resetPasswordCode);
 		return activateLink;
 	}
 

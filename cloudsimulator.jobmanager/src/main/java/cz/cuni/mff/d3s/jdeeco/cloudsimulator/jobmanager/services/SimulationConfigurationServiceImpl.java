@@ -8,8 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.ProjectDao;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationConfigurationDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationDataDao;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.Project;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationConfiguration;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationData;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.UserHelper;
 
@@ -17,9 +19,12 @@ public class SimulationConfigurationServiceImpl implements SimulationConfigurati
 
 	@Resource
 	private SimulationConfigurationDao simulationConfigurationDao;
-	
+
 	@Resource
 	private ProjectDao projectDao;
+	
+	@Resource
+	private SimulationDataDao simulationDataDao;
 	
 	@Override
 	public List<SimulationConfiguration> listConfigurations() {
@@ -38,12 +43,13 @@ public class SimulationConfigurationServiceImpl implements SimulationConfigurati
 
 	@Transactional(readOnly = false)
 	@Override
-	public SimulationConfiguration createConfiguration(int projectId, String name, String description) {
+	public SimulationConfiguration createConfiguration(int projectId, int dataId, String name, String description, int defaultRunCount) {
 
 		User currentUser = UserHelper.getAuthenticatedUser();
-		Project project = projectDao.findById(projectId);
+		Project project = projectDao.findById(projectId);		
+		SimulationData data = simulationDataDao.findById(dataId);
 		
-		SimulationConfiguration configuration = new SimulationConfiguration(project, currentUser, name, description);
+		SimulationConfiguration configuration = new SimulationConfiguration(project, currentUser, data, name, description, defaultRunCount);
 		
 		simulationConfigurationDao.saveOrUpdate(configuration);
 		
@@ -52,11 +58,12 @@ public class SimulationConfigurationServiceImpl implements SimulationConfigurati
 
 	@Transactional(readOnly = false)
 	@Override
-	public void editConfiguration(int configurationId, String name, String description) {
+	public void editConfiguration(int configurationId, String name, String description, int defaultRunCount) {
 
 		SimulationConfiguration configuration = simulationConfigurationDao.findById(configurationId);
 		configuration.setName(name);
 		configuration.setDescription(description);
+		configuration.setDefaultRunCount(defaultRunCount);
 		
 		simulationConfigurationDao.saveOrUpdate(configuration);
 	}

@@ -2,26 +2,28 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.cloud;
 
 import java.util.List;
 import java.util.stream.Stream;
+//
+//import org.openstack4j.api.Builders;
+//import org.openstack4j.model.compute.Flavor;
+//import org.openstack4j.model.compute.Image;
+//import org.openstack4j.model.compute.ServerCreate;
+//import org.openstack4j.model.network.AttachInterfaceType;
+//import org.openstack4j.model.network.IPVersionType;
+//import org.openstack4j.model.network.NetFloatingIP;
+//import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerIdGeneratorImpl;
 
-import org.openstack4j.api.Builders;
+
 import org.openstack4j.api.OSClient;
-import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.FloatingIP;
-import org.openstack4j.model.compute.Image;
 import org.openstack4j.model.compute.SecGroupExtension;
 import org.openstack4j.model.compute.Server;
-import org.openstack4j.model.compute.ServerCreate;
 import org.openstack4j.model.identity.Tenant;
-import org.openstack4j.model.network.AttachInterfaceType;
-import org.openstack4j.model.network.IPVersionType;
-import org.openstack4j.model.network.NetFloatingIP;
 import org.openstack4j.model.network.Network;
 import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.storage.object.SwiftContainer;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerIdGenerator;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerIdGeneratorImpl;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackConnector;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackConnectorImpl;
 
@@ -45,9 +47,11 @@ public class OpenStackInfrastructureInitializer {
 		return os.identity().tenants().getByName(OpenStackInfrastructureInitializerParameters.TENANT_NAME);
 	}
 
+	/*
 	private Network getNetworkByName(OSClient os, String networkName) {
 		return os.networking().network().list().stream().filter(x -> x.getName().equals(networkName)).findFirst().get();
 	}
+	*/
 
 	private void initialize() {
 		OSClient os = connect();
@@ -68,7 +72,7 @@ public class OpenStackInfrastructureInitializer {
 //		createInitialWorkers(os, tenant);
 	}
 
-	private void createNetworkInfrastructure(OSClient os, Tenant tenant) {
+/*	private void createNetworkInfrastructure(OSClient os, Tenant tenant) {
 		// create inner network
 		Network innerNetwork = os
 				.networking()
@@ -109,13 +113,13 @@ public class OpenStackInfrastructureInitializer {
 				.create(Builders.securityGroupRule().securityGroupId(sshSecurityGroup.getId()).direction("ingress")
 						.protocol("tcp").portRangeMin(22).portRangeMax(22).build());
 	}
-
+*/
 	private void createStorage(OSClient os) {
 		os.objectStorage().containers()
 				.create(OpenStackInfrastructureInitializerParameters.STORAGE_DATAPACKAGE_CONTAINER);
 	}
 
-	private void createJobManager(OSClient os, Tenant tenant) {
+/*	private void createJobManager(OSClient os, Tenant tenant) {
 		// create flavor
 		Flavor flavor = Builders.flavor().name("Job Manager Flavor").ram(8192).vcpus(6).disk(240).build();
 		flavor = os.compute().flavors().create(flavor);
@@ -139,8 +143,8 @@ public class OpenStackInfrastructureInitializer {
 
 		os.compute().floatingIps().addFloatingIP(server, publicIP.getFloatingIpAddress());
 	}
-
-	private void createInitialWorkers(OSClient os, Tenant tenant) {
+*/
+/*	private void createInitialWorkers(OSClient os, Tenant tenant) {
 
 		// create flavor
 		Flavor flavor = Builders.flavor().name(OpenStackInfrastructureInitializerParameters.WORKER_FLAVOR_NAME)
@@ -151,7 +155,7 @@ public class OpenStackInfrastructureInitializer {
 			createInitialWorker(os, tenant, flavor);
 		}
 	}
-
+	
 	private void createInitialWorker(OSClient os, Tenant tenant, Flavor flavor) {
 		WorkerIdGeneratorImpl workerIdGeneratorImpl = new WorkerIdGeneratorImpl();
 		String workerName = workerIdGeneratorImpl.generate();
@@ -167,6 +171,7 @@ public class OpenStackInfrastructureInitializer {
 		// boot the server
 		os.compute().servers().boot(workerCreate);
 	}
+*/
 
 	@SuppressWarnings("unused")
 	private void clean() {

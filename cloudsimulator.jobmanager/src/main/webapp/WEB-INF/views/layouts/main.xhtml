@@ -13,16 +13,16 @@
 	<!-- Sets all common parameters used through app. -->
 	<ui:param name="AppVersion" value="#{request.getAttribute('appVersion')}" />
 	<ui:param name="SiteRoot" value="#{request.contextPath}" />
-	<ui:param name="SiteScripts" value="#{request.contextPath}/js" />
-	<ui:param name="SiteStyles" value="#{request.contextPath}/less" />
-	<ui:param name="SiteImages" value="#{request.contextPath}/images" />
-	<ui:param name="SiteDocs" value="#{request.contextPath}/docs" />
+	<ui:param name="SiteScripts" value="#{SiteRoot}/js" />
+	<ui:param name="SiteStyles" value="#{SiteRoot}/less" />
+	<ui:param name="SiteImages" value="#{SiteRoot}/images" />
+	<ui:param name="SiteDocs" value="##{SiteRoot}/docs" />
 
 	<ui:param name="MainPath" value="#{SiteRoot}/main" />
-	<ui:param name="ProjectPath" value="#{SiteRoot}/main/project" />
-	<ui:param name="ConfigurationPath" value="#{SiteRoot}/main/configuration" />
-	<ui:param name="DataPath" value="#{SiteRoot}/main/data" />
-	<ui:param name="ExecutionPath" value="#{SiteRoot}/main/execution" />
+	<ui:param name="ProjectPath" value="#{MainPath}/project" />
+	<ui:param name="ConfigurationPath" value="#{MainPath}/configuration" />
+	<ui:param name="DataPath" value="#{MainPath}/data" />
+	<ui:param name="ExecutionPath" value="#{MainPath}/execution" />
 
 <!-- Current app version. Used to download correct css/js files. 
 	Must be incremented with each change to css/js files
@@ -59,15 +59,15 @@
 				<!-- Main menu -->
 				<div class="header-menu">
 					<!-- Projects -->
-					<a href="/main" class="header-projects">
+					<a href="#{MainPath}" class="header-projects">
 						<span>Projects</span>
 					</a>
 					<!-- Infrastructure -->
-					<a href="/main/infrastructure" class="header-infrastructure">
+					<a href="#{MainPath}/infrastructure" class="header-infrastructure">
 						<span>Infrastructure</span>
 					</a>
 					<!-- Simulation queue -->
-					<a href="/main/simulationqueue" class="header-simulation-queue">
+					<a href="#{MainPath}/simulationqueue" class="header-simulation-queue">
 						<span>Simulation queue</span>
 					</a>
 				</div>

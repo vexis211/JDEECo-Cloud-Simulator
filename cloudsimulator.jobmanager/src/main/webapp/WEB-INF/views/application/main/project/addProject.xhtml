@@ -12,35 +12,14 @@
 	
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
-		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/addSimulationItem.less?version=#{AppVersion}" />
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/simulationItemSettings.less?version=#{AppVersion}" />
 	</ui:define>
 
 	<ui:define name="MiddleContent">
-		<div class="add-item-div">					
-			<form class="add-item-form" method="post" action="#{ProjectPath}/add" name="projectItem">
-				<div class="error-div">
-					<h:outputText value="#{errorMsg}" escape="false" />
-				</div>
-				<table>
-					<tr>
-						<td>Name:</td>						
-						<td>
-							<input id="name-input" type="text" name="name" value="#{project.name}" />
-						</td>
-					</tr>
-					<tr>
-						<td>Description:</td>			
-						<td>
-							<textarea id="description-area" name="description" rows="5">#{project.description}</textarea>
-						</td>
-					</tr>
-				</table>
-				<div class="actions-div">
-					<input class="submit-input" type="submit" value="Add" />
-					<a class="cancel" href="#{cancelUri}">Cancel</a>
-				</div>
-			</form>
-		</div>
+		<ui:param name="Action" value="#{ProjectPath}/add" />
+		<ui:param name="SubmitTitle" value="Add" />
+		
+		<ui:include src="/WEB-INF/views/application/main/project/projectSettings.xhtml" />
 	</ui:define>
 
 	<!-- Specific scripts. -->

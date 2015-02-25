@@ -50,12 +50,32 @@ public class MappingSettings {
 
 	public static final String INFRASTRUCTURE = MAIN + "/infrastructure";
 	public static final String SIMULATIONQUEUE = MAIN + "/simulationqueue";
-	
-	public static String GetFullUri(String root, String subPage) {
-		if (root.endsWith("/") && subPage.startsWith("/")){
-			return root + subPage.substring(1); // we don't want double slash
+
+	public static String GetFullUri(Object... parts) {
+		StringBuilder builder = new StringBuilder();
+		
+		for (Object partObj : parts) {
+			String part = partObj.toString();
+			
+			if (builder.length() == 0) {
+				builder.append(part);
+			}
+			else {
+				boolean currentEndsWithSlash = builder.charAt(builder.length() -1) == '/';
+				boolean nextStartsWithSlash = part.startsWith("/");
+				
+				if (currentEndsWithSlash && nextStartsWithSlash) {
+					builder.deleteCharAt(builder.length() - 1);
+				} else if (currentEndsWithSlash || nextStartsWithSlash) {
+					// there is one slash
+				} else {
+					builder.append('/');
+				}
+				builder.append(part);
+			}
 		}
-		return root + subPage;
+		
+		return builder.toString();
 	}
 	
 }

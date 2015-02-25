@@ -13,6 +13,7 @@ public class ViewParameters {
 	public static final String SIMULATION_CONFIGURATION_ID = "configurationId";
 
 	public static final String SIMULATION_DATA = "data";
+	public static final String SIMULATION_DATAS = "datas";
 	public static final String SIMULATION_DATA_ID = "dataId";
 	
 	public static final String SIMULATION_EXECUTION = "execution";

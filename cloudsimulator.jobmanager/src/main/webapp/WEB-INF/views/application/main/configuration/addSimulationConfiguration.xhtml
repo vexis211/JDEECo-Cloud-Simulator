@@ -1,44 +1,19 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:sf="http://www.springframework.org/tags/faces"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:sec="http://www.springframework.org/security/tags"
-	xmlns:comp="http://java.sun.com/jsf/composite/components"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sf="http://www.springframework.org/tags/faces" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:sec="http://www.springframework.org/security/tags" xmlns:comp="http://java.sun.com/jsf/composite/components"
 	template="/WEB-INF/views/layouts/main.xhtml">
 
 	<ui:define name="HeadContent">
 		<!-- Stylesheets -->
-		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/addSimulationItem.less?version=#{AppVersion}" />
+		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/simulationItemSettings.less?version=#{AppVersion}" />
 	</ui:define>
 
 	<ui:define name="MiddleContent">
-		<div class="add-item-div">					
-			<form class="add-item-form" method="post" action="#{ConfigurationPath}/add/#{projectId}" name="simulationConfigurationItem">
-				<div class="error-div">
-					<h:outputText value="#{errorMsg}" escape="false" />
-				</div>
-				<table>
-					<tr>
-						<td>Name:</td>						
-						<td>
-							<input id="name-input" type="text" name="name" value="#{configuration.name}" />
-						</td>
-					</tr>
-					<tr>
-						<td>Description:</td>			
-						<td>
-							<textarea id="description-area" name="description" rows="5">#{configuration.description}</textarea>
-						</td>
-					</tr>
-				</table>
-				<div class="actions-div">
-					<input class="submit-input" type="submit" value="Add" />
-					<a class="cancel" href="#{cancelUri}">Cancel</a>
-				</div>
-			</form>
-		</div>
+		<ui:param name="Action" value="#{ConfigurationPath}/add/#{projectId}" />
+		<ui:param name="SubmitTitle" value="Add" />
+		
+		<ui:include src="/WEB-INF/views/application/main/configuration/simulationConfigurationSettings.xhtml" />
 	</ui:define>
 
 	<!-- Specific scripts. -->

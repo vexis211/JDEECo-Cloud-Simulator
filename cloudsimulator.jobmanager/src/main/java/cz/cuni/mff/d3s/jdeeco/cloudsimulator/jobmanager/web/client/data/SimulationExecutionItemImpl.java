@@ -19,6 +19,8 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 	private Date createdDate;
 	private Date startedDate;
 	private Date endedDate;
+	private int runCount;
+	
 	private List<SimulationRunItem> runs = new ArrayList<SimulationRunItem>();
 	
 	public SimulationExecutionItemImpl() {
@@ -35,11 +37,17 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 		this.createdDate = execution.getCreated();
 		this.startedDate = execution.getStarted();
 		this.endedDate = execution.getEnded();
+		this.runCount = execution.getRunCount();
 	}
 
 	@Override
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Override
@@ -85,6 +93,11 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 	@Override
 	public Date getEndedDate() {
 		return endedDate;
+	}
+
+	@Override
+	public int getRunCount() {
+		return runCount;
 	}
 
 	@Override

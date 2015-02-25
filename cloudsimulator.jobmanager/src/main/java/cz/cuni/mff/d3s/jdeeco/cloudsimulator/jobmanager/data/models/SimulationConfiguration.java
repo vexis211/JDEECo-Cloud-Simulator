@@ -8,30 +8,34 @@ public class SimulationConfiguration implements java.io.Serializable {
 
 	private static final long serialVersionUID = 4700118663159508565L;
 
-	private Integer id;
+	private int id;
 	private Project project;
 	private SimulationData simulationData;
 	private User creator;
 	private String name;
 	private String description;
 	private Date created;
+	private int defaultRunCount;
 	private Set<SimulationExecution> simulationExecutions = new HashSet<SimulationExecution>(0);
 
 	public SimulationConfiguration() {
 	}
 
-	public SimulationConfiguration(Project project, User creator, String name, String description) {
+	public SimulationConfiguration(Project project, User creator, SimulationData simulationData, String name,
+			String description, int defaultRunCount) {
 		this.project = project;
 		this.creator = creator;
+		this.simulationData = simulationData;
 		this.name = name;
 		this.description = description;
+		this.defaultRunCount = defaultRunCount;
 	}
-	
-	public Integer getId() {
+
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -81,6 +85,14 @@ public class SimulationConfiguration implements java.io.Serializable {
 
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+
+	public int getDefaultRunCount() {
+		return defaultRunCount;
+	}
+
+	public void setDefaultRunCount(int defaultRunCount) {
+		this.defaultRunCount = defaultRunCount;
 	}
 
 	public Set<SimulationExecution> getSimulationExecutions() {

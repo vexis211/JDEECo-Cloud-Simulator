@@ -13,8 +13,11 @@ public abstract class BaseValidator<T> implements Validator {
 	public static final String DESCRIPTION_FIELD = "description";
 	
 	protected static final String NOT_SPECIFIED_ERROR = "error.empty";
+	protected static final String INVALID_VALUE_ERROR = "error.invalidValue";
+
 
 	protected static final String NULL_MESSAGE = "Nothing is specified.";
+	protected static final String INVALID_VALUE_MESSAGE_TEMPLATE = "'%s' has invalid value. Correct value: '%s'.";
 	protected static final String NOT_SPECIFIED_MESSAGE_TEMPLATE = "'%s' is not specified.";
 	
 	
@@ -50,5 +53,14 @@ public abstract class BaseValidator<T> implements Validator {
 	
 	protected void addNotSpecifiedError(Errors errors, String fieldId, String fieldName) {
 		errors.rejectValue(fieldId, NOT_SPECIFIED_ERROR, String.format(NOT_SPECIFIED_MESSAGE_TEMPLATE, fieldName));
+	}
+
+	protected void addInvalidValueError(Errors errors, String fieldId, String correctValueDef) {
+		String fieldName = StringHelper.firstToUpper(fieldId);
+		addInvalidValueError(errors, fieldId, fieldName, correctValueDef);
+	}
+	
+	protected void addInvalidValueError(Errors errors, String fieldId, String fieldName, String correctValueDef) {
+		errors.rejectValue(fieldId, INVALID_VALUE_ERROR, String.format(INVALID_VALUE_MESSAGE_TEMPLATE, fieldName, correctValueDef));
 	}
 }
