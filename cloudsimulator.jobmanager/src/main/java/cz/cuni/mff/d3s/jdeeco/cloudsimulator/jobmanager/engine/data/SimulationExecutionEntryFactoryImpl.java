@@ -11,8 +11,8 @@ public class SimulationExecutionEntryFactoryImpl implements SimulationExecutionE
 	}
 
 	@Override
-	public SimulationExecutionEntry create(SimulationExecution data) {
-		return new SimulationExecutionEntryImpl(data, new SimulationExecutionStatisticsImpl(),
+	public SimulationExecutionEntry create(SimulationExecution data, SimulationExecutionEntryListener listener) {
+		return new SimulationExecutionEntryImpl(data, listener, new SimulationExecutionStatisticsImpl(),
 				simulationRunEntryFactory);
 	}
 }

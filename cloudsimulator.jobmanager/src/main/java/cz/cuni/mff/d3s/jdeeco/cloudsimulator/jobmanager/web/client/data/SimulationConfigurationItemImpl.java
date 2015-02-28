@@ -117,7 +117,7 @@ public class SimulationConfigurationItemImpl implements SimulationConfigurationI
 
 	@Override
 	public Date getLastRunDate() {
-		return lastExecution != null ? lastExecution.getCreatedDate() : null;
+		return lastExecution != null ? lastExecution.getCreated() : null;
 	}
 
 	@Override

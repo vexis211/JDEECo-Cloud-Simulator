@@ -23,6 +23,8 @@
 	</bean>
 
 
+	<bean id="engineController" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.control.EngineControllerImpl"
+		scope="singleton" />
 
 	<!-- Services -->
 	<bean id="userService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserServiceImpl" scope="singleton" />

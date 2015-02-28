@@ -73,7 +73,7 @@ public class ClientModelAndView extends ModelAndView {
 	}
 
 	public ClientModelAndView withSimulationExecution(SimulationExecutionItem simulationExecutionItem) {
-		return this.addObject(ViewParameters.SIMULATION_EXECUTION_ID, simulationExecutionItem);
+		return this.addObject(ViewParameters.SIMULATION_EXECUTION, simulationExecutionItem);
 	}
 
 	public ClientModelAndView withSimulationExecutionId(int simulationExecutionId) {

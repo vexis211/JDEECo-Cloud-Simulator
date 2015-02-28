@@ -17,7 +17,7 @@ public class SimulationConfigurationValidator extends BaseValidator<SimulationCo
 		} else if (checkNotSpecified(item.getDescription())) {
 			addNotSpecifiedError(errors, DESCRIPTION_FIELD);
 		} else if (item.getDefaultRunCount() < 1) {
-			addInvalidValueError(errors, DEFAULTRUNCOUNT_FIELD, "Default run count", "more than 1");
+			addInvalidValueError(errors, DEFAULTRUNCOUNT_FIELD, "Default run count", "at least 1");
 		}
 	}
 }

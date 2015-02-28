@@ -23,10 +23,6 @@
 		<constructor-arg name="corePoolSize" value="${executor.corePoolSize}"/>
 	</bean>
 
-
-	<bean id="engineController" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.control.EngineControllerImpl"
-		scope="singleton" />
-
 	<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.EngineStartup" scope="singleton" lazy-init="false" />
 
 	<bean id="jobManagerEngine" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerEngineImpl"

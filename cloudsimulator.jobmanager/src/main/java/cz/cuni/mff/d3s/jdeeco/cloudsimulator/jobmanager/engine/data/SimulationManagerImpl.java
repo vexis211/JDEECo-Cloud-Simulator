@@ -10,7 +10,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackagePrepa
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.SimplePackageManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpdate;
 
-public class SimulationManagerImpl implements SimulationManager {
+public class SimulationManagerImpl implements SimulationManager, SimulationExecutionEntryListener {
 
 	private final HashMap<Integer, SimulationExecutionEntry> simulationExecutions = new HashMap<>();
 
@@ -74,7 +74,7 @@ public class SimulationManagerImpl implements SimulationManager {
 				.filter(x -> !simulationExecutions.containsKey(x.getId())).collect(Collectors.toList());
 
 		for (SimulationExecution notCreatedExecution : notCreatedExecutions) {
-			SimulationExecutionEntry newExecutionEntry = simulationExecutionEntryFactory.create(notCreatedExecution);
+			SimulationExecutionEntry newExecutionEntry = simulationExecutionEntryFactory.create(notCreatedExecution, this);
 			simulationExecutions.put(newExecutionEntry.getId(), newExecutionEntry);
 
 			String packageName = simplePackageManager.getPackageName(notCreatedExecution);
@@ -84,5 +84,15 @@ public class SimulationManagerImpl implements SimulationManager {
 				simplePackageManager.preparePackage(notCreatedExecution);
 			}
 		}
+	}
+
+	@Override
+	public void executionStarted(SimulationExecutionEntry executionEntry) {
+		simulationRepository.markExecutionAsStarted(executionEntry.getId());
+	}
+
+	@Override
+	public void executionCompleted(SimulationExecutionEntry executionEntry) {
+		simulationRepository.markExecutionAsCompleted(executionEntry.getId());
 	}
 }

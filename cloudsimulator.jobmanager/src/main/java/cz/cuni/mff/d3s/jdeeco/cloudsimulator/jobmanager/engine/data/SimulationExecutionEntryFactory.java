@@ -4,5 +4,5 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationEx
 
 public interface SimulationExecutionEntryFactory {
 	
-	SimulationExecutionEntry create(SimulationExecution data);
+	SimulationExecutionEntry create(SimulationExecution data, SimulationExecutionEntryListener listener);
 }

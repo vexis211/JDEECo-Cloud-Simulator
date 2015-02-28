@@ -8,4 +8,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationEx
 public interface SimulationRepository {
 	List<SimulationExecution> listNotCompletedExecutions();
 	List<SimulationExecution> listStoppedExecutions(Collection<Integer> executionIds);
+	
+	void markExecutionAsStarted(int executionId);
+	void markExecutionAsCompleted(int executionId);
 }

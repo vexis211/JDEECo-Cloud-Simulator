@@ -19,6 +19,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 	private final HashMap<Integer, SimulationRunEntry> errorRuns = new HashMap<Integer, SimulationRunEntry>();
 
 	private final SimulationExecution data;
+	private final SimulationExecutionEntryListener listener;
 	private final SimulationExecutionStatistics statistics;
 
 	private final ExecutionDeadlineSettings deadlineSettings;
@@ -26,11 +27,13 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 	private String packageName;
 
 	private boolean repeatedlyThrowsError = false;
+	private boolean started = false;
 	private boolean stopped = false;
 
-	public SimulationExecutionEntryImpl(SimulationExecution data, SimulationExecutionStatistics statistics,
-			SimulationRunEntryFactory simulationRunEntryFactory) {
+	public SimulationExecutionEntryImpl(SimulationExecution data, SimulationExecutionEntryListener listener,
+			SimulationExecutionStatistics statistics, SimulationRunEntryFactory simulationRunEntryFactory) {
 		this.data = data;
+		this.listener = listener;
 		this.statistics = statistics;
 
 		this.deadlineSettings = new ExecutionDeadlineSettings(data.getEndSpecificationType(), new DateTime(data));
@@ -48,8 +51,9 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 
 	@Override
 	public SimulationStatus getStatus() {
-		if (stopped) return SimulationStatus.Stopped;
-		
+		if (stopped)
+			return SimulationStatus.Stopped;
+
 		if (repeatedlyThrowsError) {
 			return SimulationStatus.ErrorOccured;
 		} else if (startedRuns.isEmpty() && completedRuns.isEmpty()) {
@@ -79,8 +83,14 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 
 	@Override
 	public void startSimulationRun(SimulationRunEntry toStartEntry) {
-		if (stopped) return;
-		
+		if (stopped)
+			return;
+
+		if (!started) {
+			listener.executionStarted(this);
+			started = true;
+		}
+
 		int entryId = toStartEntry.getId();
 		notStartedRuns.remove(entryId);
 		toStartEntry.setStatus(SimulationStatus.Started);
@@ -90,8 +100,9 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 
 	@Override
 	public void updateRunStatus(SimulationStatusUpdate update) {
-		if (stopped) return;
-		
+		if (stopped)
+			return;
+
 		int simulationRunId = update.getSimulationRunId();
 
 		SimulationRunEntry simulationRunEntry;
@@ -124,6 +135,11 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 		default:
 			throw new RuntimeException(String.format("Cannot update simulation status to '%s'.", simulationStatus));
 		}
+		
+		// notify completion
+		if (getStatus() == SimulationStatus.Completed) {
+			listener.executionCompleted(this);
+		}
 	}
 
 	@Override
@@ -149,12 +165,12 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 	@Override
 	public void stop() {
 		this.stopped = true;
-		
+
 		stopRuns(notStartedRuns);
 		stopRuns(startedRuns);
 	}
 
-	private void stopRuns(HashMap<Integer,SimulationRunEntry> runs) {
+	private void stopRuns(HashMap<Integer, SimulationRunEntry> runs) {
 		runs.forEach((key, value) -> {
 			value.setStatus(SimulationStatus.Stopped);
 			completedRuns.put(key, value);
