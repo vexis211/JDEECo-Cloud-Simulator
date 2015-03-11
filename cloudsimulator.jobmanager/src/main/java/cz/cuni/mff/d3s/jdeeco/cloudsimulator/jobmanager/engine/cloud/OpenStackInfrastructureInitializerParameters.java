@@ -5,7 +5,7 @@ public class OpenStackInfrastructureInitializerParameters {
 	// login
 	public static final String ENDPOINT = "https://openstack.d3s.mff.cuni.cz:5000/v2.0";
 	public static final String USER = "skalicky";
-	public static final String PASSWORD = "5e1c595d88a5666d42a65e077477d93b";
+	public static final String PASSWORD = "";
 	public static final String TENANT_NAME = "skalicky";
 
     // networking
