@@ -9,19 +9,19 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.C
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.NotifyPackageTaskCompletedProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.PackageTaskProcessingListener;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.PackageTaskProcessor;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.SavePackageProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.UploadPackageProcessor;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.ZipDataProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.vcs.CodeRepositoryManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.CloudDataService;
 
-public class PackagePreparatorImpl implements PackagePreparator, PackagingExceptionHandler,
+public class PackageCloudPreparatorImpl implements PackagePreparator, PackagingExceptionHandler,
 		PackageTaskProcessingListener {
 
 	private final HashMap<PackageTask, PackagePreparatorListener> taskRepo = new HashMap<>();
 	private final PackageTaskProcessor firstProcessor;
 
-	public PackagePreparatorImpl(FutureExecutor executor, CodeRepositoryManager codeRepositoryManager,
+	public PackageCloudPreparatorImpl(FutureExecutor executor, CodeRepositoryManager codeRepositoryManager,
 			CloudDataService cloudDataService, String packageContainerName) {
 
 		CodeRepositoryProcessor codeRepositoryProcessor = new CodeRepositoryProcessor(executor, this,
@@ -31,7 +31,8 @@ public class PackagePreparatorImpl implements PackagePreparator, PackagingExcept
 				executor, this);
 
 		// TODO - run script processor
-		SavePackageProcessor savePackageProcessor = new SavePackageProcessor(executor, this,
+		ZipDataProcessor zipDataProcessor = new ZipDataProcessor(executor, this);
+		UploadPackageProcessor uploadPackageProcessor = new UploadPackageProcessor(executor, this,
 				packageContainerName, cloudDataService);
 		ClearPreparingDirectoryProcessor clearPreparingDirectoryProcessor = new ClearPreparingDirectoryProcessor(
 				executor, this);
@@ -39,8 +40,9 @@ public class PackagePreparatorImpl implements PackagePreparator, PackagingExcept
 				executor, this, this);
 
 		codeRepositoryProcessor.continueProcess(compileCodeProcessor)
-				.continueProcess(copyCompiledToPreparingDirectoryProcessor).continueProcess(savePackageProcessor)
-				.continueProcess(clearPreparingDirectoryProcessor).continueProcess(notifyPackageTaskCompletedProcessor);
+				.continueProcess(copyCompiledToPreparingDirectoryProcessor).continueProcess(zipDataProcessor)
+				.continueProcess(uploadPackageProcessor).continueProcess(clearPreparingDirectoryProcessor)
+				.continueProcess(notifyPackageTaskCompletedProcessor);
 
 		this.firstProcessor = codeRepositoryProcessor;
 	}

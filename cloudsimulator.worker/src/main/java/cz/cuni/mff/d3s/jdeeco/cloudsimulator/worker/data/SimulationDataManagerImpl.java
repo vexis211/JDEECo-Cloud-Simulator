@@ -43,18 +43,18 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 	}
 
 	@Override
-	public void prepareData(int simulationRunId, String source) {
-		startFuture(() -> prepareDataCore(simulationRunId, source));
+	public void prepareData(int simulationRunId, String dataName) {
+		startFuture(() -> prepareDataCore(simulationRunId, dataName));
 	}
 
-	private void prepareDataCore(int simulationRunId, String source) {
+	private void prepareDataCore(int simulationRunId, String dataName) {
 
 		String executionPath = PathEx.combine(dataParentDirectory, simulationRunId);
 		String logPath = PathEx.combine(logParentDirectory, simulationRunId);
 		SimulationData preparedData = new SimulationDataImpl(executionPath, logPath);
 
 		try {
-			String templateDataDir = simulationDataRepository.getData(source);
+			String templateDataDir = simulationDataRepository.getData(dataName);
 			FileUtils.copyDirectory(new File(templateDataDir), new File(executionPath));
 
 			listener.dataPrepared(simulationRunId, preparedData);
@@ -64,12 +64,12 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 	}
 
 	@Override
-	public void saveResults(int simulationRunId, SimulationData data, String target) {
-		startFuture(() -> saveResultsCore(simulationRunId, data, target));
+	public void saveResults(int simulationRunId, SimulationData data, String dataName) {
+		startFuture(() -> saveResultsCore(simulationRunId, data, dataName));
 	}
 
-	private void saveResultsCore(int simulationRunId, SimulationData data, String target) {
-		simulationDataRepository.saveResults(data, target);
+	private void saveResultsCore(int simulationRunId, SimulationData data, String dataName) {
+		simulationDataRepository.saveResults(data, dataName);
 		listener.resultsSaved(simulationRunId);
 	}
 

@@ -24,6 +24,8 @@
 	<ui:param name="DataPath" value="#{MainPath}/data" />
 	<ui:param name="ExecutionPath" value="#{MainPath}/execution" />
 
+	<ui:param name="QueuePath" value="#{MainPath}/simulationqueue" />
+	
 <!-- Current app version. Used to download correct css/js files. 
 	Must be incremented with each change to css/js files
 	to prevent caching incorrect files in web browsers. -->
@@ -67,7 +69,7 @@
 						<span>Infrastructure</span>
 					</a>
 					<!-- Simulation queue -->
-					<a href="#{MainPath}/simulationqueue" class="header-simulation-queue">
+					<a href="#{QueuePath}" class="header-simulation-queue">
 						<span>Simulation queue</span>
 					</a>
 				</div>

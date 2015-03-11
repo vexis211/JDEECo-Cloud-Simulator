@@ -83,9 +83,10 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 
 	@Override
 	public void startSimulationRun(SimulationRunEntry toStartEntry) {
-		if (stopped)
+		if (stopped) {
 			return;
-
+		}
+		
 		if (!started) {
 			listener.executionStarted(this);
 			started = true;

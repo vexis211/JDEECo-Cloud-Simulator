@@ -9,7 +9,7 @@
 	xmlns:comp="http://java.sun.com/jsf/composite/components">
 
 	<div class="configuration-executions-div">
-		<c:forEach var="execution" items="#{configuration.executions}">
+		<c:forEach var="execution" items="#{executions}">
 			<ui:include src="/WEB-INF/views/elements/items/simulationExecutionListItem.xhtml" />
 		</c:forEach>			
 	</div>

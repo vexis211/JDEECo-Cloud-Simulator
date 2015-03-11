@@ -8,6 +8,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationEx
 
 public interface SimulationExecutionService {
 	List<SimulationExecution> listExecutions();
+	List<SimulationExecution> listAllNotCompletedExecutions();
 
 	SimulationExecution getExecutionById(int executionId);
 

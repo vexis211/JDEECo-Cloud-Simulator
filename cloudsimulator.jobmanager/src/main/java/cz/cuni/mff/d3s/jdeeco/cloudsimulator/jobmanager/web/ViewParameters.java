@@ -15,8 +15,9 @@ public class ViewParameters {
 	public static final String SIMULATION_DATA = "data";
 	public static final String SIMULATION_DATAS = "datas";
 	public static final String SIMULATION_DATA_ID = "dataId";
-	
+
 	public static final String SIMULATION_EXECUTION = "execution";
+	public static final String SIMULATION_EXECUTIONS = "executions";
 	public static final String SIMULATION_EXECUTION_ID = "executionId";
 
 	/**

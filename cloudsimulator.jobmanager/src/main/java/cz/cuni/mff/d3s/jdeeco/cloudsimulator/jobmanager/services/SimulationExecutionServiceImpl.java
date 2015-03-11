@@ -37,6 +37,11 @@ public class SimulationExecutionServiceImpl implements SimulationExecutionServic
 	}
 
 	@Override
+	public List<SimulationExecution> listAllNotCompletedExecutions() {
+		return simulationExecutionDao.findAllNotCompleted();
+	}
+
+	@Override
 	public SimulationExecution getExecutionById(int executionId) {
 		return simulationExecutionDao.findById(executionId);
 	}
