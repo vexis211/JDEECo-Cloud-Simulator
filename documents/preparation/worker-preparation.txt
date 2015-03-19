@@ -1,8 +1,0 @@
-ssh -p 10012 centos@openstack.d3s.mff.cuni.cz -i .ssh/skalicky-default.pem
-
-
-# update all packages
-sudo yum update
-
-
-# include - java-install.txt
