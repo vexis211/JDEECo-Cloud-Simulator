@@ -1,8 +1,8 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationConfiguration;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationData;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationExecution;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationConfiguration;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationData;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 
 public class PackageTaskFactoryImpl implements PackageTaskFactory {
 
@@ -18,7 +18,7 @@ public class PackageTaskFactoryImpl implements PackageTaskFactory {
 		packageTask.setRelativePathToPomFile(simulationData.getPathToPom());
 		packageTask.setMavenGoals(simulationData.getMavenGoals().split(" "));
 		
-		packageTask.setUploadName("exec" + simulationExecution.getId());
+		packageTask.setSaveName("exec" + simulationExecution.getId());
 		
 		return packageTask;
 	}

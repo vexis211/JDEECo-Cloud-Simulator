@@ -27,7 +27,7 @@ public class CloudSimulationDataRepositoryImpl implements SimulationDataReposito
 	}
 
 	@Override
-	public String getData(String dataName) {
+	public String getPackagePath(String dataName) {
 		if (simulationDataCache.containsKey(dataName))
 			return simulationDataCache.get(dataName);
 

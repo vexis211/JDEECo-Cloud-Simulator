@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors;
 import java.io.File;
 import java.io.IOException;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.ZipHelper;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.helpers.ZipHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackageTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackagingException;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackagingExceptionHandler;

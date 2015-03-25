@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationExecution;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationRun;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRun;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpdate;
 
 public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {

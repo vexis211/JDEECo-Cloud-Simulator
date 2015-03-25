@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.ZipHelper;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.helpers.ZipHelper;
 
 public class SimulationDataArchiverImpl implements SimulationDataArchiver {
 

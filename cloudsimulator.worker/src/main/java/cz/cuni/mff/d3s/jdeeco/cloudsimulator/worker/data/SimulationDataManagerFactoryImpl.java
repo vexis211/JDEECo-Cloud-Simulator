@@ -13,9 +13,9 @@ public class SimulationDataManagerFactoryImpl implements SimulationDataManagerFa
 	}
 
 	@Override
-	public SimulationDataManager create(String dataParentDirectory, String logParentDirectory,
+	public SimulationDataManager create(String executionsRootDirectory, String resultsRootDirectory, String logsRootDirectory,
 			SimulationDataListener listener) {
-		SimulationDataManager manager = new SimulationDataManagerImpl(dataParentDirectory, logParentDirectory,
+		SimulationDataManager manager = new SimulationDataManagerImpl(executionsRootDirectory, resultsRootDirectory, logsRootDirectory,
 				futureExecutor, simulationDataRepository, listener);
 		return manager;
 	}

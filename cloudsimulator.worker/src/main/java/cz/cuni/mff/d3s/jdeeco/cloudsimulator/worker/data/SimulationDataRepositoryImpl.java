@@ -15,23 +15,23 @@ public class SimulationDataRepositoryImpl implements SimulationDataRepository {
 	}
 
 	@Override
-	public String getData(String dataName) {
+	public String getPackagePath(String dataName) {
 		if (simulationDataCache.containsKey(dataName)) {
 			return simulationDataCache.get(dataName);
 		}
 
-		String dataPath = simulationDataStorageService.getDataPath(dataName);
+		String packagePath = simulationDataStorageService.getPackagePath(dataName);
 
-		simulationDataCache.put(dataName, dataPath);
-		return dataPath;
+		simulationDataCache.put(dataName, packagePath);
+		return packagePath;
 	}
 
 	@Override
-	public void saveResults(SimulationData data, String target) {
+	public void saveResults(SimulationData data, String dataName) {
 		// results
-		simulationDataStorageService.saveResults(data.getExecutionPath(), target);
+		simulationDataStorageService.saveResults(data.getResultsPath(), dataName);
 		// logs
-		simulationDataStorageService.saveLogs(data.getLogPath(), target);
+		simulationDataStorageService.saveLogs(data.getLogPath(), dataName);
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.connectors.WorkerConnector;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.control.UpdateExecutionsCommand;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.data.SimulationExecutionEntry;
@@ -18,7 +19,6 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.WorkerPl
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.planning.WorkerPlanItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerInstance;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.workers.WorkerManager;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTaskImpl;
@@ -152,7 +152,7 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 
 		// send run simulation task
 		String workerId = worker.getWorkerId();
-		RunSimulationTask task = new RunSimulationTaskImpl(simulationRun.getId(), execution.getPackageName());
+		RunSimulationTask task = new RunSimulationTaskImpl(simulationRun.getId());
 		workerConnector.sendTask(workerId, task);
 	}
 

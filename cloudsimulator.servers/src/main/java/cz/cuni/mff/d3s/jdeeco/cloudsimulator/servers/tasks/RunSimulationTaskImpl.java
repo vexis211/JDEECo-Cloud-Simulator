@@ -5,20 +5,13 @@ public class RunSimulationTaskImpl extends WorkerTaskImpl implements RunSimulati
 	private static final long serialVersionUID = -956877781050491072L;
 
 	private final int simulationRunId;
-	private final String packageName;
 
-	public RunSimulationTaskImpl(int simulationRunId, String dataName) {
+	public RunSimulationTaskImpl(int simulationRunId) {
 		this.simulationRunId = simulationRunId;
-		this.packageName = dataName;
 	}
 
 	@Override
 	public int getSimulationRunId() {
 		return simulationRunId;
-	}
-
-	@Override
-	public String getPackageName() {
-		return packageName;
 	}
 }

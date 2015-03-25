@@ -23,11 +23,8 @@
 		<spring.version>4.1.1.RELEASE</spring.version>
 		<spring-boot.version>1.2.0.RELEASE</spring-boot.version>
 		<aspectj.version>1.8.2</aspectj.version>
-		<log4j.version>1.2.17</log4j.version>
-		<slf4j.version>1.7.7</slf4j.version>
 		<commons-io.version>2.4</commons-io.version>
 		<commons-lang.version>2.6</commons-lang.version>
-		<junit.version>4.12</junit.version>
 
 		<activemq.version>5.10.0</activemq.version>
 
@@ -52,24 +49,6 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>${commons-lang.version}</version>
-		</dependency>
-
-		<!-- Log4j - logging -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
 		</dependency>
 
 		<!-- Spring -->

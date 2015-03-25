@@ -2,7 +2,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack;
 
 import java.util.List;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.vcs.VCSType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType;
 
 public interface PackageTask {
 	int getId();
@@ -25,5 +25,5 @@ public interface PackageTask {
 	String getPackageLocalPath();
 	void setPackageLocalPath(String packageLocalPath);
 
-	String getUploadName();
+	String getSaveName();
 }

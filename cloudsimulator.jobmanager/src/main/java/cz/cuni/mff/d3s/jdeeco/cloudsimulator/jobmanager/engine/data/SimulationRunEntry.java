@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.data;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 
 public interface SimulationRunEntry {
 	

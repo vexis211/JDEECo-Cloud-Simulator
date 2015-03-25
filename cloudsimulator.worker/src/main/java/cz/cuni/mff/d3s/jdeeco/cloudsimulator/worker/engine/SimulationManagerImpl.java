@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.PathEx;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.StopSimulationTask;
@@ -30,7 +30,7 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 	private final HashMap<Integer, RunSimulationTask> incompleteTasks = new HashMap<Integer, RunSimulationTask>();
 	private final List<SimulationExecutor> runningExecutors = new ArrayList<SimulationExecutor>();
 
-	public SimulationManagerImpl(String executionParentDirectory, JobManagerConnector jobManagerConnector,
+	public SimulationManagerImpl(String executionDataParentDirectory, JobManagerConnector jobManagerConnector,
 			SimulationDataManagerFactory simulationDataManagerFactory,
 			SimulationExecutorFactory simulationExecutorFactory) {
 
@@ -38,8 +38,9 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 		this.simulationExecutorFactory = simulationExecutorFactory;
 
 		this.simulationDataManager = simulationDataManagerFactory.create(
-				PathEx.combine(executionParentDirectory, "data"), PathEx.combine(executionParentDirectory, "logs"),
-				this);
+				PathEx.combine(executionDataParentDirectory, "executions"),
+				PathEx.combine(executionDataParentDirectory, "results"),
+				PathEx.combine(executionDataParentDirectory, "logs"), this);
 	}
 
 	@Override
@@ -49,7 +50,7 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 		synchronized (incompleteTasks) {
 			incompleteTasks.put(task.getSimulationRunId(), task);
 		}
-		simulationDataManager.prepareData(task.getSimulationRunId(), task.getPackageName());
+		simulationDataManager.prepareData(task.getSimulationRunId());
 	}
 
 	@Override
@@ -78,10 +79,8 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 	@Override
 	public void executionEnded(SimulationExecutor simulationExecutor) {
 		SimulationExecutorParameters parameters = simulationExecutor.getParameters();
-		RunSimulationTask task = incompleteTasks.get(parameters.getSimulationRunId());
-
-		simulationDataManager.saveResults(parameters.getSimulationRunId(), parameters.getSimulationData(),
-				"target"); // TODO target dir name
+		
+		simulationDataManager.saveResults(parameters.getSimulationRunId(), parameters.getSimulationData());
 		removeExecutor(simulationExecutor);
 	}
 

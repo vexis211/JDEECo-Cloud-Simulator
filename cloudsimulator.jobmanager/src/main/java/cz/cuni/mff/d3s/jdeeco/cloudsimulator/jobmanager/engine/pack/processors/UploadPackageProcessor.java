@@ -24,7 +24,7 @@ public class UploadPackageProcessor extends PackageTaskProcessorBase {
 	protected boolean processInternal(PackageTask task) throws PackagingException {
 
 		String packageLocalPath = task.getPackageLocalPath();
-		String uploadName = task.getUploadName();
+		String uploadName = task.getSaveName();
 
 		try {
 			cloudDataService.upload(new File(packageLocalPath), packageContainerName, uploadName);

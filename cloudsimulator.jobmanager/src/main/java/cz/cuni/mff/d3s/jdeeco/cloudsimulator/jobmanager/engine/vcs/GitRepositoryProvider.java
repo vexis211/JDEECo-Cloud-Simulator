@@ -6,6 +6,8 @@ import java.io.IOException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType;
+
 public class GitRepositoryProvider implements RepositoryProvider {
 
 	@Override

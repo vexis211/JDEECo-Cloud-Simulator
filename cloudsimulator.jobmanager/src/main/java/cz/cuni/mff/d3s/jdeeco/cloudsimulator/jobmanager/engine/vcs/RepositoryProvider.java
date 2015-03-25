@@ -1,5 +1,7 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.vcs;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType;
+
 public interface RepositoryProvider {
 	
 	VCSType getVCSType();

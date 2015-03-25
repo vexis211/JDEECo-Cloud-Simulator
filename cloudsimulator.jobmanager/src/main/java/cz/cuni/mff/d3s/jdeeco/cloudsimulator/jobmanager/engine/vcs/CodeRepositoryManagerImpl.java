@@ -6,7 +6,8 @@ import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.PathEx;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
 
 public class CodeRepositoryManagerImpl implements CodeRepositoryManager {
 

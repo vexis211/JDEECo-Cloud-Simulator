@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.vcs.VCSType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType;
 
 public class PackageTaskImpl implements PackageTask {
 
@@ -23,7 +23,7 @@ public class PackageTaskImpl implements PackageTask {
 
 	private String preparingDirectory;
 	private String packageLocalPath;
-	private String uploadName;
+	private String saveName;
 
 	public PackageTaskImpl(int id) {
 		this.id = id;
@@ -90,8 +90,8 @@ public class PackageTaskImpl implements PackageTask {
 	}
 
 	@Override
-	public String getUploadName() {
-		return uploadName;
+	public String getSaveName() {
+		return saveName;
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class PackageTaskImpl implements PackageTask {
 		this.mavenGoals = Collections.unmodifiableList(Arrays.asList(mavenGoals));
 	}
 
-	public void setUploadName(String uploadName) {
-		this.uploadName = uploadName;
+	public void setSaveName(String saveName) {
+		this.saveName = saveName;
 	}
 }

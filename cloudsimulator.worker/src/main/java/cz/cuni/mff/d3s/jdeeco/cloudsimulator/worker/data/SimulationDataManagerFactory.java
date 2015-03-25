@@ -2,5 +2,6 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data;
 
 public interface SimulationDataManagerFactory {
 
-	SimulationDataManager create(String dataParentDirectory, String logParentDirectory, SimulationDataListener listener);
+	SimulationDataManager create(String executionsRootDirectory, String resultsRootDirectory, String logsRootDirectory,
+			SimulationDataListener listener);
 }

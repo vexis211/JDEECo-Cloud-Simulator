@@ -10,10 +10,9 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.N
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.PackageTaskProcessingListener;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.PackageTaskProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.SavePackageProcessor;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.processors.UploadPackageProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.vcs.CodeRepositoryManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.CloudDataService;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationDataStorageService;
 
 public class PackagePreparatorImpl implements PackagePreparator, PackagingExceptionHandler,
 		PackageTaskProcessingListener {
@@ -22,7 +21,7 @@ public class PackagePreparatorImpl implements PackagePreparator, PackagingExcept
 	private final PackageTaskProcessor firstProcessor;
 
 	public PackagePreparatorImpl(FutureExecutor executor, CodeRepositoryManager codeRepositoryManager,
-			CloudDataService cloudDataService, String packageContainerName) {
+			SimulationDataStorageService simulationDataStorageService, String packageContainerName) {
 
 		CodeRepositoryProcessor codeRepositoryProcessor = new CodeRepositoryProcessor(executor, this,
 				codeRepositoryManager);
@@ -32,7 +31,7 @@ public class PackagePreparatorImpl implements PackagePreparator, PackagingExcept
 
 		// TODO - run script processor
 		SavePackageProcessor savePackageProcessor = new SavePackageProcessor(executor, this,
-				packageContainerName, cloudDataService);
+				packageContainerName, simulationDataStorageService);
 		ClearPreparingDirectoryProcessor clearPreparingDirectoryProcessor = new ClearPreparingDirectoryProcessor(
 				executor, this);
 		NotifyPackageTaskCompletedProcessor notifyPackageTaskCompletedProcessor = new NotifyPackageTaskCompletedProcessor(

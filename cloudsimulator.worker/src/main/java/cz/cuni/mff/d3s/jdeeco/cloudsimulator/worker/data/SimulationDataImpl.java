@@ -3,11 +3,13 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data;
 public class SimulationDataImpl implements SimulationData {
 	
 	private final String executionPath;
-	private final String logPath;
+	private final String resultsPath;
+	private final String logsPath;
 
-	public SimulationDataImpl(String executionPath, String logPath) {
+	public SimulationDataImpl(String executionPath, String resultsPath, String logsPath) {
 		this.executionPath = executionPath;
-		this.logPath = logPath;
+		this.resultsPath = resultsPath;
+		this.logsPath = logsPath;
 	}
 	
 	@Override
@@ -16,8 +18,12 @@ public class SimulationDataImpl implements SimulationData {
 	}
 
 	@Override
-	public String getLogPath() {
-		return logPath;
+	public String getResultsPath() {
+		return resultsPath;
 	}
 
+	@Override
+	public String getLogPath() {
+		return logsPath;
+	}
 }

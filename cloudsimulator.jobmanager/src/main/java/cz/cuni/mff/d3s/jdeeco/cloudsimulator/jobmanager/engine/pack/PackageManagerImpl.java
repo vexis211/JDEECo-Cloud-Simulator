@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationExecution;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 
 public class PackageManagerImpl implements PackageManager, PackagePreparatorListener {
 
@@ -60,7 +60,7 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 	@Override
 	public void packagePrepared(PackageTask packageTask) {
 		int executionId = packageTask.getId();
-		String packageName = packageTask.getUploadName();
+		String packageName = packageTask.getSaveName();
 		List<PackageManagerListener> listeners;
 		SimulationExecution execution;
 

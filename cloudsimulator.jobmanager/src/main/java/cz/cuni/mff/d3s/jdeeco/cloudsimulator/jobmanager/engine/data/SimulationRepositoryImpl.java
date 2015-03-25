@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationExecutionDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationExecution;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationExecutionDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 
 public class SimulationRepositoryImpl implements SimulationRepository {
 

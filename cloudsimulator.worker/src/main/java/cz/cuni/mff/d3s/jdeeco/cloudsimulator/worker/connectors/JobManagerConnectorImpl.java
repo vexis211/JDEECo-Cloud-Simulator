@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.springframework.jms.core.JmsTemplate;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.connectors.ServerConnectorImpl;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.WorkerTask;

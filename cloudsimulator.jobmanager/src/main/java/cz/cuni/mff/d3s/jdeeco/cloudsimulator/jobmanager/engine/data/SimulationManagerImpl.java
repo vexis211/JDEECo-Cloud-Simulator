@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.SimulationExecution;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.PackagePreparedUpdate;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.pack.SimplePackageManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpdate;

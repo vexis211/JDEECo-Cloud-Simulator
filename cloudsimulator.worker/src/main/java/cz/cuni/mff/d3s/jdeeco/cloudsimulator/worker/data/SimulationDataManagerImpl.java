@@ -8,25 +8,28 @@ import java.util.concurrent.Future;
 
 import org.apache.commons.io.FileUtils;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.PathEx;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
 
 public class SimulationDataManagerImpl implements SimulationDataManager {
 
 	private final List<Future<?>> runningFutures = new ArrayList<>();
 
-	private final String dataParentDirectory;
+	private final String executionsRootDirectory;
 	private final FutureExecutor executor;
 	private final SimulationDataListener listener;
 
-	private String logParentDirectory;
+	private String resultsRootDirectory;
+	private String logsRootDirectory;
 
 	private SimulationDataRepository simulationDataRepository;
 
-	public SimulationDataManagerImpl(String dataParentDirectory, String logParentDirectory, FutureExecutor executor,
+
+	public SimulationDataManagerImpl(String executionsRootDirectory, String resultsRootDirectory, String logsRootDirectory, FutureExecutor executor,
 			SimulationDataRepository dataRepository, SimulationDataListener listener) {
-		this.dataParentDirectory = dataParentDirectory;
-		this.logParentDirectory = logParentDirectory;
+		this.executionsRootDirectory = executionsRootDirectory;
+		this.resultsRootDirectory = resultsRootDirectory;
+		this.logsRootDirectory = logsRootDirectory;
 
 		this.executor = executor;
 		this.simulationDataRepository = dataRepository;
@@ -43,19 +46,20 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 	}
 
 	@Override
-	public void prepareData(int simulationRunId, String dataName) {
-		startFuture(() -> prepareDataCore(simulationRunId, dataName));
+	public void prepareData(int simulationRunId) {
+		startFuture(() -> prepareDataCore(simulationRunId));
 	}
 
-	private void prepareDataCore(int simulationRunId, String dataName) {
+	private void prepareDataCore(int simulationRunId) {
 
-		String executionPath = PathEx.combine(dataParentDirectory, simulationRunId);
-		String logPath = PathEx.combine(logParentDirectory, simulationRunId);
-		SimulationData preparedData = new SimulationDataImpl(executionPath, logPath);
+		String executionPath = PathEx.combine(executionsRootDirectory, simulationRunId);
+		String resultsPath = PathEx.combine(resultsRootDirectory, simulationRunId);
+		String logsPath = PathEx.combine(logsRootDirectory, simulationRunId);
+		SimulationData preparedData = new SimulationDataImpl(executionPath, resultsPath, logsPath);
 
 		try {
-			String templateDataDir = simulationDataRepository.getData(dataName);
-			FileUtils.copyDirectory(new File(templateDataDir), new File(executionPath));
+			String packageDir = simulationDataRepository.getPackagePath(String.valueOf(simulationRunId)); // simulation run ID is used like data name
+			FileUtils.copyDirectory(new File(packageDir), new File(executionPath));
 
 			listener.dataPrepared(simulationRunId, preparedData);
 		} catch (IOException e) {
@@ -64,12 +68,12 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 	}
 
 	@Override
-	public void saveResults(int simulationRunId, SimulationData data, String dataName) {
-		startFuture(() -> saveResultsCore(simulationRunId, data, dataName));
+	public void saveResults(int simulationRunId, SimulationData data) {
+		startFuture(() -> saveResultsCore(simulationRunId, data));
 	}
 
-	private void saveResultsCore(int simulationRunId, SimulationData data, String dataName) {
-		simulationDataRepository.saveResults(data, dataName);
+	private void saveResultsCore(int simulationRunId, SimulationData data) {
+		simulationDataRepository.saveResults(data, String.valueOf(simulationRunId)); // simulation run ID is used like target name
 		listener.resultsSaved(simulationRunId);
 	}
 

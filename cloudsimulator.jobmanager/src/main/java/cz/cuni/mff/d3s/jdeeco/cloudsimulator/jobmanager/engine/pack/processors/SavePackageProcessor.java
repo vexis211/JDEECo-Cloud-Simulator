@@ -25,17 +25,19 @@ public class SavePackageProcessor extends PackageTaskProcessorBase {
 	protected boolean processInternal(PackageTask task) throws PackagingException {
 
 		String packageLocalPath = task.getPackageLocalPath();
-		String uploadName = task.getUploadName();
+		String savePath = task.getSaveName();
 
 		try {
-			simulationDataStorageService.getDataPath(packageLocalPath)
-			simulationDataStorageService.upload(new File(packageLocalPath), packageContainerName, uploadName);
+			// TODO!!!!!!!!!!!!!!!!!!
+//			void savePackage(String sourcePath, String target);
+//			simulationDataStorageService.getDataPath(packageLocalPath)
+//			simulationDataStorageService.upload(new File(packageLocalPath), packageContainerName, uploadName);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new PackagingException(
-					String.format(
-							"Exception occured during uploading package to cloud. Source: '%s', Target container name: '%s', Target name: '%s'.",
-							packageLocalPath, packageContainerName, uploadName), e);
+//			throw new PackagingException(
+//					String.format(
+//							"Exception occured during uploading package to cloud. Source: '%s', Target container name: '%s', Target name: '%s'.",
+//							packageLocalPath, packageContainerName, uploadName), e);
 		}
 
 		return true;

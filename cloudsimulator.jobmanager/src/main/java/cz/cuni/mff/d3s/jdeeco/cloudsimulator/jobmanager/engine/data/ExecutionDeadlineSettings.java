@@ -2,7 +2,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.data;
 
 import org.joda.time.DateTime;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.models.ExecutionEndSpecificationType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.ExecutionEndSpecificationType;
 
 public class ExecutionDeadlineSettings {
 	

@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 
 public class SimulationStatusUpdateImpl extends WorkerUpdateImpl implements SimulationStatusUpdate {
 
