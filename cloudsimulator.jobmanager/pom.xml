@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cloudsimulator.jobmanager</artifactId>
 	<name>cloudsimulator.jobmanager</name>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<parent>
 		<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
@@ -177,6 +177,11 @@
 		</activation> </profile> </profiles> -->
 
 	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>cloudsimulator.data</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>cloudsimulator.servers</artifactId>
