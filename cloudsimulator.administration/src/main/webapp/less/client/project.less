@@ -1,0 +1,120 @@
+@import "../common/globalVars.less";
+@import "../elements/contentRightHeader.less";
+@import "../elements/commonItemStyles.less";
+
+#project-div {
+	margin: 10px;
+
+	.project-name {
+		margin: 5px 5px 3px 5px;
+		font-size: 20px;
+		font-weight: bold;
+	}
+	
+	.project-creation {
+		margin: 0px 5px 5px 5px;
+		font-size: 8pt;
+	}
+
+	.project-description {
+		margin: 10px 5px 10px 5px;
+	}
+	
+	.configuration-list-header{
+		margin: 20px 5px 1px 5px;
+		font-size: 16px;
+		font-weight: bold;
+	}
+	
+	.project-configurations-div {
+
+		.configuration-list-item-div {
+			table {
+				padding: 3px;
+				width: 100%;
+				border-bottom: 1px solid @control-color;
+			}
+
+			.configuration-name-td {
+				.tds ();
+			}
+
+			.configuration-status-td {
+				.status-tds;				
+				padding-right: 20px;
+			}
+
+			.configuration-last-run-date-td {
+				.tds ();
+				width: 150px;
+				text-align: right;					
+			}
+
+			.run-configuration-td {
+				.action-tds;
+			}
+
+			.edit-configuration-td {
+				.action-tds;
+			}
+
+			.hide-configuration-td {
+				.action-tds;
+			}
+		}
+	}
+	
+	.data-list-header{
+		margin: 20px 5px 1px 5px;
+		font-size: 16px;
+		font-weight: bold;
+	}
+	
+	.project-datas-div {
+		
+		.data-list-item-div {
+			table {
+				padding: 3px;
+				width: 100%;
+				border-bottom: 1px solid @control-color;
+			}
+
+			.data-name-td {
+				.tds ();
+			}
+
+			.data-vcstype-td {	
+				.tds ();
+				width: 80px;
+				max-width: 80px;
+				padding-right: 10px;
+			}
+			
+			.data-repourl-td {			
+				.tds ();
+				padding-right: 10px;
+				width: 350px;
+				max-width: 350px;
+			}
+			
+			.data-pathtopom-td {			
+				.tds ();
+				width: 150px;
+				max-width: 150px;
+				padding-right: 10px;
+			}
+			
+			.data-goals-td {			
+				.tds ();
+				width: 150px;
+				max-width: 150px;
+				padding-right: 10px;
+			}
+			
+			.edit-data-td {
+				.action-tds;
+			}
+		}
+	}
+}
+

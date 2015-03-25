@@ -1,0 +1,51 @@
+<f:subview contentType="text/html" encoding="UTF-8" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:comp="http://java.sun.com/jsf/composite/components">
+
+	<div class="settings-item-div">
+		<form class="settings-item-form" method="post" action="#{Action}" name="simulationConfigurationItem">
+			<c:if test="#{configuration != null}">
+				<input type="hidden" name="id" value="#{configuration.id}" />
+			</c:if>
+			
+			<div class="error-div">
+				<h:outputText value="#{errorMsg}" escape="false" />
+			</div>
+			<table>
+				<tr>
+					<td>Name:</td>
+					<td><input id="name-input" type="text" name="name" value="#{configuration.name}" /></td>
+				</tr>
+				<tr>
+					<td>Description:</td>
+					<td><textarea id="description-area" name="description" rows="5"><h:outputText
+								value="#{configuration.description}" /></textarea></td>
+				</tr>
+				<tr>
+					<td>Default run count:</td>
+					<td><input id="defaultRunCount-input" type="number" min="1" name="defaultRunCount"
+						value="#{configuration.defaultRunCount}" /></td>
+				</tr>
+				<tr>
+					<td>Data:</td>
+					<td><select id="data-input" name="dataId">
+							<c:forEach var="data" items="#{datas}">
+								<c:if test="#{data.id == configuration.data.id}">
+									<option value="#{data.id}" selected="selected"><h:outputText value="#{data.name}" /></option>
+								</c:if>
+								<c:if test="#{data.id != configuration.data.id}">
+									<option value="#{data.id}"><h:outputText value="#{data.name}" /></option>
+								</c:if>
+							</c:forEach>
+					</select></td>
+				</tr>
+			</table>
+			<div class="actions-div">
+				<input class="submit-input" type="submit" value="#{SubmitTitle}" />
+				<a class="cancel" href="#{cancelUri}">Cancel</a>
+			</div>
+		</form>
+	</div>
+</f:subview>

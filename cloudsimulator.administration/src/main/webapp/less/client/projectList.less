@@ -1,0 +1,93 @@
+@import "../common/globalVars.less";
+@import "../elements/contentRightHeader.less";
+
+#projects-div {
+
+	@import "../elements/commonItemStyles";
+		
+	.project-list-item-div {
+		margin-bottom: 5px;	
+		
+		.header-div {
+			background: @control-color;
+			font-weight: bold;	
+
+			table {
+				padding: 3px;
+				width: 100%;
+			}
+
+			.project-expander-td {
+				.tds ();
+				text-align: center;
+				width: 18px;
+			}
+
+			.project-name-td {
+				.tds ();
+			}
+
+			.project-status-failed-td {
+				.status-tds;
+			}
+
+			.project-status-successful-td {
+				.status-tds;
+				padding-right: 20px;
+			}
+
+			.add-configuration-td {
+				.action-tds;
+			}
+
+			.edit-project-td {
+				.action-tds;
+			}
+
+			.hide-project-td {
+				.action-tds;
+			}
+		}
+
+		.project-configurations-div {
+			margin: 0 0 0 22px;
+
+			.configuration-list-item-div {
+				table {
+					padding: 3px;
+					width: 100%;
+					border-bottom: 1px solid @control-color;
+				}
+
+				.configuration-name-td {
+					.tds ();
+				}
+
+				.configuration-status-td {
+					.status-tds;
+					
+					padding-right: 20px;
+				}
+
+				.configuration-last-run-date-td {
+					.tds ();
+					width: 150px;
+					text-align: right;					
+				}
+
+				.run-configuration-td {
+					.action-tds;
+				}
+
+				.edit-configuration-td {
+					.action-tds;
+				}
+
+				.hide-configuration-td {
+					.action-tds;
+				}
+			}
+		}
+	}
+}
+

@@ -1,0 +1,93 @@
+@import "../common/globalVars.less";
+@import "../elements/contentRightHeader.less";
+
+#configuration-div {
+	margin: 10px;
+
+	.configuration-name {
+		margin: 5px 5px 3px 5px;
+		font-size: 20px;
+		font-weight: bold;
+	}
+	
+	.configuration-creation {
+		margin: 0px 5px 5px 5px;
+		font-size: 8pt;
+	}
+
+	.configuration-description {
+		margin: 10px 5px 10px 5px;
+	}
+		
+	.configuration-properties {
+		tr {
+			td:first-child {
+				width: 200px;
+			}
+		}
+	}
+	
+	.execution-list-header{
+		margin: 20px 5px 1px 5px;
+		font-size: 16px;
+		font-weight: bold;
+	}
+	
+	.configuration-executions-div {
+
+		@import "../elements/commonItemStyles.less";
+		
+		.execution-date-td() {
+			.tds;
+			width: 170px;
+			text-align: center;					
+		}
+		
+		.execution-list-item-div {
+			table {
+				padding: 3px;
+				width: 100%;
+				border-bottom: 1px solid @control-color;
+			}
+
+			.execution-id-td {
+				.tds;
+				text-align: right;
+				width: 18px;
+			}
+
+			.execution-created-td {
+				.execution-date-td;		
+			}
+
+			.execution-status-td {
+				.tds;	
+				width: 140px;		
+			}
+			
+			.execution-runcount-td {
+				.tds;		
+				width: 85px;
+				text-align: right;		
+				padding-right: 30px;
+			}
+			
+			.execution-endspecification-td {
+				.tds;			
+			}
+						
+			.execution-started-td {
+				.execution-date-td;		
+			}
+			
+			.execution-ended-td {
+				.execution-date-td;		
+			}
+			
+			.startstop-execution-td {
+				.action-tds;
+			}
+		}
+	}
+}
+

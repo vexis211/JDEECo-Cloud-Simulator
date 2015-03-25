@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html>
+<f:view contentType="text/html" encoding="UTF-8"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:security="http://www.springframework.org/security/tags">
+	<html>
+
+	<!-- Sets all common parameters used through app. -->
+	<ui:param name="AppVersion" value="#{request.getAttribute('appVersion')}" />
+	<ui:param name="SiteRoot" value="#{request.contextPath}" />
+	<ui:param name="SiteScripts" value="#{SiteRoot}/js" />
+	<ui:param name="SiteStyles" value="#{SiteRoot}/less" />
+	<ui:param name="SiteImages" value="#{SiteRoot}/images" />
+	<ui:param name="SiteDocs" value="##{SiteRoot}/docs" />
+
+	<ui:param name="MainPath" value="#{SiteRoot}/main" />
+	<ui:param name="ProjectPath" value="#{MainPath}/project" />
+	<ui:param name="ConfigurationPath" value="#{MainPath}/configuration" />
+	<ui:param name="DataPath" value="#{MainPath}/data" />
+	<ui:param name="ExecutionPath" value="#{MainPath}/execution" />
+
+	<ui:param name="QueuePath" value="#{MainPath}/simulationqueue" />
+	
+<!-- Current app version. Used to download correct css/js files. 
+	Must be incremented with each change to css/js files
+	to prevent caching incorrect files in web browsers. -->
+<head>
+	<!-- Meta -->
+	<ui:include src="/WEB-INF/views/elements/metaTags.xhtml" />
+	
+	<!-- Initialize basic methods used commonly through the app. -->
+	<script type="text/javascript" src="#{SiteScripts}/app/init/init_load.js?version=#{AppVersion}" />
+	<script type="text/javascript" src="#{SiteScripts}/app/common/namespaces.js?version=#{AppVersion}" />
+	
+	<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/main.less?version=#{AppVersion}" />
+	<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/userPanel.less?version=#{AppVersion}" />
+	<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/elements/navigationPathHeader.less?version=#{AppVersion}" />
+		
+	<!-- Templates may change default title if needed. -->
+	<title><ui:insert name="TitleContent">JDEECo Simulator</ui:insert></title>
+	
+	<!-- Additional css/meta/title definitions goes here. -->
+	<ui:insert name="HeadContent" />
+	
+	<!-- less compiler -->
+	<script type="text/javascript" src="#{SiteScripts}/libs/less-2.1.0.min.js" />
+</head>
+
+<!-- Definition of body element and its content. -->
+<body>
+	<div id="content">
+		<div id="top-content">
+			<ui:insert name="TopContent">
+				<!-- Icon -->
+				
+				<!-- Main menu -->
+				<div class="header-menu">
+					<!-- Projects -->
+					<a href="#{MainPath}" class="header-projects">
+						<span>Projects</span>
+					</a>
+					<!-- Infrastructure -->
+					<a href="#{MainPath}/infrastructure" class="header-infrastructure">
+						<span>Infrastructure</span>
+					</a>
+					<!-- Simulation queue -->
+					<a href="#{QueuePath}" class="header-simulation-queue">
+						<span>Simulation queue</span>
+					</a>
+				</div>
+				
+				<div class="header-user-panel">
+					<ui:include src="/WEB-INF/views/elements/userPanel.xhtml">
+						<ui:param name="user" value="${user}" />
+					</ui:include>
+				</div>
+			</ui:insert>
+		</div>
+		<div id="navigation-bar-content">
+			<ui:insert name="NavigationBarContent">
+				<ui:include src="/WEB-INF/views/elements/navigationPathHeader.xhtml" />
+			</ui:insert>
+		</div>
+		<div id="middle-content">
+			<ui:insert name="MiddleContent">No content!</ui:insert>
+		</div>
+		<div id="footer-content">
+			<ui:insert name="BottomContent">
+				<footer id="footer">
+					JDEECo, 2014
+				</footer>
+			</ui:insert>
+		</div>
+	</div>
+	
+	<!-- Dialogs -->
+	<ui:include src="/WEB-INF/views/elements/dialogs/changePassword.xhtml" />
+		
+		 
+	<!-- ************************** JavaScript ************************** -->
+	<ui:include src="/WEB-INF/views/elements/jsConfig.xhtml" />
+
+	<!-- Libraries. -->
+	<script type="text/javascript" src="#{SiteScripts}/libs/underscore-min.js"></script>
+	<script type="text/javascript" src="#{SiteScripts}/libs/jquery-2.1.1.min.js" />
+
+	<!-- Common scripts section. -->
+	<script type="text/javascript" src="#{SiteScripts}/app/html_provider.js?version=#{AppVersion}" />
+	<script type="text/javascript" src="#{SiteScripts}/app/common/utils.js?version=#{AppVersion}"/>
+	<script type="text/javascript" src="#{SiteScripts}/app/init/init.js?version=#{AppVersion}" />
+	<script type="text/javascript" src="#{SiteScripts}/app/common/widgets.js?version=#{AppVersion}" />
+	
+	<!-- Layout widgets -->
+	<script type="text/javascript" src="#{SiteScripts}/app/widgets/user_panel_widget.js?version=#{AppVersion}" />
+	<script type="text/javascript" src="#{SiteScripts}/app/widgets/autologout_widget.js?version=#{AppVersion}" />
+
+	<!-- Places all user's javascript inside JsContent makes them have initialized app context. -->
+	<ui:insert name="JsContent" />
+
+	<script type="text/javascript" src="#{SiteScripts}/app/main.js?version=#{AppVersion}" />
+	<script type="text/javascript">
+		Init.after_we_have_all_the_scripts();
+	</script>
+</body>
+	</html>
+</f:view>

@@ -1,0 +1,35 @@
+@import "../common/globalVars.less";
+
+#navigation-path-header-div {
+	text-align: left;
+	color: @control-color;
+		
+	&:after {
+		content: " ";
+		display: block;
+		height: 0;
+		clear: both;
+	}
+	
+	.path-steps-div {
+		margin: 0 0 0 18px;
+		
+		.path-step-div {
+			float: left;
+			
+			a {	
+				color: @control-color;
+				text-decoration: none;
+				padding: 0 7px 0 3px;
+				
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+						
+			.stepSeparator {
+				font-weight: bold;	
+			}
+		}
+	}
+}
