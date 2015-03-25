@@ -16,8 +16,8 @@
 		http://www.springframework.org/schema/util/spring-util-4.1.xsd">
 	
 	<!-- Email -->
-	<bean id="viewRenderer" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.utils.ViewRendererImpl" />
-	<bean id="emailPreparator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.utils.EmailPreparatorImpl">
+	<bean id="viewRenderer" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.utils.ViewRendererImpl" />
+	<bean id="emailPreparator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.utils.EmailPreparatorImpl">
 		<constructor-arg name="from" value="${mail.from}" />
 		<constructor-arg name="fromPersonalName" value="${mail.fromPersonalName}" />
 	</bean>
@@ -38,10 +38,10 @@
 		</property>
 	</bean>
 
-	<bean id="emailService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.EmailServiceImpl" />
+	<bean id="emailService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.EmailServiceImpl" />
 
 	<bean id="errorMailSender"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.utils.ErrorMailSender">
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.utils.ErrorMailSender">
 		<property name="recipients">
 			<list>
 				<value>hskalicky@gmail.com</value>

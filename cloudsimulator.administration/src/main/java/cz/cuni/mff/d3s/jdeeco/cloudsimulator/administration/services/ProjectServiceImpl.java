@@ -8,10 +8,10 @@ import javax.annotation.Resource;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.daos.ProjectDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.daos.UserDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.Project;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.ProjectDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.UserDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.Project;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.UserHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.ProjectVisibilitySettings;
 

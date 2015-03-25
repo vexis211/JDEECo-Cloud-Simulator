@@ -2,8 +2,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data;
 
 import java.util.Date;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationData;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.engine.vcs.VCSType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationData;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType;
 
 public class SimulationDataItemImpl implements SimulationDataItem {
 	private int id;

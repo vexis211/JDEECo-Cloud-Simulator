@@ -8,13 +8,13 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.daos.SimulationConfigurationDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.daos.SimulationExecutionDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.ExecutionEndSpecificationType;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationConfiguration;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationExecution;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.engine.control.EngineController;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationConfigurationDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationExecutionDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.ExecutionEndSpecificationType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationConfiguration;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.jobmanager.EngineController;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.UserHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 

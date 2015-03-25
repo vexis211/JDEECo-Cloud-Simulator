@@ -13,8 +13,8 @@
 
 	<task:annotation-driven executor="taskExecutor" scheduler="taskScheduler"/>
 		
-	<bean id="taskManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.tasks.TaskManagerImpl" />
-	<bean id="afterCommitExecutor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.tasks.AfterCommitExecutorImpl" scope="prototype" /> 
+	<bean id="taskManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.tasks.TaskManagerImpl" />
+	<bean id="afterCommitExecutor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.tasks.AfterCommitExecutorImpl" scope="prototype" /> 
  -->
 	<!-- <bean id="multipleDownloadTask" class="com.atteq.uschovna.tasks.MultipleDownloadTask" scope="prototype">
 		<property name="mailSender" ref="mailSender" />

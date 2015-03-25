@@ -20,9 +20,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.daos.UserDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.daos.UserInfoDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.UserDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.UserInfoDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.AuthenticationCodeType;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.CodeAuthenticationToken;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.CustomUserDetailsImpl;

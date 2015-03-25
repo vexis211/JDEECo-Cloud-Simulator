@@ -6,13 +6,13 @@ import javax.annotation.Resource;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.daos.ProjectDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.daos.SimulationConfigurationDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.daos.SimulationDataDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.Project;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationConfiguration;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationData;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.ProjectDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationConfigurationDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationDataDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.Project;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationConfiguration;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationData;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.UserHelper;
 
 public class SimulationConfigurationServiceImpl implements SimulationConfigurationService {

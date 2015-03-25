@@ -2,7 +2,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 
 
 /**

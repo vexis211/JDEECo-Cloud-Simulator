@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 
 public interface UserService extends UserDetailsService {
 

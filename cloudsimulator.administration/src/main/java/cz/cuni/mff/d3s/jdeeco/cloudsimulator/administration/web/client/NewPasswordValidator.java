@@ -6,7 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.PasswordHelper;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.StringEx;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.StringEx;
 
 /** Validator used for new password */
 public class NewPasswordValidator implements Validator {

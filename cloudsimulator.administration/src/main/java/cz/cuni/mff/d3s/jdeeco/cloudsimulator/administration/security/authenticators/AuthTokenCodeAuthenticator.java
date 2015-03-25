@@ -2,8 +2,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.authentica
 
 import org.springframework.security.core.Authentication;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.AuthenticationToken;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.AuthenticationToken;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.AuthenticationTokenService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.CodeAuthenticationToken;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.CustomUserDetails;

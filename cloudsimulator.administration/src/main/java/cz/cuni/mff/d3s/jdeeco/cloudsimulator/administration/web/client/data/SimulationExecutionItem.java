@@ -6,7 +6,7 @@ import java.util.List;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.ExtendedDateFormat;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.ExecutionEndSpecificationType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.ExecutionEndSpecificationType;
 
 public interface SimulationExecutionItem {
 

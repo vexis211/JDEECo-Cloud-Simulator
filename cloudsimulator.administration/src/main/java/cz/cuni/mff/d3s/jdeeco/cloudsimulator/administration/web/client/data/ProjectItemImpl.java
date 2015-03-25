@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.Project;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.Project;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 
 public class ProjectItemImpl implements ProjectItem {

@@ -17,9 +17,9 @@
 
 	<context:annotation-config />
 	<mvc:annotation-driven />
-	<context:component-scan base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web" />
-	<context:component-scan base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged" />
-	<context:component-scan base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client" />
+	<context:component-scan base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web" />
+	<context:component-scan base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.notlogged" />
+	<context:component-scan base-package="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client" />
 	
 	
 	<!-- Localization -->
@@ -61,7 +61,7 @@
 	 -->
 	 
 <!-- 	<bean
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.IndexController">
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.IndexController">
 	</bean> -->
 	 
 	<!-- Configure Spring and JSR-303 Validation -->
@@ -69,7 +69,7 @@
 
 	<!-- use annotation and non-annotation controllers together -->
 	<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
-	<!-- 	class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.ExtendedBeanNameUrlHandlerMapping"> -->
+	<!-- 	class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.ExtendedBeanNameUrlHandlerMapping"> -->
 		<property name="order" value="0" />
 		<!-- <property name="useTrailingSlashMatch" value="true" /> -->
 	</bean>
@@ -79,23 +79,23 @@
 	</bean>
 	
 	<!-- Validators. -->
-	<bean id="registerValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged.RegisterValidator" />
-	<bean id="forgottenPasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.notlogged.ForgottenPasswordValidator" />
-	<bean id="changePasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.ChangePasswordValidator" />
-	<bean id="newPasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.NewPasswordValidator" />
+	<bean id="registerValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.notlogged.RegisterValidator" />
+	<bean id="forgottenPasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.notlogged.ForgottenPasswordValidator" />
+	<bean id="changePasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.ChangePasswordValidator" />
+	<bean id="newPasswordValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.NewPasswordValidator" />
 	
-	<bean id="projectValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.ProjectValidator" />
-	<bean id="simulationConfigurationValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.SimulationConfigurationValidator" />
-	<bean id="simulationDataValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.SimulationDataValidator" />
-	<bean id="simulationExecutionValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.SimulationExecutionValidator" />
-	<bean id="simulationExecutionEditValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.SimulationExecutionEditValidator"/>
+	<bean id="projectValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.ProjectValidator" />
+	<bean id="simulationConfigurationValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.SimulationConfigurationValidator" />
+	<bean id="simulationDataValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.SimulationDataValidator" />
+	<bean id="simulationExecutionValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.SimulationExecutionValidator" />
+	<bean id="simulationExecutionEditValidator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.SimulationExecutionEditValidator"/>
 	
 	<!-- Item factories. -->
-	<bean id="projectItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.ProjectItemFactoryImpl" />
-	<bean id="configurationItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.SimulationConfigurationItemFactoryImpl" />
-	<bean id="dataItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.SimulationDataItemFactoryImpl" />
-	<bean id="executionItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.factories.SimulationExecutionItemFactoryImpl" />
+	<bean id="projectItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories.ProjectItemFactoryImpl" />
+	<bean id="configurationItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories.SimulationConfigurationItemFactoryImpl" />
+	<bean id="dataItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories.SimulationDataItemFactoryImpl" />
+	<bean id="executionItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories.SimulationExecutionItemFactoryImpl" />
 	
-	<bean id="navigationPathBuilder" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.web.client.NavigationPathBuilderImpl" />
+	<bean id="navigationPathBuilder" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.NavigationPathBuilderImpl" />
 	
 </beans>

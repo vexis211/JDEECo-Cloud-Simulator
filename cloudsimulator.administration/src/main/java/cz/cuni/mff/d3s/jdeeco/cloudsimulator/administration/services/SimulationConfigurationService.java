@@ -2,7 +2,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services;
 
 import java.util.List;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationConfiguration;;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationConfiguration;;
 
 public interface SimulationConfigurationService {
 	List<SimulationConfiguration> listConfigurations();

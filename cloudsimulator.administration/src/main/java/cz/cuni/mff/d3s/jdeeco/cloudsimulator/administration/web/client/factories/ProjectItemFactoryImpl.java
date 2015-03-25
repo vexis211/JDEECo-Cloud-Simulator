@@ -2,7 +2,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factorie
 
 import javax.annotation.Resource;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.Project;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.Project;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.ProjectItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.ProjectItemImpl;
 

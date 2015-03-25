@@ -2,7 +2,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data;
 
 import java.util.Date;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationRun;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRun;
 
 public class SimulationRunItemImpl implements SimulationRunItem {
 

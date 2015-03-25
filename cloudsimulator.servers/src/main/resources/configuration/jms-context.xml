@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="
+	    http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		http://activemq.apache.org/schema/core
+		http://activemq.apache.org/schema/core/activemq-core-5.10.0.xsd">
+<!-- 
+	<context:property-placeholder location="classpath:properties/manager.properties" />
+ --> 
+ 	<context:property-placeholder
+		location="classpath:properties/hibernate.properties, classpath:properties/build.properties, classpath:properties/profile.properties" />
+ 
+	<!-- JMS -->
+
+	<!-- lets create an embedded ActiveMQ Broker -->
+	<amq:broker useJmx="false" persistent="false" start="true">
+		<amq:transportConnectors>
+			<amq:transportConnector uri="${jms.brokerUri}" />
+		</amq:transportConnectors>
+	</amq:broker>
+
+	<!-- ActiveMQ destinations to use -->
+	<amq:queue id="destination" physicalName="org.apache.activemq.spring.Test.spring.embedded" />
+
+	<!-- JMS ConnectionFactory to use, configuring the embedded broker using XML -->
+	<amq:connectionFactory id="jmsFactory" brokerURL="${jms.brokerUri}" />
+
+	<!-- Spring JMS Template -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory">
+			<!-- lets wrap in a pool to avoid creating a connection per send -->
+			<bean class="org.springframework.jms.connection.CachingConnectionFactory">
+				<property name="targetConnectionFactory" ref="jmsFactory" />
+			</bean>
+		</property>
+	</bean>
+
+</beans>

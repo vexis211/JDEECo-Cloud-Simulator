@@ -8,10 +8,10 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.daos.AuthenticationTokenDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.daos.UserDao;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.AuthenticationToken;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.AuthenticationTokenDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.UserDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.AuthenticationToken;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.UserOperationErrorType;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.UserOperationException;
 

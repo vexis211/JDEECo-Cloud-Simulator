@@ -2,7 +2,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data;
 
 import java.util.Date;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.engine.vcs.VCSType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType;
 
 public interface SimulationDataItem {
 

@@ -16,6 +16,7 @@
 		<module>../cloudsimulator.servers</module>
 		<module>../cloudsimulator.worker</module>
 		<module>../cloudsimulator.jobmanager</module>
+		<module>../cloudsimulator.administration</module>
 	</modules>
 
 	<properties>

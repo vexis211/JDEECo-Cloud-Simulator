@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.validation.Errors;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.ExecutionEndSpecificationType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.ExecutionEndSpecificationType;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.SimulationExecutionItem;
 
 /** Validator used for new project */

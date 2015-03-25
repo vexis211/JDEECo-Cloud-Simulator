@@ -8,6 +8,7 @@
 
 	<modules>
 		<module>../cloudsimulator.common</module>
+		<module>../cloudsimulator.data</module>
 		<module>../cloudsimulator.serversparent</module>
 		<module>../cloudsimulator.client</module>
 	</modules>

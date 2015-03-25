@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.AppContext;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.UserHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.UserService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.MappingSettings;

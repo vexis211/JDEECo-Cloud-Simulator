@@ -3,8 +3,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services;
 import java.util.Date;
 import java.util.List;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.ExecutionEndSpecificationType;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationExecution;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.ExecutionEndSpecificationType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 
 public interface SimulationExecutionService {
 	List<SimulationExecution> listExecutions();

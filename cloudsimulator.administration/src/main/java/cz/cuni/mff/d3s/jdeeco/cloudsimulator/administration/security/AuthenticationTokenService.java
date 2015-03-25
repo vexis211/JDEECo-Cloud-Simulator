@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.AuthenticationToken;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.AuthenticationToken;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.UserOperationException;
 
 

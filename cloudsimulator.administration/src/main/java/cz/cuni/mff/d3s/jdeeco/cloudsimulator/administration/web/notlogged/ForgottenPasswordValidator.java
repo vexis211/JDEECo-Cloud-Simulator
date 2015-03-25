@@ -5,7 +5,7 @@ import org.springframework.validation.Validator;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.utils.ValidatorHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.notlogged.data.ForgottenPasswordForm;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.StringEx;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.StringEx;
 
 /** Validator used for forgotten password */
 public class ForgottenPasswordValidator implements Validator {

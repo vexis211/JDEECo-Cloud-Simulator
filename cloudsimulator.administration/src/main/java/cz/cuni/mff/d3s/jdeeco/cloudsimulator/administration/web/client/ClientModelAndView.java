@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.UserHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.ViewParameters;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.NavigationPath;

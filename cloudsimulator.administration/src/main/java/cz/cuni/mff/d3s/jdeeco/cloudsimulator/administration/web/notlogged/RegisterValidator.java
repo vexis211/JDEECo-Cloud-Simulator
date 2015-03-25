@@ -8,7 +8,7 @@ import org.springframework.validation.Validator;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.PasswordHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.utils.ValidatorHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.notlogged.data.RegisterForm;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.StringEx;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.StringEx;
 
 /**
  * Validates registration form.

@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.AppContext;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.utils.EmailPreparator;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.utils.ExtendedMimeMessagePreparator;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.MappingSettings;

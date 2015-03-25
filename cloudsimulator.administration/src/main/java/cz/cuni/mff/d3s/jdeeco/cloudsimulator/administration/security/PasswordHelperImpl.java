@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.StringEx;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.StringEx;
 
 
 public class PasswordHelperImpl implements PasswordHelper {

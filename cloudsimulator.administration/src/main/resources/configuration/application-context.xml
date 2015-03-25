@@ -17,21 +17,24 @@
 	<context:property-placeholder
 		location="classpath:properties/profile.properties, classpath:properties/hibernate.properties, classpath:properties/mail.properties, classpath:properties/build.properties, classpath:properties/manager.properties" />
 
-	<bean id="appContext" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.AppContextImpl" scope="singleton">
+	<bean id="appContext" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.AppContextImpl" scope="singleton">
 		<property name="appVersionNumber" value="${build.buildTimestamp}" />
 		<property name="siteRoot" value="${profile.siteRoot}" />
 	</bean>
 
 
-	<bean id="engineController" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.control.EngineControllerImpl"
-		scope="singleton" />
+	<bean id="engineController"
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.jobmanager.EngineControllerImpl" scope="singleton">
+		<constructor-arg name="jmsTemplate" ref="jmsTemplate" />
+		<constructor-arg name="outgoingQueue" ref="${TODO}" />
+	</bean>
 
 	<!-- Services -->
-	<bean id="userService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.UserServiceImpl" scope="singleton" />
-	<bean id="projectService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.ProjectServiceImpl" scope="singleton" />
-	<bean id="simulationConfigurationService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.SimulationConfigurationServiceImpl" scope="singleton" />
-	<bean id="simulationDataService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.SimulationDataServiceImpl" scope="singleton" />
-	<bean id="simulationExecutionService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.services.SimulationExecutionServiceImpl" scope="singleton" />
+	<bean id="userService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.UserServiceImpl" scope="singleton" />
+	<bean id="projectService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.ProjectServiceImpl" scope="singleton" />
+	<bean id="simulationConfigurationService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.SimulationConfigurationServiceImpl" scope="singleton" />
+	<bean id="simulationDataService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.SimulationDataServiceImpl" scope="singleton" />
+	<bean id="simulationExecutionService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.SimulationExecutionServiceImpl" scope="singleton" />
 
 	<!-- Scan for all of Spring components such as Spring Service -->
 	<context:component-scan base-package="com.journaldev.spring.service" />

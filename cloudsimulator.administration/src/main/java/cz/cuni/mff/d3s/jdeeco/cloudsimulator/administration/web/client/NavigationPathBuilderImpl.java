@@ -6,10 +6,10 @@ import java.text.SimpleDateFormat;
 import javax.annotation.Resource;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.AppContext;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.Project;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationConfiguration;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationData;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationExecution;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.Project;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationConfiguration;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationData;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.ProjectService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.SimulationConfigurationService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.SimulationDataService;

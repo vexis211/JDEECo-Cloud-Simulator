@@ -5,7 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.StringEx;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.StringEx;
 
 public abstract class BaseValidator<T> implements Validator {
 
