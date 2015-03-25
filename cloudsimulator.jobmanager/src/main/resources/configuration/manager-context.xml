@@ -18,6 +18,9 @@
 <!-- 
 	<context:property-placeholder location="classpath:properties/manager.properties" />
  --> 
+ 	<context:property-placeholder
+		location="classpath:properties/hibernate.properties, classpath:properties/build.properties, classpath:properties/manager.properties" />
+ 
 	<bean id="executor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.CustomThreadPoolExecutor"
 		scope="singleton">
 		<constructor-arg name="corePoolSize" value="${executor.corePoolSize}"/>

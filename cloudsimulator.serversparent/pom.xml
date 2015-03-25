@@ -31,8 +31,6 @@
 		<openstack4j.version>2.0.0</openstack4j.version>
 	</properties>
 
-	<url>http://maven.apache.org</url>
-
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

@@ -9,8 +9,8 @@
 
 	<parent>
 		<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
-		<artifactId>cloudsimulator.serversparent</artifactId>
-		<relativePath>../cloudsimulator.serversparent/pom.xml</relativePath>
+		<artifactId>cloudsimulator.parent</artifactId>
+		<relativePath>../cloudsimulator.parent/pom.xml</relativePath>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
@@ -18,11 +18,6 @@
 		<war.name>jdeeco-simulator-administration</war.name>
 
 		<!-- versions -->
-		<mysql-connector.version>5.1.33</mysql-connector.version>
-		<hibernate.version>4.3.6.Final</hibernate.version>
-		<hibernate-validator.version>5.1.2.Final</hibernate-validator.version>
-		<commons-dbcp.version>1.4</commons-dbcp.version>
-
 		<javax-servlet.version>2.5</javax-servlet.version>
 		<javax-servlet-jsp.version>2.3.1</javax-servlet-jsp.version>
 		<javax-servlet-jstl.version>1.2</javax-servlet-jstl.version>
@@ -34,15 +29,7 @@
 		<javax.version>1.4.7</javax.version>
 		<javax-validation.version>1.1.0.Final</javax-validation.version>
 
-		<jgit.version>3.6.0.201412230720-r</jgit.version>
-		<maven-invoker.version>2.1.1</maven-invoker.version>
-		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
-
 		<joda-time.version>2.7</joda-time.version>
-
-		<!-- plugin versions -->
-		<maven-war-plugin.version>2.6</maven-war-plugin.version>
-		<buildnumber-maven-plugin.version>1.3</buildnumber-maven-plugin.version>
 	</properties>
 
 	<build>
@@ -94,7 +81,6 @@
 				</executions>
 			</plugin>
 
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -114,108 +100,15 @@
 				</configuration>
 			</plugin>
 		</plugins>
-
-
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>${m2e-lifecycle-mapping.version}</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<!-- Allow executing antrun plugin from eclipse (default is no). -->
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-antrun-plugin</artifactId>
-										<versionRange>[1.3,)</versionRange>
-										<goals>
-											<goal>run</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute>
-											<!-- Do not run on incremental builds - makes build cycle when
-												on every change build.properties is generated. This also trigger change event
-												and starts build again which generates build.properties... -->
-											<runOnIncremental>false</runOnIncremental>
-										</execute>
-									</action>
-								</pluginExecution>
-								<!-- Allow executing of buildnumber plugin from eclipse (default
-									is no). -->
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.codehaus.mojo</groupId>
-										<artifactId>buildnumber-maven-plugin</artifactId>
-										<versionRange>[1.0,)</versionRange>
-										<goals>
-											<goal>create</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute>
-											<runOnIncremental>true</runOnIncremental>
-										</execute>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
-
-	<url>http://maven.apache.org</url>
-
-	<!-- <profiles> <profile> <id>development</id> <activation> <activeByDefault>true</activeByDefault>
-		</activation> </profile> </profiles> -->
 
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>cloudsimulator.servers</artifactId>
+			<artifactId>cloudsimulator.data</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
-		<!-- Hibernate library -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-ehcache</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>${hibernate-validator.version}</version>
-		</dependency>
-
-		<!-- MySQL driver connector library -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql-connector.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>${commons-dbcp.version}</version>
-		</dependency>
 		<!-- Spring ORM -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -360,28 +253,6 @@
 			<version>${javax-validation.version}</version>
 		</dependency>
 
-		<!-- Git -->
-		<dependency>
-			<groupId>org.eclipse.jgit</groupId>
-			<artifactId>org.eclipse.jgit</artifactId>
-			<version>${jgit.version}</version>
-			<exclusions>
-				<!-- Exclude Commons Logging in favor of SLF4j -->
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<!-- Maven -->
-		<dependency>
-			<groupId>org.apache.maven.shared</groupId>
-			<artifactId>maven-invoker</artifactId>
-			<version>${maven-invoker.version}</version>
-		</dependency>
-
-
 		<!-- Time -->
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -392,20 +263,3 @@
 	</dependencies>
 
 </project>
-
-<!--
-
-	<plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-eclipse-plugin</artifactId>
-	<version>${maven-eclipse-plugin.version}</version>
-	<configuration>
-	<downloadSources>true</downloadSources>
-	<downloadJavadocs>true</downloadJavadocs>
-
-	<additionalProjectFacets>
-	<
-	</additionalProjectFacets>
-	</configuration>
-	</plugin>
--->

@@ -18,36 +18,14 @@
 		<war.name>jdeeco-simulator-jobmanager</war.name>
 
 		<!-- versions -->
-		<mysql-connector.version>5.1.33</mysql-connector.version>
-		<hibernate.version>4.3.6.Final</hibernate.version>
-		<hibernate-validator.version>5.1.2.Final</hibernate-validator.version>
-		<commons-dbcp.version>1.4</commons-dbcp.version>
-
-		<javax-servlet.version>2.5</javax-servlet.version>
-		<javax-servlet-jsp.version>2.3.1</javax-servlet-jsp.version>
-		<javax-servlet-jstl.version>1.2</javax-servlet-jstl.version>
-		<spring-security.version>3.2.5.RELEASE</spring-security.version>
-		<spring-webflow.version>2.4.1.RELEASE</spring-webflow.version>
-		<jsf.version>2.2.8-02</jsf.version>
-		<el-impl.version>2.2</el-impl.version>
-		<jackson-mapper.version>1.9.13</jackson-mapper.version>
-		<javax.version>1.4.7</javax.version>
-		<javax-validation.version>1.1.0.Final</javax-validation.version>
-
 		<jgit.version>3.6.0.201412230720-r</jgit.version>
 		<maven-invoker.version>2.1.1</maven-invoker.version>
-		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
 
 		<joda-time.version>2.7</joda-time.version>
-
-		<!-- plugin versions -->
-		<maven-war-plugin.version>2.6</maven-war-plugin.version>
-		<buildnumber-maven-plugin.version>1.3</buildnumber-maven-plugin.version>
 	</properties>
 
 	<build>
 		<plugins>
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>buildnumber-maven-plugin</artifactId>
@@ -93,90 +71,11 @@
 					</execution>
 				</executions>
 			</plugin>
-
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>${maven-war-plugin.version}</version>
-				<configuration>
-					<warName>${war.name}</warName>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Implementation-Build>$\{buildNumber}</Implementation-Build>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
 		</plugins>
-
-
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>${m2e-lifecycle-mapping.version}</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<!-- Allow executing antrun plugin from eclipse (default is no). -->
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-antrun-plugin</artifactId>
-										<versionRange>[1.3,)</versionRange>
-										<goals>
-											<goal>run</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute>
-											<!-- Do not run on incremental builds - makes build cycle when
-												on every change build.properties is generated. This also trigger change event
-												and starts build again which generates build.properties... -->
-											<runOnIncremental>false</runOnIncremental>
-										</execute>
-									</action>
-								</pluginExecution>
-								<!-- Allow executing of buildnumber plugin from eclipse (default
-									is no). -->
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.codehaus.mojo</groupId>
-										<artifactId>buildnumber-maven-plugin</artifactId>
-										<versionRange>[1.0,)</versionRange>
-										<goals>
-											<goal>create</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute>
-											<runOnIncremental>true</runOnIncremental>
-										</execute>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 
-	<url>http://maven.apache.org</url>
-
-	<!-- <profiles> <profile> <id>development</id> <activation> <activeByDefault>true</activeByDefault>
-		</activation> </profile> </profiles> -->
-
 	<dependencies>
+		<!-- Dependent modules -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>cloudsimulator.data</artifactId>
@@ -188,39 +87,6 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<!-- Hibernate library -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-ehcache</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>${hibernate-validator.version}</version>
-		</dependency>
-
-		<!-- MySQL driver connector library -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql-connector.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>${commons-dbcp.version}</version>
-		</dependency>
 		<!-- Spring ORM -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -228,142 +94,6 @@
 			<version>${spring.version}</version>
 		</dependency>
 
-		<!-- Servlet -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>${javax-servlet.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- JSF - mojarra -->
-		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-impl</artifactId>
-			<version>${jsf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-api</artifactId>
-			<version>${jsf.version}</version>
-		</dependency>
-		<!-- JSP Library -->
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>javax.servlet.jsp-api</artifactId>
-			<version>${javax-servlet-jsp.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.glassfish.web</groupId>
-			<artifactId>el-impl</artifactId>
-			<version>${el-impl.version}</version>
-		</dependency>
-
-		<!-- JSTL Library -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>${javax-servlet-jstl.version}</version>
-		</dependency>
-
-		<!-- Spring Web -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<!-- Security -->
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-			<version>${spring-security.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>${spring-security.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-taglibs</artifactId>
-			<version>${spring-security.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>${spring-security.version}</version>
-		</dependency>
-
-		<!-- Webflow -->
-		<dependency>
-			<groupId>org.springframework.webflow</groupId>
-			<artifactId>spring-binding</artifactId>
-			<version>${spring-webflow.version}</version>
-			<exclusions>
-				<!-- Exclude Commons Logging in favor of SLF4j -->
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.webflow</groupId>
-			<artifactId>spring-js</artifactId>
-			<version>${spring-webflow.version}</version>
-			<exclusions>
-				<!-- Exclude Commons Logging in favor of SLF4j -->
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.webflow</groupId>
-			<artifactId>spring-webflow</artifactId>
-			<version>${spring-webflow.version}</version>
-			<exclusions>
-				<!-- Exclude Commons Logging in favor of SLF4j -->
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<!-- Faces -->
-		<dependency>
-			<groupId>org.springframework.webflow</groupId>
-			<artifactId>spring-faces</artifactId>
-			<version>${spring-webflow.version}</version>
-			<exclusions>
-				<!-- Exclude Commons Logging in favor of SLF4j -->
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<!-- Mail -->
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>${javax.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>${javax-validation.version}</version>
-		</dependency>
 
 		<!-- Git -->
 		<dependency>
@@ -397,20 +127,3 @@
 	</dependencies>
 
 </project>
-
-<!--
-
-	<plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-eclipse-plugin</artifactId>
-	<version>${maven-eclipse-plugin.version}</version>
-	<configuration>
-	<downloadSources>true</downloadSources>
-	<downloadJavadocs>true</downloadJavadocs>
-
-	<additionalProjectFacets>
-	<
-	</additionalProjectFacets>
-	</configuration>
-	</plugin>
--->

@@ -29,6 +29,9 @@
 		<maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
 		<maven-resources-plugin.version>2.7</maven-resources-plugin.version>
 		<maven-release-plugin.version>2.5.1</maven-release-plugin.version>
+		<buildnumber-maven-plugin.version>1.3</buildnumber-maven-plugin.version>
+		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
+		<maven-war-plugin.version>2.6</maven-war-plugin.version>
 	</properties>
 
 	<url>http://maven.apache.org</url>
@@ -117,6 +120,60 @@
 			
 		</plugins>
 
+
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>${m2e-lifecycle-mapping.version}</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<!-- Allow executing antrun plugin from eclipse (default is no). -->
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-antrun-plugin</artifactId>
+										<versionRange>[1.3,)</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<!-- Do not run on incremental builds - makes build cycle when
+												on every change build.properties is generated. This also trigger change event
+												and starts build again which generates build.properties... -->
+											<runOnIncremental>false</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+								<!-- Allow executing of buildnumber plugin from eclipse (default
+									is no). -->
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>buildnumber-maven-plugin</artifactId>
+										<versionRange>[1.0,)</versionRange>
+										<goals>
+											<goal>create</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>true</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 </project>
 
