@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationData" table="simulation_data" catalog="jdeeco_simulation">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="creator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User" fetch="select">
+            <column name="CreatorID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="project" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.Project" fetch="select">
+            <column name="ProjectID" not-null="true" />
+        </many-to-one>
+        
+        <property name="name" type="string">
+            <column name="Name" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="Description" length="1000" not-null="true" />
+        </property>
+        <property name="created" type="timestamp" insert="false">
+            <column name="Created" length="19" not-null="true" />
+        </property>
+        <property name="vcsType">
+            <column name="VCSType" not-null="true" />
+            <type name="org.hibernate.type.EnumType">
+            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.engine.vcs.VCSType</param>
+            </type>
+        </property>
+        <property name="repositoryURL" type="string">
+            <column name="RepositoryURL" length="2000" not-null="true" />
+        </property>
+        <property name="pathToPom" type="string">
+            <column name="PathToPom" length="256" not-null="true" />
+        </property>
+        <property name="mavenGoals" type="string">
+            <column name="MavenGoals" length="1000" not-null="true" />
+        </property>
+        
+        <set name="simulationConfigurations" table="simulation_configuration" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DataID" />
+            </key>
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationConfiguration" />
+        </set>
+    </class>
+</hibernate-mapping>
