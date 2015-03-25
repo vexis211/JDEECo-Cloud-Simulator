@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<bean id="authenticationTokenService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.AuthenticationTokenServiceImpl" scope="singleton" />
+
+	<bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+		<property name="errorPage" value="/" />
+	</bean>
+
+	<bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
+		<property name="exceptionMappings">
+			<props>
+	            <prop key="org.springframework.security.authentication.BadCredentialsException">/?failure=badCredentials</prop>
+	            <prop key="org.springframework.security.authentication.LockedException">/?failure=accountNotActivated</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- Returns 403 to AJAX action request on authentication failed. -->
+	<bean id="authenticationEntryPoint" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.AjaxActionAuthenicationEntryPoint">
+		<constructor-arg name="loginUrl" value="${profile.siteRoot}" />
+	</bean>
+
+	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+	<bean id="passwordHelper" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.PasswordHelperImpl" />
+
+	<bean id="codeAuthenticationProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.CodeAuthenticationProvider">
+		<property name="authenticators">
+			<map key-type="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.AuthenticationCodeType">
+				<entry key="ANONYMOUS_LOGIN">
+					<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.authenticators.AnonymousLoginCodeAuthenticator">
+						<constructor-arg index="0" ref="userService" />
+					</bean>
+				</entry>
+				<entry key="RESET_PASSWORD">
+					<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.authenticators.ResetPasswordCodeAuthenticator">
+						<constructor-arg index="0" ref="userService" />
+					</bean>
+				</entry>
+				<entry key="ACTIVATION">
+					<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.authenticators.ActivationCodeAuthenticator">
+						<constructor-arg index="0" ref="userService" />
+					</bean>
+				</entry>
+				<entry key="AUTH_TOKEN">
+					<bean class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.security.authenticators.AuthTokenCodeAuthenticator">
+						<constructor-arg index="0" ref="authenticationTokenService" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider user-service-ref="userService">
+			<security:password-encoder ref="passwordEncoder" />
+		</security:authentication-provider>
+		<security:authentication-provider ref="codeAuthenticationProvider" />
+	</security:authentication-manager>
+
+
+	<!-- **************************** security:http **************************** -->
+
+	<!-- Configure Spring Security -->
+	<security:http pattern="/docs/**" security="none" />
+	<security:http pattern="/css/**" security="none" />
+	<security:http pattern="/less/**" security="none" />
+	<security:http pattern="/images/**" security="none" />
+	<security:http pattern="/js/**" security="none" />
+
+	<!-- Anonymous access. -->
+	<security:http pattern="^.{0,1}$" auto-config="true" request-matcher="regex">
+		<security:intercept-url pattern="/$" access="ROLE_ANONYMOUS" />
+		<security:access-denied-handler ref="accessDeniedHandler" />
+	</security:http>
+	<security:http pattern="/" auto-config="true">
+		<security:intercept-url pattern="/$" access="ROLE_ANONYMOUS" />
+		<security:access-denied-handler ref="accessDeniedHandler" />
+	</security:http>
+	<security:http pattern="/client/forgottenpassword" auto-config="true">
+		<security:intercept-url pattern="/client/forgottenpassword" access="ROLE_ANONYMOUS" />
+		<security:access-denied-handler ref="accessDeniedHandler" />
+	</security:http>
+	<security:http pattern="/client/resetpassword/**" auto-config="true">
+		<security:intercept-url pattern="/client/resetpassword/**" access="ROLE_ANONYMOUS" />
+		<security:access-denied-handler ref="accessDeniedHandler" />
+	</security:http>
+	<security:http pattern="/client/login" auto-config="true">
+		<security:intercept-url pattern="/client/login" access="ROLE_ANONYMOUS" />
+		<security:access-denied-handler ref="accessDeniedHandler" />
+	</security:http>
+
+	<!-- Allow access to maintenance and administration for administrators -->
+	<security:http pattern="/maintenance/**" auto-config="true">
+		<security:intercept-url pattern="/maintenance/**" access="ROLE_ADMINISTRATOR" />
+	</security:http>
+	<security:http pattern="/admin/**" auto-config="true">
+		<security:intercept-url pattern="/admin/**" access="ROLE_ADMINISTRATOR" />
+	</security:http>
+
+
+	<!-- Access for role user ROLE_USER,ROLE_ADMINISTRATOR -->
+	<security:http auto-config="true" entry-point-ref="authenticationEntryPoint">
+		<!-- logged views -->
+	 	<security:intercept-url pattern="/action/**" access="ROLE_USER,ROLE_ADMINISTRATOR" />
+		<security:intercept-url pattern="/main/**" access="ROLE_USER,ROLE_ADMINISTRATOR" />
+
+		<security:form-login login-page="/" login-processing-url="/client/auth"
+			default-target-url="${profile.siteRoot}/main" password-parameter="password"
+			username-parameter="email" always-use-default-target="true"
+			authentication-failure-handler-ref="authenticationFailureHandler" />
+
+		<security:logout logout-url="/action/client/logout" logout-success-url="${profile.siteRoot}" />
+	</security:http>
+</beans>
