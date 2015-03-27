@@ -17,6 +17,19 @@
 	<context:property-placeholder
 		location="classpath:properties/profile.properties, classpath:properties/hibernate.properties, classpath:properties/mail.properties, classpath:properties/build.properties, classpath:properties/manager.properties" />
 
+	<import resource="classpath:configuration/"/>
+			<import resource="classpath:configuration/hibernate-session.xml
+			<import resource="classpath:configuration/hibernate-daos.xml
+			<import resource="
+			classpath:configuration/application-context.xml
+			classpath:configuration/application-tasks.xml
+			classpath:configuration/application-webmvc.xml
+			classpath:configuration/application-security.xml
+
+			classpath:configuration/application-view.xml
+			classpath:configuration/mail-context.xml
+    		
+
 	<bean id="appContext" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.AppContextImpl" scope="singleton">
 		<property name="appVersionNumber" value="${build.buildTimestamp}" />
 		<property name="siteRoot" value="${profile.siteRoot}" />
