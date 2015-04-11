@@ -2,15 +2,15 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationExecution" table="simulation_execution" catalog="jdeeco_simulation">
+    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution" table="simulation_execution" catalog="jdeeco_simulation">
         <id name="id" type="java.lang.Integer">
             <column name="ID" />
             <generator class="identity" />
         </id>
-        <many-to-one name="simulationConfiguration" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationConfiguration" fetch="select">
+        <many-to-one name="simulationConfiguration" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationConfiguration" fetch="select">
             <column name="ConfigurationID" not-null="true" />
         </many-to-one>
-        <many-to-one name="creator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User" fetch="select">
+        <many-to-one name="creator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User" fetch="select">
             <column name="CreatorID" not-null="true" />
         </many-to-one>
         <property name="description" type="string">
@@ -19,7 +19,7 @@
         <property name="status">
             <column name="Status" not-null="true" />
             <type name="org.hibernate.type.EnumType">
-            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationStatus</param>
+            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus</param>
             </type>
         </property>
         <property name="created" type="timestamp" insert="false">
@@ -34,7 +34,7 @@
         <property name="endSpecificationType">
             <column name="EndSpecificationType" not-null="true" />
             <type name="org.hibernate.type.EnumType">
-            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.ExecutionEndSpecificationType</param>
+            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.ExecutionEndSpecificationType</param>
             </type>
         </property>
         <property name="endDate" type="timestamp">
@@ -47,7 +47,7 @@
             <key>
                 <column name="ExecutionID" not-null="true" />
             </key>
-            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationRun" />
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRun" />
         </set>
     </class>
 </hibernate-mapping>

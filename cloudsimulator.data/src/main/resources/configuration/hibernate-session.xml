@@ -24,9 +24,9 @@
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="mappingDirectoryLocations">
+		<property name="mappingLocations">
 			<list>
-				<value>classpath:/cz/cuni/mff/d3s/jdeeco/cloudsimulator/jobmanager/data/mapping
+				<value>classpath:/cz/cuni/mff/d3s/jdeeco/cloudsimulator/data/mapping/*.hbm.xml
 				</value>
 			</list>
 		</property>

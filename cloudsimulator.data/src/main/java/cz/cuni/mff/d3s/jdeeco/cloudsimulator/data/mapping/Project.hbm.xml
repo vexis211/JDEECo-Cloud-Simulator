@@ -2,12 +2,12 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.Project" table="project" catalog="jdeeco_simulation">
+    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.Project" table="project" catalog="jdeeco_simulation">
         <id name="id" type="java.lang.Integer">
             <column name="ID" />
             <generator class="identity" />
         </id>
-        <many-to-one name="creator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User" fetch="select">
+        <many-to-one name="creator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User" fetch="select">
             <column name="CreatorID" not-null="true" />
         </many-to-one>
         <property name="name" type="string">
@@ -23,19 +23,19 @@
             <key>
                 <column name="ProjectID" not-null="true" />
             </key>
-            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationConfiguration" />
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationConfiguration" />
         </set>
         <set name="simulationDatas" table="simulation_data" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="ProjectID" not-null="true" />
             </key>
-            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationData" />
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationData" />
         </set>
         <set name="visibleForUsers" table="visible_project" inverse="false" lazy="true" fetch="select">
             <key>
                 <column name="ProjectID" not-null="true" />
             </key>
-            <many-to-many entity-name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User">
+            <many-to-many entity-name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User">
                 <column name="UserID" not-null="true" />
             </many-to-many>
         </set>

@@ -13,16 +13,7 @@
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>
-			classpath:configuration/hibernate-session.xml
-			classpath:configuration/hibernate-daos.xml
-			classpath:configuration/application-context.xml
-			classpath:configuration/application-tasks.xml
-			classpath:configuration/application-webmvc.xml
-			classpath:configuration/application-security.xml
-
-			classpath:configuration/application-view.xml
-			classpath:configuration/mail-context.xml
-    		
+			classpath:configuration/application-context.xml    		
 			/WEB-INF/jdeeco-simulator-servlet.xml
 		</param-value>
   </context-param>

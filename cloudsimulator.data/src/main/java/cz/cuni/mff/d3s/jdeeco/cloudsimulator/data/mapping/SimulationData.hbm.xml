@@ -2,15 +2,15 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationData" table="simulation_data" catalog="jdeeco_simulation">
+    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationData" table="simulation_data" catalog="jdeeco_simulation">
         <id name="id" type="java.lang.Integer">
             <column name="ID" />
             <generator class="identity" />
         </id>
-        <many-to-one name="creator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User" fetch="select">
+        <many-to-one name="creator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User" fetch="select">
             <column name="CreatorID" not-null="true" />
         </many-to-one>
-        <many-to-one name="project" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.Project" fetch="select">
+        <many-to-one name="project" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.Project" fetch="select">
             <column name="ProjectID" not-null="true" />
         </many-to-one>
         
@@ -26,7 +26,7 @@
         <property name="vcsType">
             <column name="VCSType" not-null="true" />
             <type name="org.hibernate.type.EnumType">
-            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.engine.vcs.VCSType</param>
+            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType</param>
             </type>
         </property>
         <property name="repositoryURL" type="string">
@@ -43,7 +43,7 @@
             <key>
                 <column name="DataID" />
             </key>
-            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationConfiguration" />
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationConfiguration" />
         </set>
     </class>
 </hibernate-mapping>

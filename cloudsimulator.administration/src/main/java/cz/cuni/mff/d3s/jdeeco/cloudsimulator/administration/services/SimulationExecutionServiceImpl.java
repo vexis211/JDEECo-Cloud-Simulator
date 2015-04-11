@@ -14,7 +14,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.ExecutionEndSpecificati
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationConfiguration;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.jobmanager.EngineController;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.jobmanager.JobManagerController;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.UserHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 
@@ -29,7 +29,7 @@ public class SimulationExecutionServiceImpl implements SimulationExecutionServic
 	private SimulationExecutionDao simulationExecutionDao;
 
 	@Resource
-	private EngineController engineController;
+	private JobManagerController engineController;
 	
 	@Override
 	public List<SimulationExecution> listExecutions() {

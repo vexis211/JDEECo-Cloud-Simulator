@@ -26,7 +26,8 @@
 						
 						<c:if test="#{projectVisibilitySettings.visible}">			
 							<input type="checkbox" name="visibilitySettings[#{loop.index}].visible" checked="checked">
-								<h:outputText value="#{projectVisibilitySettings.projectName}" />
+								<h:outputText
+									value="#{projectVisibilitySettings.projectName}" />
 							</input>
 						</c:if>
 						<c:if test="#{!(projectVisibilitySettings.visible)}">						

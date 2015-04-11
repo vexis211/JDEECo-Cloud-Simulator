@@ -12,21 +12,21 @@
 		http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<bean id="userDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.UserDaoImpl" />
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.UserDaoImpl" />
 	<bean id="userInfoDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.UserInfoDaoImpl" />
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.UserInfoDaoImpl" />
 		
 	<bean id="authenticationTokenDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.AuthenticationTokenDaoImpl" />
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.AuthenticationTokenDaoImpl" />
 		
 	<bean id="projectDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.ProjectDaoImpl" />
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.ProjectDaoImpl" />
 	<bean id="simulationDataDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationDataDaoImpl" />
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationDataDaoImpl" />
 	<bean id="simulationCongfigurationDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationConfigurationDaoImpl" />
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationConfigurationDaoImpl" />
 	<bean id="simulationExecutionDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationExecutionDaoImpl" />
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationExecutionDaoImpl" />
 	<bean id="simulationRunDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.daos.SimulationRunDaoImpl" />
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationRunDaoImpl" />
 </beans>

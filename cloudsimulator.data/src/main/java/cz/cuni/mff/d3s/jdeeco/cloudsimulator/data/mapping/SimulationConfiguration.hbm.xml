@@ -2,18 +2,18 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationConfiguration" table="simulation_configuration" catalog="jdeeco_simulation">
+    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationConfiguration" table="simulation_configuration" catalog="jdeeco_simulation">
         <id name="id" type="java.lang.Integer">
             <column name="ID" />
             <generator class="identity" />
         </id>
-        <many-to-one name="project" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.Project" fetch="select">
+        <many-to-one name="project" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.Project" fetch="select">
             <column name="ProjectID" not-null="true" />
         </many-to-one>
-        <many-to-one name="simulationData" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationData" fetch="select">
+        <many-to-one name="simulationData" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationData" fetch="select">
             <column name="DataID" />
         </many-to-one>
-        <many-to-one name="creator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.User" fetch="select">
+        <many-to-one name="creator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User" fetch="select">
             <column name="CreatorID" not-null="true" />
         </many-to-one>
         <property name="name" type="string">
@@ -32,7 +32,7 @@
             <key>
                 <column name="ConfigurationID" not-null="true" />
             </key>
-            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.data.models.SimulationExecution" />
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution" />
         </set>
     </class>
 </hibernate-mapping>

@@ -6,19 +6,14 @@ import org.springframework.jms.core.JmsTemplate;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.commands.UpdateExecutionsCommandImpl;
 
-/*
-import javax.annotation.Resource;
-
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerUpdateQueue;
-*/
-public class EngineControllerImpl implements EngineController {
+public class JobManagerControllerImpl implements JobManagerController {
 
 	private final JmsTemplate jmsTemplate;
-	private final String outgoingQueue;
+	private final String jobManagerControlQueue;
 
-	protected EngineControllerImpl(JmsTemplate jmsTemplate, String outgoingQueue) {
+	protected JobManagerControllerImpl(JmsTemplate jmsTemplate, String jobManagerControlQueue) {
 		this.jmsTemplate = jmsTemplate;
-		this.outgoingQueue = outgoingQueue;
+		this.jobManagerControlQueue = jobManagerControlQueue;
 	}
 	
 	@Override
@@ -27,6 +22,6 @@ public class EngineControllerImpl implements EngineController {
 	}
 
 	private void sendMessage(Serializable data) {
-		jmsTemplate.convertAndSend(outgoingQueue, data);
+		jmsTemplate.convertAndSend(jobManagerControlQueue, data);
 	}
 }
