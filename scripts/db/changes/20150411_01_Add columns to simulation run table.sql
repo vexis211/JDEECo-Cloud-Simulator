@@ -1,0 +1,4 @@
+ALTER TABLE `simulation_run`
+ADD COLUMN `Status` INT(4) NOT NULL,
+ADD COLUMN `Started` TIMESTAMP,
+ADD COLUMN `Ended` TIMESTAMP;

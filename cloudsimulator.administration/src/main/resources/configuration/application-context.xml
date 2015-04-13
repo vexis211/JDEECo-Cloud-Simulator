@@ -14,7 +14,7 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
 
-	<!-- Properties in Spring configuration files -->
+	<!-- Properties for Spring configuration files -->
 	<context:property-placeholder location="
 		classpath:properties/hibernate.properties,
 		classpath:properties/jms.properties,

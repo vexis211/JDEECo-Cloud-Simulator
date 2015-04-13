@@ -61,8 +61,9 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 
 	private void refreshExecutionsInternal() {
 		// check stopped executions
-		List<SimulationExecutionEntry> toStopExecutions = simulationRepository
-				.listStoppedExecutions(simulationExecutions.keySet()).stream()
+		List<SimulationExecution> stoppedExecutionModels = simulationRepository
+				.listStoppedExecutions(simulationExecutions.keySet());
+		List<SimulationExecutionEntry> toStopExecutions = stoppedExecutionModels.stream()
 				.map(x -> simulationExecutions.get(x.getId())).collect(Collectors.toList());
 		for (SimulationExecutionEntry toStopExecution : toStopExecutions) {
 			toStopExecution.stop();
@@ -70,11 +71,14 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 		}
 
 		// add new executions
-		List<SimulationExecution> notCreatedExecutions = simulationRepository.listNotCompletedExecutions().stream()
+		List<SimulationExecution> notCompletedExecutionModels = simulationRepository.listNotCompletedExecutions();
+		List<SimulationExecution> notCreatedExecutions = notCompletedExecutionModels.stream()
 				.filter(x -> !simulationExecutions.containsKey(x.getId())).collect(Collectors.toList());
 
 		for (SimulationExecution notCreatedExecution : notCreatedExecutions) {
-			SimulationExecutionEntry newExecutionEntry = simulationExecutionEntryFactory.create(notCreatedExecution, this);
+			simulationRepository.initializeExecution(notCreatedExecution);
+			SimulationExecutionEntry newExecutionEntry = simulationExecutionEntryFactory.create(notCreatedExecution,
+					this);
 			simulationExecutions.put(newExecutionEntry.getId(), newExecutionEntry);
 
 			String packageName = simplePackageManager.getPackageName(notCreatedExecution);
@@ -84,6 +88,16 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 				simplePackageManager.preparePackage(notCreatedExecution);
 			}
 		}
+	}
+
+	@Override
+	public void runStarted(SimulationRunEntry runEntry) {
+		simulationRepository.markRunAsStarted(runEntry.getId());
+	}
+
+	@Override
+	public void runCompleted(SimulationRunEntry runEntry) {
+		simulationRepository.markRunAsCompleted(runEntry.getId());
 	}
 
 	@Override

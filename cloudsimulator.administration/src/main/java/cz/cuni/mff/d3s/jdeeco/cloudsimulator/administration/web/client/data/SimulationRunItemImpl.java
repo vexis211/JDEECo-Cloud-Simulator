@@ -2,12 +2,13 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data;
 
 import java.util.Date;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRun;
 
 public class SimulationRunItemImpl implements SimulationRunItem {
 
 	private int id;
-	private String status;
+	private SimulationStatus status;
 	private Date startedDate;
 	private Date endedDate;
 
@@ -17,8 +18,9 @@ public class SimulationRunItemImpl implements SimulationRunItem {
 	
 	public SimulationRunItemImpl(SimulationRun run) {
 		this.id = run.getId();
-		//this.status 
-		// TODO add to run
+		this.status = run.getStatus();
+		this.startedDate = run.getStarted();
+		this.endedDate = run.getEnded();
 	}
 
 	@Override
@@ -27,7 +29,7 @@ public class SimulationRunItemImpl implements SimulationRunItem {
 	}
 
 	@Override
-	public String getStatus() {
+	public SimulationStatus getStatus() {
 		return status;
 	}
 

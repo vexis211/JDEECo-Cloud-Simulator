@@ -1,7 +1,5 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos;
 
-import javax.annotation.Resource;
-
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -17,13 +15,13 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 
 	private final Logger logger = Logger.getLogger(BaseDaoImpl.class);
 
-	@Resource
 	protected SessionFactory sessionFactory;
 
 	private Class<T> classType;
 
 	@SuppressWarnings("unchecked")
-	public BaseDaoImpl() {
+	public BaseDaoImpl(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 		this.classType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 

@@ -22,4 +22,4 @@ public class OpenStackConnectorImpl implements OpenStackConnector {
 				.authenticate();
 		return os;
 	}
-}
+}	

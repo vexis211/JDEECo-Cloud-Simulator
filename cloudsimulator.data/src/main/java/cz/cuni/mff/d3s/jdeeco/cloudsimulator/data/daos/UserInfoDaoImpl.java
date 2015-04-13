@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 
@@ -26,6 +27,10 @@ public class UserInfoDaoImpl extends BaseDaoImpl<UserInfo> implements UserInfoDa
 	 */
 	private static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
+	public UserInfoDaoImpl(SessionFactory sessionFactory) {
+		super(sessionFactory);
+	}
+	
 	@Override
 	public final String getActivationCode(final int userId) {
 

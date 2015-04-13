@@ -10,5 +10,17 @@
         <many-to-one name="simulationExecution" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution" fetch="select">
             <column name="ExecutionID" not-null="true" />
         </many-to-one>
+        <property name="status">
+            <column name="Status" not-null="true" />
+            <type name="org.hibernate.type.EnumType">
+            	<param name="enumClass">cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus</param>
+            </type>
+        </property>
+        <property name="started" type="timestamp">
+            <column name="Started" length="19" />
+        </property>
+        <property name="ended" type="timestamp" insert="false">
+            <column name="Ended" length="19" not-null="true" />
+        </property>
     </class>
 </hibernate-mapping>

@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos;
 
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.Role;
@@ -8,6 +9,10 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.UserActivationFlags;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 
 public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
+
+	public UserDaoImpl(SessionFactory sessionFactory) {
+		super(sessionFactory);
+	}
 
 	@Override
 	public User findByEmail(String email) {

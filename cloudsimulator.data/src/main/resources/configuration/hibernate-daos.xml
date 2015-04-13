@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -11,22 +10,30 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-	<bean id="userDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.UserDaoImpl" />
-	<bean id="userInfoDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.UserInfoDaoImpl" />
-		
-	<bean id="authenticationTokenDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.AuthenticationTokenDaoImpl" />
-		
-	<bean id="projectDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.ProjectDaoImpl" />
-	<bean id="simulationDataDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationDataDaoImpl" />
-	<bean id="simulationCongfigurationDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationConfigurationDaoImpl" />
-	<bean id="simulationExecutionDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationExecutionDaoImpl" />
-	<bean id="simulationRunDao"
-		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationRunDaoImpl" />
+	<bean id="userDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.UserDaoImpl">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="userInfoDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.UserInfoDaoImpl">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="authenticationTokenDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.AuthenticationTokenDaoImpl">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="projectDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.ProjectDaoImpl">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="simulationDataDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationDataDaoImpl">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="simulationCongfigurationDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationConfigurationDaoImpl">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="simulationExecutionDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationExecutionDaoImpl">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="simulationRunDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationRunDaoImpl">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
 </beans>

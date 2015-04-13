@@ -36,7 +36,8 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 		this.listener = listener;
 		this.statistics = statistics;
 
-		this.deadlineSettings = new ExecutionDeadlineSettings(data.getEndSpecificationType(), new DateTime(data));
+		this.deadlineSettings = new ExecutionDeadlineSettings(data.getEndSpecificationType(),
+				data.getEndDate() != null ? new DateTime(data.getEndDate()) : null);
 
 		for (SimulationRun simulationRun : data.getSimulationRuns()) {
 			SimulationRunEntry newEntry = simulationRunEntryFactory.create(simulationRun, this);
@@ -86,7 +87,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 		if (stopped) {
 			return;
 		}
-		
+
 		if (!started) {
 			listener.executionStarted(this);
 			started = true;
@@ -97,6 +98,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 		toStartEntry.setStatus(SimulationStatus.Started);
 		startedRuns.put(entryId, toStartEntry);
 		statistics.simulationStarted(entryId);
+		listener.runStarted(toStartEntry);
 	}
 
 	@Override
@@ -125,6 +127,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 		case Completed:
 			completedRuns.put(simulationRunId, simulationRunEntry);
 			statistics.simulationCompleted(simulationRunId);
+			listener.runCompleted(simulationRunEntry);
 			break;
 		case ErrorOccured:
 			errorRuns.put(simulationRunId, simulationRunEntry);
@@ -136,7 +139,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 		default:
 			throw new RuntimeException(String.format("Cannot update simulation status to '%s'.", simulationStatus));
 		}
-		
+
 		// notify completion
 		if (getStatus() == SimulationStatus.Completed) {
 			listener.executionCompleted(this);
