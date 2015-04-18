@@ -9,9 +9,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 public class RepositoryPersistingMap {
+
+	private final Logger logger = Logger.getLogger(RepositoryPersistingMap.class);
+
 	private static final String SEPARATOR = "\t";
-	
+
 	private final HashMap<String, String> remote2Local = new HashMap<>();
 	private final HashMap<String, String> local2Remote = new HashMap<>();
 	private final File dataFile;
@@ -32,13 +37,13 @@ public class RepositoryPersistingMap {
 						remote2Local.put(parts[0], parts[1]);
 						local2Remote.put(parts[1], parts[0]);
 					} else {
-						throw new RuntimeException("Incorrect repository file format! File: "
-								+ dataFile.getAbsolutePath());
+						logger.error(String.format("Incorrect repository file format! File: %s. Line: %s",
+								dataFile.getAbsolutePath(), line));
 					}
 				}
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error loading repository persisting map.", e);
 			}
 
 			Save();
@@ -51,7 +56,7 @@ public class RepositoryPersistingMap {
 				writer.append(entry.getKey()).append(SEPARATOR).append(entry.getValue());
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error saving repository persisting map.", e);
 		}
 	}
 
@@ -72,9 +77,11 @@ public class RepositoryPersistingMap {
 				BufferedWriter writer = new BufferedWriter(fileWriter)) {
 			writer.append(remoteUrl).append(SEPARATOR).append(localPath);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(String.format(
+					"Error occured while putting item to repository persisting map. Remote repo: %s. Local repo: %s.",
+					remoteUrl, localPath), e);
 		}
-		
+
 		remote2Local.put(remoteUrl, localPath);
 		local2Remote.put(localPath, remoteUrl);
 	}

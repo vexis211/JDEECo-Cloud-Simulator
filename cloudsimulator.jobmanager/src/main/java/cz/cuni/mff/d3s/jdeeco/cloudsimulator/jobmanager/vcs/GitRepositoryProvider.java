@@ -3,6 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.vcs;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
@@ -10,6 +11,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType;
 
 public class GitRepositoryProvider implements RepositoryProvider {
 
+	private final Logger logger = Logger.getLogger(GitRepositoryProvider.class);
+	
 	@Override
 	public VCSType getVCSType() {
 		return VCSType.Git;
@@ -21,10 +24,9 @@ public class GitRepositoryProvider implements RepositoryProvider {
 		Git git = null;
 		try {
 			git = Git.cloneRepository().setURI(remoteUrl).setDirectory(localDir).call();
-	        System.out.println("Having repository: " + git.getRepository().getDirectory());
+			logger.info(String.format("Cloning repository: %s to %s.", remoteUrl, localPath));
 		} catch (GitAPIException e) {
-			System.out.println("Error while getting repository: " + remoteUrl + " to: " + localPath);
-			e.printStackTrace();
+			throw new RuntimeException(String.format("Error while getting repository: %s to: %s.", remoteUrl, localPath));
 		} finally {
 			if (git != null) git.close();
 		}
@@ -36,9 +38,9 @@ public class GitRepositoryProvider implements RepositoryProvider {
 		try {
 			git = Git.open(new File(localPath));
 			git.pull().call();
+			logger.info(String.format("Updating repository: %s.", localPath));
 		} catch (GitAPIException | IOException e) {
-			System.out.println("Error while updating repository: " + localPath);
-			e.printStackTrace();
+			throw new RuntimeException(String.format("Error while updating repository: %s.", localPath));
 		} finally {
 			if (git != null) git.close();
 		}		

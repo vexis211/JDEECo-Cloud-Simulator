@@ -7,11 +7,10 @@ public class SimulationTimeEstimatorImpl implements SimulationTimeEstimator {
 	@Override
 	public long estimateRunExecutionTimeInMillis(SimulationExecutionEntry execution) {
 		
-		if (execution.getStatistics().getCompletedSimulationsCount() > 0) {
-			return execution.getStatistics().getAverageSimulationTimeInMillis();
+		if (execution.getExecutionStatistics().getCompletedJobsCount() > 0) {
+			return execution.getExecutionStatistics().getAverageJobTimeInMillis();
 		}
 		
 		return  1000 * 60 * 5; // TODO implement
 	}
-
 }

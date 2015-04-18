@@ -14,8 +14,8 @@ public class SimplePackageManagerImpl implements SimplePackageManager, PackageMa
 	}
 	
 	@Override
-	public String getPackageName(SimulationExecution execution) {
-		return packageManager.getPackageName(execution);
+	public boolean isPackagePrepared(SimulationExecution execution) {
+		return packageManager.isPackagePrepared(execution);
 	}
 
 	@Override
@@ -24,7 +24,7 @@ public class SimplePackageManagerImpl implements SimplePackageManager, PackageMa
 	}
 
 	@Override
-	public void packagePrepared(int executionId, String packageName) {
-		jobManagerUpdateQueue.add(new PackagePreparedUpdateImpl(executionId, packageName));
+	public void packagePrepared(int executionId) {
+		jobManagerUpdateQueue.add(new PackagePreparedUpdateImpl(executionId));
 	}
 }

@@ -12,7 +12,6 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.SimulationManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.SimulationRunEntry;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerInstance;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerManager;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
 
 public class SimulationSchedulerImpl implements SimulationScheduler {
 
@@ -20,8 +19,7 @@ public class SimulationSchedulerImpl implements SimulationScheduler {
 	private final WorkerManager workerManager;
 	private final SimulationSchedulerSettings settings;
 	private final SimulationTimeEstimator simulationTimeEstimator;
-
-	private SimulationPlan simulationPlan;
+	private final SimulationPlan simulationPlan;
 
 	public SimulationSchedulerImpl(SimulationManager simulationManager, WorkerManager workerManager,
 			SimulationSchedulerSettings settings, SimulationTimeEstimator simulationTimeEstimator,
@@ -37,34 +35,36 @@ public class SimulationSchedulerImpl implements SimulationScheduler {
 	@Override
 	public SimulationPlan getSimulationPlan() {
 		return simulationPlan;
-	};
-	
+	}
+
 	@Override
 	public void recalculateSchedule() {
 
 		// update plan according to current workers
-		List<WorkerInstance> allWorkers = workerManager.listWorkers();
+		List<WorkerInstance> allWorkers = workerManager.listAvailableWorkers();
 
 		// if there is no started worker start one
 		if (allWorkers.isEmpty()) {
-			workerManager.startNewWorker();
-			allWorkers = workerManager.listWorkers();
+			workerManager.startWorker();
+			allWorkers = workerManager.listAvailableWorkers();
 		}
 
 		simulationPlan.update(allWorkers);
 
 		List<SimulationExecutionEntry> allExecutions = simulationManager.listExecutions();
-		DateTime newWorkerStartedTime = workerManager.getNewWorkerStartedTime();
+		DateTime workerTimeToStart = workerManager.whenWorkerWillBePrepared();
 
 		// add items to simulation plan
-		addFastExecutions(allExecutions, newWorkerStartedTime);
-		addToDateExecutions(allExecutions, newWorkerStartedTime);
+		addFastExecutions(allExecutions, workerTimeToStart);
+		addToDateExecutions(allExecutions, workerTimeToStart);
 		addCheapExecutions(allExecutions);
 
 		// handle unused workers
 		stopUnusedWorkers();
 		int workerPlanCount = simulationPlan.getWorkerPlanCount();
-		workerManager.setDesiredWorkerCount((workerPlanCount * 3) / 2, workerPlanCount); // TODO constants to configuration
+		workerManager.setDesiredWorkerCount(
+				(int) Math.ceil(workerPlanCount * settings.getDesiredCreatedWorkerCountRatio()),
+				(int) Math.ceil(workerPlanCount * settings.getDesiredRunningWorkerCountRatio()));
 	}
 
 	private void addFastExecutions(List<SimulationExecutionEntry> allExecutions, DateTime newWorkerStartedTime) {
@@ -82,7 +82,8 @@ public class SimulationSchedulerImpl implements SimulationScheduler {
 				for (SimulationRunEntry notStartedRun : execution.getNotStartedRuns()) {
 					WorkerPlan firstEndingWorkerPlan = simulationPlan.getPlanForFirstEndingWorker();
 					if (newWorkerStartedTime.isBefore(firstEndingWorkerPlan.getPlanEndTime())) {
-						WorkerPlan startedWorkerPlan = startNewWorker();
+						WorkerPlan startedWorkerPlan = startWorker();
+						// if new worker can't be started, use worker with first ending plan
 						firstEndingWorkerPlan = startedWorkerPlan != null ? startedWorkerPlan : firstEndingWorkerPlan;
 					}
 					addPlanItem(notStartedRun, estimateRunExecutionTimeInMillis, firstEndingWorkerPlan);
@@ -110,7 +111,7 @@ public class SimulationSchedulerImpl implements SimulationScheduler {
 				if (workerPlan == null) {
 					// check if it is possible to start new worker to meet the deadline
 					if (newWorkerStartedTime.isBefore(runStartDeadline)) {
-						WorkerPlan startedWorkerPlan = startNewWorker();
+						WorkerPlan startedWorkerPlan = startWorker();
 						workerPlan = startedWorkerPlan != null ? startedWorkerPlan : workerPlan;
 					}
 					// no other worker could not be started -> use first possible worker
@@ -126,7 +127,7 @@ public class SimulationSchedulerImpl implements SimulationScheduler {
 
 	private void addCheapExecutions(List<SimulationExecutionEntry> allExecutions) {
 		// run cheapest only if there is no running and no planned simulation run
-		// run maximum one run at one time
+		// run maximum one run at one time, don't plan anything after first run
 		if (!simulationPlan.isAnythingPlanned()) {
 			List<SimulationExecutionEntry> cheapExecutions = filterExecutions(allExecutions,
 					ExecutionEndSpecificationType.AsCheapAsPossible);
@@ -150,52 +151,32 @@ public class SimulationSchedulerImpl implements SimulationScheduler {
 				.collect(Collectors.toList());
 	}
 
-	private WorkerPlan startNewWorker() {
-		if (settings.getMaximumNumberOfWorkers() < workerManager.getCurrentWorkerCount()) {
-			WorkerInstance newWorker = workerManager.startNewWorker();
+	private WorkerPlan startWorker() {
+		if (settings.getMaximumNumberOfWorkers() < workerManager.getCurrentAvailableWorkerCount()) {
+			WorkerInstance newWorker = workerManager.startWorker();
 			return simulationPlan.addWorkerPlan(newWorker);
 		}
 		return null;
 	}
 
 	private void addPlanItem(SimulationRunEntry notStartedRun, long estimateRunExecutionTimeInMillis,
-			WorkerPlan firstEndingWorkerPlan) {
-		DateTime itemStartTime = firstEndingWorkerPlan.getPlanEndTime();
+			WorkerPlan workerPlan) {
+		DateTime itemStartTime = workerPlan.getPlanEndTime();
 		DateTime itemEndTime = itemStartTime.plus(estimateRunExecutionTimeInMillis);
 		WorkerPlanItemImpl newPlanItem = new WorkerPlanItemImpl(notStartedRun, itemStartTime, itemEndTime);
-		firstEndingWorkerPlan.addNextItem(newPlanItem);
+		workerPlan.addNextItem(newPlanItem);
 	}
 
 	private void stopUnusedWorkers() {
-		// we want at least one worker to run
-		if (workerManager.getCurrentWorkerCount() <= 1) {
-			return;
-		}
 
-		WorkerPlan workerPlan;
-		while ((workerPlan = simulationPlan.getPlanForFirstEndingWorker()) != null) {
-			WorkerPlanItem currentItem = workerPlan.getCurrentItem();
-			if (currentItem != null) {
-				// all started workers are simulating or going to simulate
-				// best item is worker with simulation task
-				// started worker without task would be before this one
+		List<WorkerPlan> removedWorkerPlans = simulationPlan.clearEmptyWorkerPlans();
+		
+		for (WorkerPlan removedWorkerPlan : removedWorkerPlans) {
+			if (workerManager.getCurrentAvailableWorkerCount() <= 1) {
+				// we want at least one worker to run
 				return;
-			} else {
-				if (workerPlan.getWorker().getStatus() == WorkerStatus.Stopped) {
-					// all started workers are simulating or going to simulate
-					// started worker without simulation task would be before stopped,
-					// because stopped worker must start and is prepared later
-					return;
-				}
-				if (workerManager.getCurrentWorkerCount() <= 1) {
-					// we want at least one worker to run
-					return;
-				}
-
-				// worker is started and doesn't have any task
-				simulationPlan.removeWorkerPlan(workerPlan);
-				workerManager.stopWorker(workerPlan.getWorker());
 			}
+			workerManager.stopWorker(removedWorkerPlan.getWorker());
 		}
 	}
 }

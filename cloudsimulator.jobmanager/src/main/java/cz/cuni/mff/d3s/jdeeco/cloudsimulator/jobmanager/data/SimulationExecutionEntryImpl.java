@@ -20,21 +20,20 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 
 	private final SimulationExecution data;
 	private final SimulationExecutionEntryListener listener;
-	private final SimulationExecutionStatistics statistics;
+	private final JobStatistics<Integer> executionStatistics;
 
 	private final ExecutionDeadlineSettings deadlineSettings;
 
-	private String packageName;
-
+	private boolean isPackagePrepared = false;
 	private boolean repeatedlyThrowsError = false;
 	private boolean started = false;
 	private boolean stopped = false;
 
 	public SimulationExecutionEntryImpl(SimulationExecution data, SimulationExecutionEntryListener listener,
-			SimulationExecutionStatistics statistics, SimulationRunEntryFactory simulationRunEntryFactory) {
+			JobStatistics<Integer> executionStatistics, SimulationRunEntryFactory simulationRunEntryFactory) {
 		this.data = data;
 		this.listener = listener;
-		this.statistics = statistics;
+		this.executionStatistics = executionStatistics;
 
 		this.deadlineSettings = new ExecutionDeadlineSettings(data.getEndSpecificationType(),
 				data.getEndDate() != null ? new DateTime(data.getEndDate()) : null);
@@ -52,10 +51,9 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 
 	@Override
 	public SimulationStatus getStatus() {
-		if (stopped)
+		if (stopped) {
 			return SimulationStatus.Stopped;
-
-		if (repeatedlyThrowsError) {
+		} else if (repeatedlyThrowsError) {
 			return SimulationStatus.ErrorOccured;
 		} else if (startedRuns.isEmpty() && completedRuns.isEmpty()) {
 			return SimulationStatus.Created;
@@ -77,12 +75,6 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 	}
 
 	@Override
-	public boolean containsSimulationRun(int simulationRunId) {
-		return notStartedRuns.containsKey(simulationRunId) || startedRuns.containsKey(simulationRunId)
-				|| completedRuns.containsKey(simulationRunId) || errorRuns.containsKey(simulationRunId);
-	}
-
-	@Override
 	public void startSimulationRun(SimulationRunEntry toStartEntry) {
 		if (stopped) {
 			return;
@@ -97,15 +89,18 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 		notStartedRuns.remove(entryId);
 		toStartEntry.setStatus(SimulationStatus.Started);
 		startedRuns.put(entryId, toStartEntry);
-		statistics.simulationStarted(entryId);
+		
+		// notify run started
+		executionStatistics.jobStarted(entryId);
 		listener.runStarted(toStartEntry);
 	}
 
 	@Override
 	public void updateRunStatus(SimulationStatusUpdate update) {
-		if (stopped)
+		if (stopped) {
 			return;
-
+		}
+		
 		int simulationRunId = update.getSimulationRunId();
 
 		SimulationRunEntry simulationRunEntry;
@@ -126,7 +121,8 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 			break;
 		case Completed:
 			completedRuns.put(simulationRunId, simulationRunEntry);
-			statistics.simulationCompleted(simulationRunId);
+			// notify
+			executionStatistics.jobCompleted(simulationRunId);
 			listener.runCompleted(simulationRunEntry);
 			break;
 		case ErrorOccured:
@@ -147,8 +143,8 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 	}
 
 	@Override
-	public SimulationExecutionStatistics getStatistics() {
-		return statistics;
+	public JobStatistics<Integer> getExecutionStatistics() {
+		return executionStatistics;
 	}
 
 	@Override
@@ -157,13 +153,13 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 	}
 
 	@Override
-	public String getPackageName() {
-		return packageName;
+	public boolean isPackagePrepared() {
+		return isPackagePrepared;
 	}
 
 	@Override
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+	public void setIsPackagePrepared() {
+		this.isPackagePrepared = true;
 	}
 
 	@Override

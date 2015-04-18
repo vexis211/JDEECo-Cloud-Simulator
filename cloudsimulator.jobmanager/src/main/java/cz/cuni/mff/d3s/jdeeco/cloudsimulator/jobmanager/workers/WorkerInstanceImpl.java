@@ -2,8 +2,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers;
 
 import org.joda.time.DateTime;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.cloud.CloudMachine;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
 
 public class WorkerInstanceImpl implements WorkerInstance {
 
@@ -13,12 +13,20 @@ public class WorkerInstanceImpl implements WorkerInstance {
 	private WorkerStatus status;
 	private DateTime lastStatusChange;
 
-	public WorkerInstanceImpl(String workerId, CloudMachine cloudMachine) {
-		this.workerId = workerId;
+	public WorkerInstanceImpl(CloudMachine cloudMachine) {
 		this.cloudMachine = cloudMachine;
-
-		this.status = WorkerStatus.Stopped;
+		
+		this.workerId = cloudMachine.getName();
 		this.lastStatusChange = DateTime.now();
+
+		switch (cloudMachine.getStatus()) {
+		case Started:
+			this.status = WorkerStatus.Started;			
+			break;
+		default:
+			this.status = WorkerStatus.Stopped;
+			break;
+		}
 	}
 
 	@Override

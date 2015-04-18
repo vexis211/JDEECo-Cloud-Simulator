@@ -10,19 +10,17 @@ public interface SimulationExecutionEntry {
 	int getId();
 	SimulationStatus getStatus();
 
-	boolean containsSimulationRun(int simulationRunId);
-	
 	int getNotStartedRunsCount();
 	List<SimulationRunEntry> getNotStartedRuns();
 
 	void startSimulationRun(SimulationRunEntry simulationRunEntry);
 	void updateRunStatus(SimulationStatusUpdate update);
 	
-	SimulationExecutionStatistics getStatistics();
+	JobStatistics<Integer> getExecutionStatistics();
 	ExecutionDeadlineSettings getDeadlineSettings();
 
-	String getPackageName();
-	void setPackageName(String packageName);
+	boolean isPackagePrepared();
+	void setIsPackagePrepared();
 	
 	void stop();
 }

@@ -71,7 +71,7 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 	@Override
 	public void markRunAsCompleted(int runId) {
 		SimulationRun run = simulationRunDao.findById(runId);
-		run.setStarted(new Date());
+		run.setEnded(new Date());
 		run.setStatus(SimulationStatus.Completed);
 		simulationRunDao.saveOrUpdate(run);
 	}

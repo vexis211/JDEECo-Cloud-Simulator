@@ -17,35 +17,41 @@
 		http://activemq.apache.org/schema/core/activemq-core-5.10.0.xsd">
 
 	<!-- Properties in Spring configuration files -->
-	<context:property-placeholder location="
+	<context:property-placeholder
+		location="
 		classpath:properties/hibernate.properties,
 		classpath:properties/jms.properties,
 		classpath:properties/profile.properties,
-		classpath:properties/build.properties
-		classpath:properties/jdeeco-simulator-openstack-credentions.properties" />
+		classpath:properties/build.properties,
+		classpath:properties/openstack-credentials.properties" />
 
 	<import resource="classpath*:configuration/hibernate-session.xml" />
 	<import resource="classpath*:configuration/hibernate-daos.xml" />
-	
+
 	<import resource="classpath*:configuration/jms-context.xml" />
 
 
-	<bean id="executor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.CustomThreadPoolExecutor"
-		scope="singleton">
-		<constructor-arg name="corePoolSize" value="${executor.corePoolSize}"/>
+	<bean id="executor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.CustomThreadPoolExecutor" scope="singleton">
+		<constructor-arg name="corePoolSize" value="${executor.corePoolSize}" />
 	</bean>
 
 	<bean id="jobManagerEngine" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerEngineImpl"
 		scope="singleton">
-		<constructor-arg name="jobManagerUpdateQueue" ref="jobManagerUpdateQueue" />
 		<constructor-arg name="simulationManager" ref="simulationManager" />
 		<constructor-arg name="simulationScheduler" ref="simulationScheduler" />
 		<constructor-arg name="workerManager" ref="workerManager" />
 		<constructor-arg name="workerConnector" ref="workerConnector" />
+		<constructor-arg name="jobManagerUpdateQueue" ref="jobManagerUpdateQueue" />
+		<constructor-arg name="receiveMessageQueueTimeout" ref="receiveMessageQueueTimeout" />
 	</bean>
 
 	<bean id="jobManagerUpdateQueue" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerUpdateQueue"
 		scope="singleton" />
+
+	<bean id="receiveMessageQueueTimeout" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.TimeSpan">
+		<constructor-arg name="unit" type="java.util.concurrent.TimeUnit" value="MINUTES" />
+		<constructor-arg name="numberOUnits" value="3" />
+	</bean>
 
 
 	<!-- Simulation data -->
@@ -70,9 +76,9 @@
 	<bean id="simulationRunEntryFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.SimulationRunEntryFactoryImpl" />
 
 	<bean id="simulationDataStorageService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationDataStorageServiceImpl">
-		<constructor-arg name="packageRootDirectory" value="TODO" />
-		<constructor-arg name="resultsRootDirectory" value="TODO" />
-		<constructor-arg name="logsRootDirectory" value="TODO" />
+		<constructor-arg name="packageRootDirectory" value="${simulation.storage.packagesRoot}" />
+		<constructor-arg name="resultsRootDirectory" value="${simulation.storage.runResultsRoot}" />
+		<constructor-arg name="logsRootDirectory" value="${simulation.storage.runLogsRoot}" />
 	</bean>
 
 	<!-- Packaging -->
@@ -83,8 +89,7 @@
 		<constructor-arg name="packageManager" ref="packageManager" />
 	</bean>
 
-	<bean id="packageManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.PackageManagerImpl"
-		scope="singleton">
+	<bean id="packageManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.PackageManagerImpl" scope="singleton">
 		<constructor-arg name="packagePreparator" ref="packagePreparator" />
 		<constructor-arg name="packageTaskFactory" ref="packageTaskFactory" />
 	</bean>
@@ -93,7 +98,7 @@
 		<constructor-arg name="executor" ref="executor" />
 		<constructor-arg name="codeRepositoryManager" ref="codeRepositoryManager" />
 		<constructor-arg name="simulationDataStorageService" ref="simulationDataStorageService" />
-		<constructor-arg name="packageContainerName" value="${openStack.storage.dataContainerName}" />
+		<constructor-arg name="preparationRootDir" value="${packaging.storage.preparationRoot}" />
 	</bean>
 
 	<bean id="packageTaskFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.PackageTaskFactoryImpl" />
@@ -101,7 +106,7 @@
 
 	<!-- VCS -->
 	<bean id="codeRepositoryManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.vcs.CodeRepositoryManagerImpl">
-		<constructor-arg name="localRootDir" value="${packaging.localRepositoryDir}" />
+		<constructor-arg name="localRootDir" value="${packaging.storage.localRepositoryRoot}" />
 		<constructor-arg name="repositoryProviders">
 			<list>
 				<ref bean="gitRepositoryProvider" />
@@ -137,23 +142,26 @@
 	<bean id="workerConnector" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.connectors.WorkerConnectorImpl"
 		scope="singleton">
 		<constructor-arg name="jmsTemplate" ref="jmsTemplate" />
+		<constructor-arg name="receiveTimeout" ref="jmsTemplate" />
 		<constructor-arg name="incomingQueue" value="${jms.incomingQueue}" />
 		<constructor-arg name="outgoingQueuePrefix" value="${jms.outgoingQueuePrefix}" />
 		<constructor-arg name="jobManagerUpdateQueue" ref="jobManagerUpdateQueue" />
 	</bean>
+	
+	<bean id="workerConnectorReceiveTimeout" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.TimeSpan">
+		<constructor-arg name="unit" type="java.util.concurrent.TimeUnit" value="SECONDS" />
+		<constructor-arg name="numberOUnits" value="10" />
+	</bean>
 
-	<bean id="workerManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerManagerImpl"
-		scope="singleton">
+	<bean id="workerManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerManagerImpl" scope="singleton">
 		<constructor-arg name="cloudMachineService" ref="cloudMachineService" />
-		<constructor-arg name="statisticsFactory" ref="workerStatisticsFactory" />
 		<constructor-arg name="workerIdGenerator" ref="workerIdGenerator" />
 		<constructor-arg name="workerTemplateName" value="${openStack.machine.templateName}" />
+		<constructor-arg name="workerFlavorName" value="${openStack.machine.flavorName}" />
 	</bean>
 
 	<bean id="workerIdGenerator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerIdGeneratorImpl"
 		scope="singleton" />
-
-	<bean id="workerStatisticsFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerStatisticsFactoryImpl" />
 
 	<!-- Scheduling -->
 
@@ -184,6 +192,8 @@
 	<bean id="simulationSchedulerSettings" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.planning.SimulationSchedulerSettingsImpl"
 		scope="singleton">
 		<constructor-arg name="maximumNumberOfWorkers" value="${simulationScheduler.maximumNumberOfWorkers}" />
+		<constructor-arg name="desiredCreatedWorkerCountRatio" value="${simulationScheduler.desiredCreatedWorkerCountRatio}" />
+		<constructor-arg name="desiredRunningWorkerCountRatio" value="${simulationScheduler.desiredRunningWorkerCountRatio}" />
 	</bean>
 
 </beans>

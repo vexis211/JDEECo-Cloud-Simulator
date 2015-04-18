@@ -21,27 +21,25 @@ public class SimulationDataStorageServiceImpl implements SimulationDataStorageSe
 	}
 
 	@Override
-	public String getPackagePath(String dataName) {
-		return PathEx.combine(packageRootDirectory, dataName);
+	public String getPackagePath(int executionId) {
+		return PathEx.combine(packageRootDirectory, executionId);
 	}
 
 	@Override
-	public void saveResults(String sourcePath, String dataName) {
+	public void saveResults(String sourcePath, int runId) {
 		try {
-			FileUtils.copyDirectory(new File(sourcePath), new File(PathEx.combine(resultsRootDirectory, dataName)));
+			FileUtils.copyDirectory(new File(sourcePath), new File(PathEx.combine(resultsRootDirectory, runId)));
 		} catch (IOException e) {
 			e.printStackTrace();
-			// TODO log
 		}
 	}
 
 	@Override
-	public void saveLogs(String sourcePath, String dataName) {
+	public void saveLogs(String sourcePath, int runId) {
 		try {
-			FileUtils.copyFile(new File(sourcePath), new File(PathEx.combine(logsRootDirectory, dataName)));
+			FileUtils.copyDirectory(new File(sourcePath), new File(PathEx.combine(logsRootDirectory, runId)));
 		} catch (IOException e) {
 			e.printStackTrace();
-			// TODO log
 		}
 	}
 }

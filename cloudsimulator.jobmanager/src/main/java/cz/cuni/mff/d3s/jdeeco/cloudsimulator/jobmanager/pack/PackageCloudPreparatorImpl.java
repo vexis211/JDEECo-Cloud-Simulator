@@ -22,13 +22,13 @@ public class PackageCloudPreparatorImpl implements PackagePreparator, PackagingE
 	private final PackageTaskProcessor firstProcessor;
 
 	public PackageCloudPreparatorImpl(FutureExecutor executor, CodeRepositoryManager codeRepositoryManager,
-			CloudDataService cloudDataService, String packageContainerName) {
+			CloudDataService cloudDataService, String packageContainerName, String preparationRootDir) {
 
 		CodeRepositoryProcessor codeRepositoryProcessor = new CodeRepositoryProcessor(executor, this,
 				codeRepositoryManager);
 		CompileCodeProcessor compileCodeProcessor = new CompileCodeProcessor(executor, this);
 		CopyCompiledToPreparingDirectoryProcessor copyCompiledToPreparingDirectoryProcessor = new CopyCompiledToPreparingDirectoryProcessor(
-				executor, this);
+				preparationRootDir, executor, this);
 
 		// TODO - run script processor
 		ZipDataProcessor zipDataProcessor = new ZipDataProcessor(executor, this);

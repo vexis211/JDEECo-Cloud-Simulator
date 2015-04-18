@@ -2,8 +2,9 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.apache.log4j.Logger;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.PackagePreparedUpdate;
@@ -11,6 +12,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.SimplePackageManage
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpdate;
 
 public class SimulationManagerImpl implements SimulationManager, SimulationExecutionEntryListener {
+
+	private final Logger logger = Logger.getLogger(SimulationManagerImpl.class);
 
 	private final HashMap<Integer, SimulationExecutionEntry> simulationExecutions = new HashMap<>();
 
@@ -35,8 +38,18 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 	@Override
 	public void updateStatus(List<SimulationStatusUpdate> updates) {
 		for (SimulationStatusUpdate update : updates) {
-			SimulationExecutionEntry executionEntry = getExecutionEntry(update.getSimulationRunId());
-			executionEntry.updateRunStatus(update);
+			if (simulationExecutions.containsKey(update.getSimulationExecutionId())) {
+				SimulationExecutionEntry executionEntry = simulationExecutions.get(update.getSimulationExecutionId());
+				try {
+					executionEntry.updateRunStatus(update);
+				} catch(RuntimeException e) {
+					logger.error(String.format("Simulation status update failed. Execution Id: %d. Run Id: %d.",
+						update.getSimulationExecutionId(), update.getSimulationRunId(), e));
+				}
+			} else {
+				logger.info(String.format("Update for wrong or stopped execution. Execution Id: %d. Run Id: %d",
+						update.getSimulationExecutionId(), update.getSimulationRunId()));
+			}
 		}
 	}
 
@@ -44,14 +57,8 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 	public void updatePackageNames(List<PackagePreparedUpdate> updates) {
 		for (PackagePreparedUpdate update : updates) {
 			SimulationExecutionEntry simulationExecutionEntry = simulationExecutions.get(update.getExecutionId());
-			simulationExecutionEntry.setPackageName(update.getPackageName());
+			simulationExecutionEntry.setIsPackagePrepared();
 		}
-	}
-
-	private SimulationExecutionEntry getExecutionEntry(int simulationRunId) {
-		Optional<SimulationExecutionEntry> entry = simulationExecutions.values().stream()
-				.filter(x -> x.containsSimulationRun(simulationRunId)).findAny();
-		return entry.get();
 	}
 
 	@Override
@@ -60,6 +67,8 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 	}
 
 	private void refreshExecutionsInternal() {
+		logger.info("Refreshing simulation executions.");
+		
 		// check stopped executions
 		List<SimulationExecution> stoppedExecutionModels = simulationRepository
 				.listStoppedExecutions(simulationExecutions.keySet());
@@ -81,9 +90,8 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 					this);
 			simulationExecutions.put(newExecutionEntry.getId(), newExecutionEntry);
 
-			String packageName = simplePackageManager.getPackageName(notCreatedExecution);
-			if (packageName != null) {
-				newExecutionEntry.setPackageName(packageName);
+			if (simplePackageManager.isPackagePrepared(notCreatedExecution)) {
+				newExecutionEntry.setIsPackagePrepared();
 			} else {
 				simplePackageManager.preparePackage(notCreatedExecution);
 			}

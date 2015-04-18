@@ -24,7 +24,7 @@ public class SimulationExecutorParametersImpl implements SimulationExecutorParam
 
 	@Override
 	public String getLogPath() {
-		return data.getLogPath();
+		return data.getLogsPath();
 	}
 
 	@Override

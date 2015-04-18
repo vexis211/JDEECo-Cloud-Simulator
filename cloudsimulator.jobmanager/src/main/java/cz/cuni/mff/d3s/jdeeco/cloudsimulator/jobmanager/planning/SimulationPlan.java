@@ -11,7 +11,7 @@ public interface SimulationPlan {
 	WorkerPlan getPlanForLastEndingWorkerBefore(DateTime dateTime);
 	
 	WorkerPlan addWorkerPlan(WorkerInstance worker);
-	void removeWorkerPlan(WorkerPlan workerPlan);
+	List<WorkerPlan> clearEmptyWorkerPlans();
 
 	boolean isAnythingPlanned();
 

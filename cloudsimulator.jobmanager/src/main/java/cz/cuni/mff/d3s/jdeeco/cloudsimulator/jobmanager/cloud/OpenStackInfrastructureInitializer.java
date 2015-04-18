@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 //import org.openstack4j.model.network.AttachInterfaceType;
 //import org.openstack4j.model.network.IPVersionType;
 //import org.openstack4j.model.network.NetFloatingIP;
-//import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerIdGeneratorImpl;
 
 
 
@@ -43,7 +42,7 @@ public class OpenStackInfrastructureInitializer {
 	
 	public static void main(String[] args) {
 		OpenStackInfrastructureInitializer initializer = new OpenStackInfrastructureInitializer();
-		// initializer.initialize();
+		initializer.initialize();
 		initializer.attachVolume("SimulationDataDrive", "JobManager-Instance");
 	}
 
@@ -87,7 +86,7 @@ public class OpenStackInfrastructureInitializer {
 		List<? extends SwiftContainer> list = os.objectStorage().containers().list();
 		System.out.println(list);
 
-		createStorage(os);
+//		createStorage(os);
 
 		list = os.objectStorage().containers().list();
 		System.out.println(list);
@@ -139,10 +138,10 @@ public class OpenStackInfrastructureInitializer {
 	 * .getId()).direction("ingress")
 	 * .protocol("tcp").portRangeMin(22).portRangeMax(22).build()); }
 	 */
-	private void createStorage(OSClient os) {
-		os.objectStorage().containers()
-				.create(OpenStackInfrastructureInitializerParameters.STORAGE_DATAPACKAGE_CONTAINER);
-	}
+//	private void createStorage(OSClient os) {
+//		os.objectStorage().containers()
+//				.create(OpenStackInfrastructureInitializerParameters.STORAGE_DATAPACKAGE_CONTAINER);
+//	}
 
 	/*
 	 * private void createJobManager(OSClient os, Tenant tenant) { // create
@@ -187,14 +186,14 @@ public class OpenStackInfrastructureInitializer {
 	 * 
 	 * private void createInitialWorker(OSClient os, Tenant tenant, Flavor
 	 * flavor) { WorkerIdGeneratorImpl workerIdGeneratorImpl = new
-	 * WorkerIdGeneratorImpl(); String workerName =
+	 * WorkerIdGeneratorImpl(); String workerId =
 	 * workerIdGeneratorImpl.generate();
 	 * 
 	 * // get image Image workerImage = os.compute().images()
 	 * .get(OpenStackInfrastructureInitializerParameters.WORKER_TEMPLATE_NAME);
 	 * 
 	 * // create a worker model object ServerCreate workerCreate =
-	 * Builders.server().name(workerName).flavor(flavor.getId())
+	 * Builders.server().name(workerId).flavor(flavor.getId())
 	 * .image(workerImage.getId()).build();
 	 * 
 	 * // boot the server os.compute().servers().boot(workerCreate); }
@@ -239,11 +238,11 @@ public class OpenStackInfrastructureInitializer {
 		removeServer(os, tenant, jobManager);
 	}
 
-	@SuppressWarnings("unused")
-	private void cleanStorage(OSClient os, Tenant tenant) {
-		os.objectStorage().containers()
-				.delete(OpenStackInfrastructureInitializerParameters.STORAGE_DATAPACKAGE_CONTAINER);
-	}
+//	@SuppressWarnings("unused")
+//	private void cleanStorage(OSClient os, Tenant tenant) {
+//		os.objectStorage().containers()
+//				.delete(OpenStackInfrastructureInitializerParameters.STORAGE_DATAPACKAGE_CONTAINER);
+//	}
 
 	private void cleanNetworkInfrastructure(OSClient os, Tenant tenant) {
 

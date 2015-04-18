@@ -22,27 +22,3 @@ public class ExecutionDeadlineSettings {
 		return endDate;
 	}
 }
-
-
-
-/*
-	private static final DateTime MIN_VALUE = new DateTime(new Date(0));
-	private static final DateTime MAX_VALUE = new DateTime(new Date(Long.MAX_VALUE));
- 
- public DateTime getCalculatedDeadline() {
- 
-	return calculatedDeadline;
-}
-
-private DateTime calculateDeadLine() {
-	switch (endSpecificationType) {
-	case ToDate:
-		return endDate;
-	case AsCheapAsPossible:
-		return MAX_VALUE ;
-	case AsFastAsPossible:
-		return MIN_VALUE;
-	default:
-		throw new RuntimeException(String.format("Value '%s' is not currently supported.", endSpecificationType));
-	}
-}*/

@@ -2,8 +2,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers;
 
 import org.joda.time.DateTime;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.cloud.CloudMachine;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
 
 public interface WorkerInstance {
 

@@ -1,14 +1,16 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import org.apache.log4j.Logger;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.TimeSpan;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.connectors.WorkerConnector;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.control.UpdateExecutionsCommand;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.SimulationExecutionEntry;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.SimulationManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.SimulationRunEntry;
@@ -19,7 +21,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.planning.WorkerPlan;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.planning.WorkerPlanItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerInstance;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerManager;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.commands.UpdateExecutionsCommand;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTaskImpl;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.StopSimulationTask;
@@ -30,32 +32,39 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdate;
 
 public class JobManagerEngineImpl implements JobManagerEngine {
 
-	private WorkerManager workerManager;
-	private SimulationManager simulationManager;
-	private SimulationScheduler simulationScheduler;
-	private WorkerConnector workerConnector;
-	private JobManagerUpdateQueue jobManagerUpdateQueue;
+	private final Logger logger = Logger.getLogger(JobManagerEngineImpl.class);
+	
+	private final WorkerManager workerManager;
+	private final SimulationManager simulationManager;
+	private final SimulationScheduler simulationScheduler;
+	
+	private final WorkerConnector workerConnector;
+	private final JobManagerUpdateQueue jobManagerUpdateQueue;
+	private final TimeSpan receiveMessageQueueTimeout;
 
-	private long queueTimeout = 3;
-	private TimeUnit queueTimeoutUnit = TimeUnit.MINUTES;
 	private boolean stopped = false;
 
 	public JobManagerEngineImpl(WorkerManager workerManager, SimulationManager simulationManager,
 			SimulationScheduler simulationScheduler, WorkerConnector workerConnector,
-			JobManagerUpdateQueue jobManagerUpdateQueue) {
+			JobManagerUpdateQueue jobManagerUpdateQueue, TimeSpan receiveMessageQueueTimeout) {
 		this.workerManager = workerManager;
 		this.simulationManager = simulationManager;
 		this.simulationScheduler = simulationScheduler;
 		this.workerConnector = workerConnector;
 		this.jobManagerUpdateQueue = jobManagerUpdateQueue;
+		this.receiveMessageQueueTimeout = receiveMessageQueueTimeout;
 	}
 
 	@Override
 	public void start() {
 
+		logger.info("Initializing job manager engine...");
+		
 		simulationManager.refreshExecutions();
 		workerConnector.connect();
 
+		logger.info("Starting job manager update loop...");
+		
 		while (!stopped) {
 			List<JobManagerUpdate> updates = getNewUpdates();
 			applyUpdates(updates);
@@ -63,6 +72,8 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 			updateWorkers();
 		}
 
+		logger.info("Disconnecting from worker connector...");
+		
 		workerConnector.disconnect();
 	}
 
@@ -74,9 +85,10 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 	private List<JobManagerUpdate> getNewUpdates() {
 		List<JobManagerUpdate> updates;
 		try {
-			updates = jobManagerUpdateQueue.takeAll(queueTimeout, queueTimeoutUnit);
+			updates = jobManagerUpdateQueue.takeAll(receiveMessageQueueTimeout.getNumberOUnits(),
+					receiveMessageQueueTimeout.getUnit());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.info("Error occured while getting new updates.", e);
 			updates = new ArrayList<JobManagerUpdate>();
 		}
 		return updates;
@@ -89,30 +101,30 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 
 		// updates
 		// update worker manager
-		Stream<WorkerStatusUpdate> workerStatusUpdates = takeUpdates(updates, WorkerStatusUpdate.class);
-		workerManager.update(workerStatusUpdates.collect(Collectors.toList()));
+		List<WorkerStatusUpdate> workerStatusUpdates = takeUpdates(updates, WorkerStatusUpdate.class);
+		workerManager.update(workerStatusUpdates);
 
 		// update simulation manager
-		Stream<SimulationStatusUpdate> simulationStatusUpdates = takeUpdates(updates, SimulationStatusUpdate.class);
-		simulationManager.updateStatus(simulationStatusUpdates.collect(Collectors.toList()));
-		Stream<PackagePreparedUpdate> packagePreparedUpdates = takeUpdates(updates, PackagePreparedUpdate.class);
-		simulationManager.updatePackageNames(packagePreparedUpdates.collect(Collectors.toList()));
+		List<SimulationStatusUpdate> simulationStatusUpdates = takeUpdates(updates, SimulationStatusUpdate.class);
+		simulationManager.updateStatus(simulationStatusUpdates);
+		List<PackagePreparedUpdate> packagePreparedUpdates = takeUpdates(updates, PackagePreparedUpdate.class);
+		simulationManager.updatePackageNames(packagePreparedUpdates);
 
 		// commands
 		// are there any other updates?
-		Stream<UpdateExecutionsCommand> updateExecutionsCommands = takeUpdates(updates, UpdateExecutionsCommand.class);
-		if (updateExecutionsCommands.findAny().isPresent()) {
+		List<UpdateExecutionsCommand> updateExecutionsCommands = takeUpdates(updates, UpdateExecutionsCommand.class);
+		if (!updateExecutionsCommands.isEmpty()) {
 			simulationManager.refreshExecutions();
 		}
 
 		if (!updates.isEmpty()) {
-			throw new UnknownJobManagerUpdateException("Unknown job manager updates: " + updates);
+			logger.error("Unknown job manager updates: " + Arrays.toString(updates.toArray()));
 		}
 	}
 
-	private <T extends JobManagerUpdate> Stream<T> takeUpdates(List<JobManagerUpdate> updates, Class<T> type) {
+	private <T extends JobManagerUpdate> List<T> takeUpdates(List<JobManagerUpdate> updates, Class<T> type) {
 		@SuppressWarnings("unchecked")
-		Stream<T> taken = updates.stream().filter(x -> x.getClass().equals(type)).map(x -> (T) x);
+		List<T> taken = updates.stream().filter(x -> x.getClass().equals(type)).map(x -> (T) x).collect(Collectors.toList());
 		taken.forEach(x -> updates.remove(x));
 		return taken;
 	}
@@ -123,12 +135,16 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 		for (WorkerPlan workerPlan : workerPlans) {
 
 			WorkerPlanItem planItemRunning = getPlanItemRunning(workerPlan);
+			// running simulation at this time
 			if (planItemRunning != null) {
 				SimulationRunEntry simulationRun = planItemRunning.getSimulationRun();
 				if (simulationRun.getStatus() == SimulationStatus.Stopped) {
 					stopSimulationRun(workerPlan.getWorker(), simulationRun);
 				}
-			} else {
+			}
+			// not running simulation at this time
+			else {
+				// checked if worker is prepared and if anything is planned
 				WorkerPlanItem itemToRun = getPlanItemToRun(workerPlan);
 				if (itemToRun != null) {
 					startSimulationRun(workerPlan.getWorker(), itemToRun.getSimulationRun());
@@ -152,25 +168,31 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 
 		// send run simulation task
 		String workerId = worker.getWorkerId();
-		RunSimulationTask task = new RunSimulationTaskImpl(simulationRun.getId());
+		RunSimulationTask task = new RunSimulationTaskImpl(simulationRun.getExecution().getId(), simulationRun.getId());
 		workerConnector.sendTask(workerId, task);
 	}
 
 	private WorkerPlanItem getPlanItemRunning(WorkerPlan workerPlan) {
 		WorkerStatus workerStatus = workerPlan.getWorker().getStatus();
-		if (workerStatus == WorkerStatus.StartingSimulation || workerStatus == WorkerStatus.RunningSimulation) { // TODO should I test against both?
+		if (workerStatus == WorkerStatus.StartingSimulation || workerStatus == WorkerStatus.RunningSimulation) {
 			return workerPlan.getCurrentItem();
 		}
 		return null;
 	}
 
 	private WorkerPlanItem getPlanItemToRun(WorkerPlan workerPlan) {
+		
+		if (workerPlan.getWorker().getStatus() != WorkerStatus.Started) {
+			// we need to wait until worker is started
+			return null;
+		}
+		
 		WorkerPlanItem currentItem = workerPlan.getCurrentItem();
 		if (hasPreparedPackage(currentItem)) {
 			return currentItem;
 		}
 
-		// TODO is this OK?
+		// TODO is OK to prefer another package with another priority??
 		for (WorkerPlanItem planItem : workerPlan) {
 			if (hasPreparedPackage(planItem)) {
 				return planItem;
@@ -181,6 +203,6 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 	}
 
 	private boolean hasPreparedPackage(WorkerPlanItem workerPlanItem) {
-		return workerPlanItem.getSimulationRun().getExecution().getPackageName() != null;
+		return workerPlanItem.getSimulationRun().getExecution().isPackagePrepared();
 	}
 }

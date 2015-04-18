@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.StopSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnector;

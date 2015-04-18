@@ -28,8 +28,9 @@ public class OpenStackMachineServiceImpl extends OpenStackComponent implements O
 
 	@Override
 	public OpenStackMachine getMachineWithName(String machineName) {
-		if (machinesByName.containsKey(machineName))
+		if (machinesByName.containsKey(machineName)) {
 			return machinesByName.get(machineName);
+		}
 
 		updateFromCloud();
 
@@ -49,8 +50,9 @@ public class OpenStackMachineServiceImpl extends OpenStackComponent implements O
 	}
 
 	@Override
-	public OpenStackMachineBuilder buildMachineFromTemplate(String templateName, String machineName) {
-		return new OpenStackMachineBuilder(openStackConnector, this, templateName, machineName);
+	public OpenStackMachineBuilder buildMachineFromTemplate(String templateName, String flavorName,
+			String machineName) {
+		return new OpenStackMachineBuilder(openStackConnector, this, templateName, flavorName, machineName);
 	}
 
 	@Override

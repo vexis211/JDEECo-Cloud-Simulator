@@ -17,7 +17,7 @@ public class OpenStackComponent {
 		if (client == null) {
 			synchronized (locker) {
 				if (client == null) {
-					this.client = openStackConnector.connect();
+					this.client = openStackConnector.connect(); // TODO is it OK to connect in every component?
 				}
 			}
 		}

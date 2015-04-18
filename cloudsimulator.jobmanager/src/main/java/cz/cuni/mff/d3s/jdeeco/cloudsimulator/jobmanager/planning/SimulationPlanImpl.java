@@ -75,7 +75,26 @@ public class SimulationPlanImpl implements SimulationPlan, WorkerPlanChangeListe
 	}
 
 	@Override
-	public void removeWorkerPlan(WorkerPlan workerPlan) {
+	public List<WorkerPlan> clearEmptyWorkerPlans() {
+		List<WorkerPlan> emptyPlans = new ArrayList<WorkerPlan>();
+		
+		// get empty plans
+		for (WorkerPlan workerPlan : workerPlans) {
+			WorkerPlanItem currentItem = workerPlan.getCurrentItem();
+			if (currentItem == null) {
+				emptyPlans.add(workerPlan);
+			}
+		}
+		
+		// remove empty plans
+		for (WorkerPlan emptyPlan : emptyPlans) {
+			removeWorkerPlan(emptyPlan);
+		}
+		
+		return emptyPlans;
+	}
+
+	private void removeWorkerPlan(WorkerPlan workerPlan) {
 		worker2plan.remove(workerPlan.getWorker());
 		workerPlans.remove(workerPlan);
 	}

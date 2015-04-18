@@ -18,20 +18,14 @@ public class OpenStackInfrastructureInitializerParameters {
     public static final String KEYPAIR_NAME = "ssh_keypair";
 
     // computing
-    public static final String JOB_MANAGER_TEMPLATE_NAME = "TODO"; // TODO
-    public static final String JOB_MANAGER_NAME = "job_manager";
+    public static final String JOB_MANAGER_TEMPLATE_NAME = "JobManager-Template"; // TODO
+    public static final String JOB_MANAGER_NAME = "JobManager-Instance";
 
     public static final int INITIAL_WORKER_COUNT = 3;
-    public static final String WORKER_TEMPLATE_NAME = "TODO"; // TODO
-    public static final String WORKER_FLAVOR_NAME = "Worker Flavor";
+	public static final String WORKER_TEMPLATE_NAME = "Worker-Template";
+    public static final String WORKER_FLAVOR_NAME = "2.2048";
     
     // storage
-	public static final String STORAGE_DATAPACKAGE_CONTAINER = "simulations/preparedData";
+//	public static final String STORAGE_DATAPACKAGE_CONTAINER = "simulations/preparedData";
 	
-	/*
-	 * 
-openStack.storage.dataContainerName=simulations/preparedData
-openStack.storage.resultsContainerName=simulations/runs/results
-openStack.storage.logsContainerName=simulations/runs/logs
-	 */
 }

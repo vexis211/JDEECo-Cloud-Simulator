@@ -12,7 +12,7 @@ public class SimulationExecutionEntryFactoryImpl implements SimulationExecutionE
 
 	@Override
 	public SimulationExecutionEntry create(SimulationExecution data, SimulationExecutionEntryListener listener) {
-		return new SimulationExecutionEntryImpl(data, listener, new SimulationExecutionStatisticsImpl(),
+		return new SimulationExecutionEntryImpl(data, listener, new JobStatisticsImpl<Integer>(),
 				simulationRunEntryFactory);
 	}
 }

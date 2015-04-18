@@ -25,6 +25,15 @@
 	</properties>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>development/</exclude>
+				</excludes>
+			</resource>
+		</resources>
+	
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -48,22 +57,22 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>compile-configuration</id>
+						<id>compile-copy</id>
 						<phase>compile</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<!-- Generate property file build.properties with buildNumber, buildTimestamp and revision parameters. Revision is 
 									set from changeSet parameter from buildnumber-maven-plugin. -->
 								<!-- <echo file="src/main/resources/properties/build.properties">build.buildNumber=${timestamp}${line.separator}</echo> -->
 								<echo file="src/main/resources/properties/build.properties">build.buildTimestamp=${timestamp}${line.separator}</echo>
 								<!-- <echo file="src/main/resources/properties/build.properties" append="true">build.revision=${changeSet}</echo> -->
 
-								<copy todir="target/classes">
-									<fileset dir="src/main/resources">
-										<include name="build.properties" />
-									</fileset>
-								</copy>
-							</tasks>
+								<!-- Copy build number -->
+								<copy file="src/main/resources/properties/build.properties" todir="${project.build.directory}/classes/properties" />
+
+								<!-- Copy OpenStack credentials -->
+								<copy file="${basedir}/../../jdeeco-simulator-openstack-credentials.properties" tofile="${project.build.directory}/classes/properties/openstack-credentials.properties" />
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>
@@ -73,30 +82,37 @@
 			</plugin>
 
 			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>${maven-resources-plugin.version}</version>
-				<configuration>
-					<encoding>${project.encoding}</encoding>
-				</configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>copy-resources</id>
-						<!-- here the phase you need -->
-						<phase>validate</phase>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
 						<goals>
-							<goal>copy-resources</goal>
+							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/extra-resources</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/non-packaged-resources</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.App</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -150,7 +166,6 @@
 			<artifactId>joda-time</artifactId>
 			<version>${joda-time.version}</version>
 		</dependency>
-
 	</dependencies>
 
 </project>

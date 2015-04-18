@@ -9,7 +9,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType;
 
 public class PackageTaskImpl implements PackageTask {
 
-	private final int id;
+	private final int executionId;
 
 	private List<PackageTask> identicalTasksForProcessingStep = new ArrayList<PackageTask>();
 
@@ -22,18 +22,17 @@ public class PackageTaskImpl implements PackageTask {
 	private String repositoryLocalPath;
 
 	private String preparingDirectory;
-	private String packageLocalPath;
-	private String saveName;
+//	private String packageLocalPath;
 
-	public PackageTaskImpl(int id) {
-		this.id = id;
+	public PackageTaskImpl(int executionId) {
+		this.executionId = executionId;
 	}
 
 	@Override
-	public int getId() {
-		return id;
+	public int getExecutionId() {
+		return executionId;
 	}
-	
+
 	@Override
 	public List<PackageTask> getIdenticalTasksForProcessingStep() {
 		return identicalTasksForProcessingStep;
@@ -47,6 +46,16 @@ public class PackageTaskImpl implements PackageTask {
 	@Override
 	public String getRepositoryRemoteUrl() {
 		return repositoryRemoteUrl;
+	}
+
+	@Override
+	public String getRepositoryLocalPath() {
+		return repositoryLocalPath;
+	}
+
+	@Override
+	public void setRepositoryLocalPath(String repositoryLocalPath) {
+		this.repositoryLocalPath = repositoryLocalPath;
 	}
 
 	@Override
@@ -79,49 +88,30 @@ public class PackageTaskImpl implements PackageTask {
 		this.preparingDirectory = preparingDirectory;
 	}
 
-	@Override
-	public String getPackageLocalPath() {
-		return packageLocalPath;
-	}
-
-	@Override
-	public void setPackageLocalPath(String packageLocalPath) {
-		this.packageLocalPath = packageLocalPath;
-	}
-
-	@Override
-	public String getSaveName() {
-		return saveName;
-	}
-
-	@Override
-	public String getRepositoryLocalPath() {
-		return repositoryLocalPath;
-	}
-
-	@Override
-	public void setRepositoryLocalPath(String repositoryLocalPath) {
-		this.repositoryLocalPath = repositoryLocalPath;
-	}
+//	@Override
+//	public String getPackageLocalPath() {
+//		return packageLocalPath;
+//	}
+//
+//	@Override
+//	public void setPackageLocalPath(String packageLocalPath) {
+//		this.packageLocalPath = packageLocalPath;
+//	}
 
 	// public only in implementation
-	public void setRepositoryType(VCSType repositoryType) {
+	void setRepositoryType(VCSType repositoryType) {
 		this.repositoryType = repositoryType;
 	}
 
-	public void setRepositoryRemoteUrl(String repositoryRemoteUrl) {
+	void setRepositoryRemoteUrl(String repositoryRemoteUrl) {
 		this.repositoryRemoteUrl = repositoryRemoteUrl;
 	}
 
-	public void setRelativePathToPomFile(String relativePathToPomFile) {
+	void setRelativePathToPomFile(String relativePathToPomFile) {
 		this.relativePathToPomFile = relativePathToPomFile;
 	}
 
-	public void setMavenGoals(String[] mavenGoals) {
+	void setMavenGoals(String[] mavenGoals) {
 		this.mavenGoals = Collections.unmodifiableList(Arrays.asList(mavenGoals));
-	}
-
-	public void setSaveName(String saveName) {
-		this.saveName = saveName;
 	}
 }

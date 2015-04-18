@@ -18,8 +18,6 @@ public class PackageTaskFactoryImpl implements PackageTaskFactory {
 		packageTask.setRelativePathToPomFile(simulationData.getPathToPom());
 		packageTask.setMavenGoals(simulationData.getMavenGoals().split(" "));
 		
-		packageTask.setSaveName("exec" + simulationExecution.getId());
-		
 		return packageTask;
 	}
 }

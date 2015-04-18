@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.StopSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.WorkerTask;

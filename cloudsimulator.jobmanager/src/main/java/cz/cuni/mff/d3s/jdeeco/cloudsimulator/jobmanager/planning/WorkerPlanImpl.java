@@ -5,20 +5,20 @@ import java.util.LinkedList;
 
 import org.joda.time.DateTime;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.JobStatistics;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerInstance;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerStatistics;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.WorkerStatus;
 
 public class WorkerPlanImpl implements WorkerPlan {
 
-	private final WorkerPlanChangeListener changeListener;
 	private final long id;
 	private final WorkerInstance worker;
+	private final WorkerPlanChangeListener changeListener;
 	private final LinkedList<WorkerPlanItem> items = new LinkedList<>();
-	private final WorkerStatistics workerStatistics;
+	private final JobStatistics<String> workerStatistics;
 
 	public WorkerPlanImpl(long id, WorkerInstance worker, WorkerPlanChangeListener changeListener,
-			WorkerStatistics workerStatistics) {
+			JobStatistics<String> workerStatistics) {
 		this.id = id;
 		this.worker = worker;
 		this.changeListener = changeListener;
@@ -42,17 +42,23 @@ public class WorkerPlanImpl implements WorkerPlan {
 
 	@Override
 	public DateTime getPlanEndTime() {
-		if (!items.isEmpty())
+		if (!items.isEmpty()) {
 			return items.getLast().getEndTime();
+		}
 
 		WorkerStatus workerStatus = worker.getStatus();
-		if (workerStatus == WorkerStatus.Stopped) {
-			return DateTime.now().plus(workerStatistics.getAverageStartTimeInMillis());
-		} else if (workerStatus == WorkerStatus.Starting) {
-			DateTime plannedStartedTime = worker.getLastStatusChange().plus(workerStatistics.getAverageStartTimeInMillis());
+		if (workerStatus == WorkerStatus.Starting) {
+			DateTime plannedStartedTime = worker.getLastStatusChange().plus(
+					workerStatistics.getAverageJobTimeInMillis());
 			return plannedStartedTime.isAfterNow() ? plannedStartedTime : DateTime.now();
-		} else {
+		} else if (workerStatus == WorkerStatus.Started) {
 			return DateTime.now();
+		} else if (workerStatus == WorkerStatus.Stopped) {
+			throw new PlanningException(
+					"Error getting plan end time. WorkerPlan should not exist for worker, which is stopped.");
+		} else {
+			throw new PlanningException(String.format(
+					"Error getting plan end time. Worker plan is empty and status is %s.", workerStatus));
 		}
 	}
 

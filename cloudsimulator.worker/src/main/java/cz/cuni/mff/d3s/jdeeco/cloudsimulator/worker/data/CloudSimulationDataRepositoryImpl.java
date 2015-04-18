@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class CloudSimulationDataRepositoryImpl implements SimulationDataRepository {
 
-	private final HashMap<String, String> simulationDataCache = new HashMap<>();
+	private final HashMap<Integer, String> simulationDataCache = new HashMap<>();
 
 	private final String dataParentDirectory;
 
@@ -27,19 +27,19 @@ public class CloudSimulationDataRepositoryImpl implements SimulationDataReposito
 	}
 
 	@Override
-	public String getPackagePath(String dataName) {
-		if (simulationDataCache.containsKey(dataName))
-			return simulationDataCache.get(dataName);
+	public String getPackagePath(int executionId) {
+		if (simulationDataCache.containsKey(executionId))
+			return simulationDataCache.get(executionId);
 
 		String dataPath = generateDataPath();
 
-		try (InputStream archiveStream = simulationDataLoader.download(dataName)) {
+		try (InputStream archiveStream = simulationDataLoader.downloadPackage(executionId)) {
 			simulationDataArchiver.extract(archiveStream, dataPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		simulationDataCache.put(dataName, dataPath);
+		simulationDataCache.put(executionId, dataPath);
 		return dataPath;
 	}
 
@@ -48,33 +48,36 @@ public class CloudSimulationDataRepositoryImpl implements SimulationDataReposito
 	}
 
 	@Override
-	public void saveResults(SimulationData data, String dataName) {
+	public void saveResults(SimulationData data, int runId) {
 		// results
 		try {
-			saveResultsInternal(data, dataName);
+			File tempZipFile = zipDataToSave(data.getExecutionPath(), "simulationResults");			
+			simulationDataLoader.uploadResults(tempZipFile.getAbsolutePath(), runId);
+			tempZipFile.delete();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		// logs
-		simulationDataLoader.uploadLogs(data.getLogPath(), dataName);
-	}
-
-	private void saveResultsInternal(SimulationData data, String dataName) throws IOException {
-		// create a temporary file.
-		File tempZipFile = File.createTempFile("simulationResults", ".zip");
-
-		try (OutputStream outputStream = new FileOutputStream(tempZipFile)) {
-			simulationDataArchiver.compress(data.getExecutionPath(), outputStream);
+		try {
+			File tempZipFile = zipDataToSave(data.getLogsPath(), "simulationLogs");			
+			simulationDataLoader.uploadLogs(tempZipFile.getAbsolutePath(), runId);
+			tempZipFile.delete();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		simulationDataLoader.uploadResults(tempZipFile.getAbsolutePath(), dataName);
-		
-		// delete temporary file when you finish to use it.
-		// if streams where not correctly closed this might fail (return false)
-		tempZipFile.delete();
+	}
+
+	private File zipDataToSave(String sourceDir, String zipPrefix) throws IOException {
+		// create a temporary file.
+		File tempZipFile = File.createTempFile(zipPrefix, ".zip");
+
+		try (OutputStream outputStream = new FileOutputStream(tempZipFile)) {
+			simulationDataArchiver.compress(sourceDir, outputStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return tempZipFile;
 	}
 
 	@Override

@@ -6,8 +6,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationDataStorageServic
 
 public class SimulationDataRepositoryImpl implements SimulationDataRepository {
 
-	private final HashMap<String, String> simulationDataCache = new HashMap<>();
-
+	private final HashMap<Integer, String> simulationDataCache = new HashMap<>();
 	private final SimulationDataStorageService simulationDataStorageService;
 
 	public SimulationDataRepositoryImpl(SimulationDataStorageService simulationDataStorageService) {
@@ -15,23 +14,23 @@ public class SimulationDataRepositoryImpl implements SimulationDataRepository {
 	}
 
 	@Override
-	public String getPackagePath(String dataName) {
-		if (simulationDataCache.containsKey(dataName)) {
-			return simulationDataCache.get(dataName);
+	public String getPackagePath(int executionId) {
+		if (simulationDataCache.containsKey(executionId)) {
+			return simulationDataCache.get(executionId);
 		}
 
-		String packagePath = simulationDataStorageService.getPackagePath(dataName);
+		String packagePath = simulationDataStorageService.getPackagePath(executionId);
 
-		simulationDataCache.put(dataName, packagePath);
+		simulationDataCache.put(executionId, packagePath);
 		return packagePath;
 	}
 
 	@Override
-	public void saveResults(SimulationData data, String dataName) {
+	public void saveResults(SimulationData data, int runId) {
 		// results
-		simulationDataStorageService.saveResults(data.getResultsPath(), dataName);
+		simulationDataStorageService.saveResults(data.getResultsPath(), runId);
 		// logs
-		simulationDataStorageService.saveLogs(data.getLogPath(), dataName);
+		simulationDataStorageService.saveLogs(data.getLogsPath(), runId);
 	}
 
 	@Override

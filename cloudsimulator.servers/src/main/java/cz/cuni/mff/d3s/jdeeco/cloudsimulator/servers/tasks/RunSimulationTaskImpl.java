@@ -4,10 +4,17 @@ public class RunSimulationTaskImpl extends WorkerTaskImpl implements RunSimulati
 
 	private static final long serialVersionUID = -956877781050491072L;
 
+	private final int simulationExecutionId;
 	private final int simulationRunId;
 
-	public RunSimulationTaskImpl(int simulationRunId) {
+	public RunSimulationTaskImpl(int simulationExecutionId, int simulationRunId) {
+		this.simulationExecutionId = simulationExecutionId;
 		this.simulationRunId = simulationRunId;
+	}
+
+	@Override
+	public int getSimulationExecutionId() {
+		return simulationExecutionId;
 	}
 
 	@Override

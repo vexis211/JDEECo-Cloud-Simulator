@@ -33,10 +33,13 @@
 		<buildnumber-maven-plugin.version>1.3</buildnumber-maven-plugin.version>
 		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
 		<maven-war-plugin.version>2.6</maven-war-plugin.version>
+		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+		<maven-jar-plugin.version>2.6</maven-jar-plugin.version>
+		<maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
 	</properties>
 
 	<url>http://maven.apache.org</url>
-	
+
 	<scm>
 		<connection>scm:git:https://github.com/vexis211/JDEECo-Cloud-Simulator.git</connection>
 		<developerConnection>scm:git:https://github.com/vexis211/JDEECo-Cloud-Simulator.git</developerConnection>
@@ -107,7 +110,7 @@
 					<downloadJavadocs>true</downloadJavadocs>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
@@ -118,14 +121,30 @@
 					</checkModificationExcludes>
 				</configuration>
 			</plugin>
-			
+
 		</plugins>
 
 
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings
-					only. It has no influence on the Maven build itself. -->
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>${maven-antrun-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>${maven-dependency-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${maven-jar-plugin.version}</version>
+				</plugin>
+
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -145,15 +164,13 @@
 									</pluginExecutionFilter>
 									<action>
 										<execute>
-											<!-- Do not run on incremental builds - makes build cycle when
-												on every change build.properties is generated. This also trigger change event
-												and starts build again which generates build.properties... -->
+											<!-- Do not run on incremental builds - makes build cycle when on every change build.properties is generated. 
+												This also trigger change event and starts build again which generates build.properties... -->
 											<runOnIncremental>false</runOnIncremental>
 										</execute>
 									</action>
 								</pluginExecution>
-								<!-- Allow executing of buildnumber plugin from eclipse (default
-									is no). -->
+								<!-- Allow executing of buildnumber plugin from eclipse (default is no). -->
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>org.codehaus.mojo</groupId>

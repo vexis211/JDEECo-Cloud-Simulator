@@ -23,17 +23,17 @@ public class SimulationDataLoaderImpl implements SimulationDataLoader {
 	}
 	
 	@Override
-	public InputStream download(String source) {
-		return cloudDataService.download(dataContainerName, source);
+	public InputStream downloadPackage(int executionId) {
+		return cloudDataService.download(dataContainerName, Integer.toString(executionId));
 	}
 
 	@Override
-	public void uploadLogs(String sourcePath, String target) {
-		cloudDataService.upload(new File(sourcePath), logsContainerName, target);
+	public void uploadLogs(String sourcePath, int runId) {
+		cloudDataService.upload(new File(sourcePath), logsContainerName, Integer.toString(runId));
 	}
 
 	@Override
-	public void uploadResults(String sourcePath, String target) {
-		cloudDataService.upload(new File(sourcePath), resultsContainerName, target);
+	public void uploadResults(String sourcePath, int runId) {
+		cloudDataService.upload(new File(sourcePath), resultsContainerName, Integer.toString(runId));
 	}
 }

@@ -21,17 +21,17 @@ public class PackagePreparatorImpl implements PackagePreparator, PackagingExcept
 	private final PackageTaskProcessor firstProcessor;
 
 	public PackagePreparatorImpl(FutureExecutor executor, CodeRepositoryManager codeRepositoryManager,
-			SimulationDataStorageService simulationDataStorageService, String packageContainerName) {
+			SimulationDataStorageService simulationDataStorageService, String preparationRootDir) {
 
 		CodeRepositoryProcessor codeRepositoryProcessor = new CodeRepositoryProcessor(executor, this,
 				codeRepositoryManager);
 		CompileCodeProcessor compileCodeProcessor = new CompileCodeProcessor(executor, this);
 		CopyCompiledToPreparingDirectoryProcessor copyCompiledToPreparingDirectoryProcessor = new CopyCompiledToPreparingDirectoryProcessor(
-				executor, this);
+				preparationRootDir, executor, this);
 
 		// TODO - run script processor
 		SavePackageProcessor savePackageProcessor = new SavePackageProcessor(executor, this,
-				packageContainerName, simulationDataStorageService);
+				simulationDataStorageService);
 		ClearPreparingDirectoryProcessor clearPreparingDirectoryProcessor = new ClearPreparingDirectoryProcessor(
 				executor, this);
 		NotifyPackageTaskCompletedProcessor notifyPackageTaskCompletedProcessor = new NotifyPackageTaskCompletedProcessor(

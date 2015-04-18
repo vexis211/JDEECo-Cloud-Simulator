@@ -8,24 +8,28 @@ import javax.jms.ObjectMessage;
 
 import org.springframework.jms.core.JmsTemplate;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.TimeSpan;
+
 public abstract class ServerConnectorImpl implements ServerConnector {
+
+	private final JmsTemplate jmsTemplate;
+	private final String incomingQueue;
 
 	private boolean isConnected = false;
 	private Thread thread;
 
-	private final String incomingQueue;
-
-	protected final JmsTemplate jmsTemplate;
-
-	protected ServerConnectorImpl(JmsTemplate jmsTemplate, String incomingQueue) {
+	protected ServerConnectorImpl(JmsTemplate jmsTemplate, TimeSpan receiveTimeout, String incomingQueue) {
 		this.jmsTemplate = jmsTemplate;
 		this.incomingQueue = incomingQueue;
+		
+		jmsTemplate.setReceiveTimeout(receiveTimeout.getTotalMilliseconds());
 	}
 
 	@Override
 	public void connect() {
-		if (isConnected)
+		if (isConnected) {
 			return;
+		}
 		this.isConnected = true;
 
 		Runnable listen = () -> this.listenToMessages();
@@ -38,8 +42,9 @@ public abstract class ServerConnectorImpl implements ServerConnector {
 		try {
 			while (true) {
 				Message message = jmsTemplate.receive(incomingQueue);
-
-				processIncomingMessage(message);
+				if (message != null) {
+					processIncomingMessage(message);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,7 +73,11 @@ public abstract class ServerConnectorImpl implements ServerConnector {
 
 	@Override
 	public void disconnect() {
-		this.thread.interrupt(); // TODO improvement - do better
 		this.isConnected = false;
+		try {
+			this.thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

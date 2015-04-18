@@ -24,7 +24,6 @@ public class ClearPreparingDirectoryProcessor extends PackageTaskProcessorBase {
 		try {
 			FileUtils.deleteDirectory(new File(preparingDirectory));
 		} catch (IOException e) {
-			e.printStackTrace();
 			throw new PackagingException(String.format(
 					"Exception occured during removing preparing directory. Preparing directory: '%s'.",
 					preparingDirectory), e);

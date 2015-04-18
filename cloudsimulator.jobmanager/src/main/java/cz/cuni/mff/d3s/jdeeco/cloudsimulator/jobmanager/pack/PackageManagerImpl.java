@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 
 public class PackageManagerImpl implements PackageManager, PackagePreparatorListener {
+
+	private final Logger logger = Logger.getLogger(PackageManagerImpl.class);
 
 	private final Object locker = new Object();
 	private final HashMap<Integer, PackageManagerEntry> entries = new HashMap<>();
@@ -20,15 +24,11 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 	}
 
 	@Override
-	public String getPackageName(SimulationExecution execution) {
+	public boolean isPackagePrepared(SimulationExecution execution) {
 		Integer executionId = execution.getId();
 
 		synchronized (locker) {
-			if (entries.containsKey(executionId)) {
-				return entries.get(executionId).packageName;
-			} else {
-				return null;
-			}
+			return entries.containsKey(executionId);
 		}
 	}
 
@@ -36,13 +36,15 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 	public void preparePackage(SimulationExecution execution, PackageManagerListener listener) {
 		Integer executionId = execution.getId();
 
+		boolean notifyPrepared = false;
+
 		synchronized (locker) {
 			if (entries.containsKey(executionId)) {
 				PackageManagerEntry entry = entries.get(executionId);
-				if (entry.packageName == null) {
-					entry.listeners.add(listener);
+				if (entry.isPrepared) {
+					notifyPrepared = true;
 				} else {
-					listener.packagePrepared(execution.getId(), entry.packageName);
+					entry.listeners.add(listener);
 				}
 			} else {
 				// create and add entry
@@ -55,36 +57,39 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 				packagePreparator.preparePackage(packageTask, this);
 			}
 		}
+
+		if (notifyPrepared) {
+			listener.packagePrepared(execution.getId());
+		}
 	}
 
 	@Override
 	public void packagePrepared(PackageTask packageTask) {
-		int executionId = packageTask.getId();
-		String packageName = packageTask.getSaveName();
+		int executionId = packageTask.getExecutionId();
 		List<PackageManagerListener> listeners;
 		SimulationExecution execution;
 
 		synchronized (locker) {
 			PackageManagerEntry entry = entries.get(executionId);
 			listeners = new ArrayList<>(entry.listeners);
+			entry.listeners.clear();
 			execution = entry.execution;
-
-			entry.packageName = packageName;
+			entry.isPrepared = true;
 		}
 
-		listeners.forEach(x -> x.packagePrepared(execution.getId(), packageName));
+		logger.info(String.format("Package for execution id: %d is prepared.", executionId));
+		listeners.forEach(x -> x.packagePrepared(execution.getId()));
 	}
 
 	@Override
 	public void packageExceptionOccured(PackageTask packageTask, PackagingException e) {
-		// TODO Auto-generated method stub
-		System.out.println(String.format("packageExceptionOccured: %s, PackagingException: %s", packageTask, e));
+		logger.error("Error occured while performing packaging task: " + packageTask, e);
 	}
 
 	private class PackageManagerEntry {
 		private final List<PackageManagerListener> listeners = new ArrayList<>();
 		private final SimulationExecution execution;
-		private String packageName;
+		private boolean isPrepared = false;
 
 		public PackageManagerEntry(SimulationExecution execution) {
 			this.execution = execution;

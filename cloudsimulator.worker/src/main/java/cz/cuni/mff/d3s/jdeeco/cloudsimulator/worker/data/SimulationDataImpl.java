@@ -23,7 +23,7 @@ public class SimulationDataImpl implements SimulationData {
 	}
 
 	@Override
-	public String getLogPath() {
+	public String getLogsPath() {
 		return logsPath;
 	}
 }

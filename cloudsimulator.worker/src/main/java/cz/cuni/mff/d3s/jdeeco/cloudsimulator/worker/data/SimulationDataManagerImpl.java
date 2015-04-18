@@ -58,7 +58,7 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 		SimulationData preparedData = new SimulationDataImpl(executionPath, resultsPath, logsPath);
 
 		try {
-			String packageDir = simulationDataRepository.getPackagePath(String.valueOf(simulationRunId)); // simulation run ID is used like data name
+			String packageDir = simulationDataRepository.getPackagePath(simulationExecutionId);
 			FileUtils.copyDirectory(new File(packageDir), new File(executionPath));
 
 			listener.dataPrepared(simulationRunId, preparedData);
@@ -73,7 +73,7 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 	}
 
 	private void saveResultsCore(int simulationRunId, SimulationData data) {
-		simulationDataRepository.saveResults(data, String.valueOf(simulationRunId)); // simulation run ID is used like target name
+		simulationDataRepository.saveResults(data, simulationRunId);
 		listener.resultsSaved(simulationRunId);
 	}
 

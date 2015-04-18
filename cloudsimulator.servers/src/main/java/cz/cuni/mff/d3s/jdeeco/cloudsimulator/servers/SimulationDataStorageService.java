@@ -2,8 +2,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers;
 
 public interface SimulationDataStorageService {
 
-	String getPackagePath(String dataName);
+	String getPackagePath(int executionId);
 
-	void saveResults(String sourcePath, String target);
-	void saveLogs(String sourcePath, String target);
+	void saveResults(String sourcePath, int runId);
+	void saveLogs(String sourcePath, int runId);
 }

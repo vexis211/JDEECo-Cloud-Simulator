@@ -4,20 +4,21 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.JobStatistics;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdate;
 
 public interface WorkerManager {
 
-	int getCurrentWorkerCount();
+	int getCurrentAvailableWorkerCount();
 	void setDesiredWorkerCount(int desiredCreatedWorkerCount, int desiredRunningWorkerCount);
 
-	DateTime getNewWorkerStartedTime();
-	WorkerInstance startNewWorker();
+	DateTime whenWorkerWillBePrepared();
+	WorkerInstance startWorker();
 	void stopWorker(WorkerInstance worker);
 	
-	List<WorkerInstance> listWorkers();
+	List<WorkerInstance> listAvailableWorkers();
 		
 	void update(List<WorkerStatusUpdate> updates);
 	
-	WorkerStatistics getStatistics();
+	JobStatistics<String> getWorkerStartStatistics();
 }

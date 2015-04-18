@@ -46,8 +46,6 @@ public abstract class PackageTaskProcessorBase implements PackageTaskProcessor {
 				identicalTasks.forEach(x -> nextProcessor.process(x));
 			}
 		} catch (PackagingException e) {
-			e.printStackTrace();
-
 			List<PackageTask> identicalTasks = task.getIdenticalTasksForProcessingStep().stream()
 					.collect(Collectors.toList());
 			task.getIdenticalTasksForProcessingStep().clear();

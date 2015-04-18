@@ -4,5 +4,5 @@ public interface SimulationData {
 
 	String getExecutionPath();
 	String getResultsPath();
-	String getLogPath();
+	String getLogsPath();
 }

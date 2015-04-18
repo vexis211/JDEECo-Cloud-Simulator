@@ -15,6 +15,6 @@ public class WorkerPlanFactoryImpl implements WorkerPlanFactory {
 
 	@Override
 	public WorkerPlan create(WorkerInstance worker, WorkerPlanChangeListener changeListener) {
-		return new WorkerPlanImpl(workerPlanIdGenerator.generate(), worker, changeListener, workerManager.getStatistics());
+		return new WorkerPlanImpl(workerPlanIdGenerator.generate(), worker, changeListener, workerManager.getWorkerStartStatistics());
 	}
 }

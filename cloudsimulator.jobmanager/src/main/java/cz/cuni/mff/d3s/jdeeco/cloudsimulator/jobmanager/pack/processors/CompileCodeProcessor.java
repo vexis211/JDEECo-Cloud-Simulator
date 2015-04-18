@@ -65,9 +65,8 @@ public class CompileCodeProcessor extends PackageTaskProcessorBase {
 		InvocationResult result;
 		try {
 			result = invoker.execute(request);
-			task.setCompileTargetDirectory("target"); // TODO improvement - other build managers?
+			task.setCompileTargetDirectory(PathEx.combine(task.getRepositoryLocalPath(), "target")); // TODO improvement - other build managers?
 		} catch (MavenInvocationException e) {
-			e.printStackTrace();
 			throw new PackagingException(String.format(
 					"Error occured while invoking maven. POM file path: '%s' Goals: '%s'.", pathToPom,
 					String.join(", ", task.getMavenGoals())), e);

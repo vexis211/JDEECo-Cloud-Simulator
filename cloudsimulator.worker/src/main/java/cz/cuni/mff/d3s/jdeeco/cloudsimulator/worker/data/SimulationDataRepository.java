@@ -1,7 +1,7 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data;
 
 public interface SimulationDataRepository {
-	String getPackagePath(String source);
-	void saveResults(SimulationData data, String dataName);
+	String getPackagePath(int executionId);
+	void saveResults(SimulationData data, int runId);
 	void clear();
 }
