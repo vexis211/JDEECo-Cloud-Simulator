@@ -15,7 +15,7 @@ public class PackageTaskImpl implements PackageTask {
 
 	private VCSType repositoryType;
 	private String repositoryRemoteUrl;
-	private String relativePathToPomFile;
+	private String pomDirectory;
 	private List<String> mavenGoals;
 	private String compileTargetDirectory;
 
@@ -59,8 +59,8 @@ public class PackageTaskImpl implements PackageTask {
 	}
 
 	@Override
-	public String getRelativePathToPomFile() {
-		return relativePathToPomFile;
+	public String getPomDirectoryName() {
+		return pomDirectory;
 	}
 
 	@Override
@@ -107,8 +107,8 @@ public class PackageTaskImpl implements PackageTask {
 		this.repositoryRemoteUrl = repositoryRemoteUrl;
 	}
 
-	void setRelativePathToPomFile(String relativePathToPomFile) {
-		this.relativePathToPomFile = relativePathToPomFile;
+	void setPomDirectory(String pomDirectory) {
+		this.pomDirectory = pomDirectory;
 	}
 
 	void setMavenGoals(String[] mavenGoals) {

@@ -32,8 +32,8 @@
         <property name="repositoryURL" type="string">
             <column name="RepositoryURL" length="2000" not-null="true" />
         </property>
-        <property name="pathToPom" type="string">
-            <column name="PathToPom" length="256" not-null="true" />
+        <property name="pomDirectory" type="string">
+            <column name="PomDirectory" length="256" not-null="true" />
         </property>
         <property name="mavenGoals" type="string">
             <column name="MavenGoals" length="1000" not-null="true" />

@@ -24,8 +24,8 @@ public interface SimulationDataItem {
 	String getRepositoryUrl();
 	void setRepositoryUrl(String repositoryUrl);
 	
-	String getPathToPom();
-	void setPathToPom(String pathToPom);
+	String getPomDirectory();
+	void setPomDirectory(String pomDirectory);
 	
 	String getMavenGoals();
 	void setMavenGoals(String mavenGoals);

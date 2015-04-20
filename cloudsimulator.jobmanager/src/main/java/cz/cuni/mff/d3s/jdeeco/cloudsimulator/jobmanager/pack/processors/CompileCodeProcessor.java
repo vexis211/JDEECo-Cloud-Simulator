@@ -54,8 +54,10 @@ public class CompileCodeProcessor extends PackageTaskProcessorBase {
 
 	private void processInternalCore(PackageTask task) throws PackagingException {
 		// TODO improvement - make universal - not only maven
-		String pathToPom = PathEx.combine(task.getRepositoryLocalPath(), task.getRelativePathToPomFile());
-		File pomFile = new File(pathToPom);
+		String pomDirectoryPath = PathEx.combine(task.getRepositoryLocalPath(), task.getPomDirectoryName());
+		
+		File pomFile = new File(PathEx.combine(pomDirectoryPath, "pom.xml"));
+		String targetDirectoryPath = PathEx.combine(pomDirectoryPath, "target");
 
 		InvocationRequest request = new DefaultInvocationRequest();
 		request.setInteractive(false);
@@ -66,22 +68,22 @@ public class CompileCodeProcessor extends PackageTaskProcessorBase {
 		InvocationResult result;
 		try {
 			result = invoker.execute(request);
-			task.setCompileTargetDirectory(PathEx.combine(pomFile.getParent(), "target")); // TODO improvement - other build managers?
+			task.setCompileTargetDirectory(targetDirectoryPath); // TODO improvement - other build managers?
 		} catch (MavenInvocationException e) {
 			throw new PackagingException(String.format(
-					"Error occured while invoking maven. POM file path: '%s' Goals: '%s'.", pathToPom,
+					"Error occured while invoking maven. POM file path: '%s' Goals: '%s'.", pomFile.getAbsolutePath(),
 					String.join(", ", task.getMavenGoals())), e);
 		}
 
 		if (result.getExitCode() != 0) {
 			if (result.getExecutionException() != null) {
 				throw new PackagingException(String.format(
-						"Failed to compile using maven. POM file path: '%s' Goals: '%s'.", pathToPom,
+						"Failed to compile using maven. POM file path: '%s' Goals: '%s'.", pomFile.getAbsolutePath(),
 						String.join(", ", task.getMavenGoals())), result.getExecutionException());
 			} else {
 				throw new PackagingException(String.format(
 						"Failed to compile using maven. Exit code: '%s'. POM file path: '%s' Goals: '%s'.",
-						result.getExitCode(), pathToPom, String.join(", ", task.getMavenGoals())));
+						result.getExitCode(), pomFile.getAbsolutePath(), String.join(", ", task.getMavenGoals())));
 			}
 		}
 	}

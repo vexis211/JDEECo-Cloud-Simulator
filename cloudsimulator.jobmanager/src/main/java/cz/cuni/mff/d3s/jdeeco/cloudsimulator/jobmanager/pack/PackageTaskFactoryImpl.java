@@ -15,7 +15,7 @@ public class PackageTaskFactoryImpl implements PackageTaskFactory {
 		PackageTaskImpl packageTask = new PackageTaskImpl(simulationExecution.getId());
 		packageTask.setRepositoryType(simulationData.getVcsType());
 		packageTask.setRepositoryRemoteUrl(simulationData.getRepositoryURL());
-		packageTask.setRelativePathToPomFile(simulationData.getPathToPom());
+		packageTask.setPomDirectory(simulationData.getPomDirectory());
 		packageTask.setMavenGoals(simulationData.getMavenGoals().split(" "));
 		
 		return packageTask;

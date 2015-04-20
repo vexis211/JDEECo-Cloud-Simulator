@@ -20,7 +20,7 @@ public interface PackageTask {
 	String getRepositoryLocalPath();
 	void setRepositoryLocalPath(String repositoryLocalPath);
 
-	String getRelativePathToPomFile();
+	String getPomDirectoryName();
 	List<String> getMavenGoals();
 
 	String getCompileTargetDirectory();

@@ -11,6 +11,6 @@ public interface SimulationDataService {
 
 	SimulationData getDataById(int dataId);
 
-	void createData(int projectId, String name, String description, VCSType vcsType, String repositoryUrl, String pathToPom, String mavenGoals);
-	void editData(int dataId, String name, String description, VCSType vcsType, String repositoryUrl, String pathToPom, String mavenGoals);
+	void createData(int projectId, String name, String description, VCSType vcsType, String repositoryUrl, String pomDirectory, String mavenGoals);
+	void editData(int dataId, String name, String description, VCSType vcsType, String repositoryUrl, String pomDirectory, String mavenGoals);
 }

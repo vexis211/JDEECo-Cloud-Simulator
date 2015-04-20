@@ -18,7 +18,7 @@ public class SimulationData implements java.io.Serializable {
 	private Date created;
 	private VCSType vcsType;
 	private String repositoryURL;
-	private String pathToPom;
+	private String pomDirectory;
 	private String mavenGoals;
 
 	private Set<SimulationConfiguration> simulationConfigurations = new HashSet<SimulationConfiguration>(0);
@@ -27,14 +27,14 @@ public class SimulationData implements java.io.Serializable {
 	}
 
 	public SimulationData(User creator, Project project, String name, String description, VCSType vcsType, String repositoryURL,
-			String pathToPom, String mavenGoals) {
+			String pomDirectory, String mavenGoals) {
 		this.creator = creator;
 		this.project = project;
 		this.name = name;
 		this.description = description;
 		this.vcsType = vcsType;
 		this.repositoryURL = repositoryURL;
-		this.pathToPom = pathToPom;
+		this.pomDirectory = pomDirectory;
 		this.mavenGoals = mavenGoals;
 	}
 
@@ -102,12 +102,12 @@ public class SimulationData implements java.io.Serializable {
 		this.repositoryURL = repositoryURL;
 	}
 
-	public String getPathToPom() {
-		return pathToPom;
+	public String getPomDirectory() {
+		return pomDirectory;
 	}
 
-	public void setPathToPom(String pathToPom) {
-		this.pathToPom = pathToPom;
+	public void setPomDirectory(String pomDirectory) {
+		this.pomDirectory = pomDirectory;
 	}
 
 	public String getMavenGoals() {

@@ -14,7 +14,7 @@ public class SimulationDataItemImpl implements SimulationDataItem {
 	private String description;
 	private VCSType vcsType;
 	private String repositoryUrl;
-	private String pathToPom;
+	private String pomDirectory;
 	private String mavenGoals;
 
 	public SimulationDataItemImpl() {
@@ -29,7 +29,7 @@ public class SimulationDataItemImpl implements SimulationDataItem {
 		this.description = data.getDescription();
 		this.vcsType = data.getVcsType();
 		this.repositoryUrl = data.getRepositoryURL();
-		this.pathToPom = data.getPathToPom();
+		this.pomDirectory = data.getPomDirectory();
 		this.mavenGoals = data.getMavenGoals();
 	}
 
@@ -94,13 +94,13 @@ public class SimulationDataItemImpl implements SimulationDataItem {
 	}
 
 	@Override
-	public String getPathToPom() {
-		return pathToPom;
+	public String getPomDirectory() {
+		return pomDirectory;
 	}
 
 	@Override
-	public void setPathToPom(String pathToPom) {
-		this.pathToPom = pathToPom;
+	public void setPomDirectory(String pomDirectory) {
+		this.pomDirectory = pomDirectory;
 	}
 
 	@Override
