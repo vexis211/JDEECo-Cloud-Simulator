@@ -11,13 +11,14 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerEngine;
 
 public class App {
 
-	private static final Logger logger = Logger.getLogger(App.class);
 	
 	public static void main(String[] args) throws FileNotFoundException {
 
-		logger.info("Initializing logging...");
 		// configure logger from XML configuration file
         Log4jConfigurer.initLogging("classpath:configuration/log4j.xml");
+        
+    	Logger logger = Logger.getLogger(App.class);
+		logger.info("Initialized logging.");
 
 		logger.info("Creating application context...");
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("configuration/application-context.xml");

@@ -124,7 +124,7 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 
 	private <T extends JobManagerUpdate> List<T> takeUpdates(List<JobManagerUpdate> updates, Class<T> type) {
 		@SuppressWarnings("unchecked")
-		List<T> taken = updates.stream().filter(x -> x.getClass().equals(type)).map(x -> (T) x).collect(Collectors.toList());
+		List<T> taken = updates.stream().filter(x -> type.isAssignableFrom(x.getClass())).map(x -> (T) x).collect(Collectors.toList());
 		taken.forEach(x -> updates.remove(x));
 		return taken;
 	}

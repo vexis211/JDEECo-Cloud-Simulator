@@ -26,8 +26,6 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 		this.simulationRepository = simulationRepository;
 		this.simulationExecutionEntryFactory = simulationExecutionEntryFactory;
 		this.simplePackageManager = simplePackageManager;
-
-		refreshExecutionsInternal();
 	}
 
 	@Override
@@ -42,9 +40,9 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 				SimulationExecutionEntry executionEntry = simulationExecutions.get(update.getSimulationExecutionId());
 				try {
 					executionEntry.updateRunStatus(update);
-				} catch(RuntimeException e) {
+				} catch (RuntimeException e) {
 					logger.error(String.format("Simulation status update failed. Execution Id: %d. Run Id: %d.",
-						update.getSimulationExecutionId(), update.getSimulationRunId(), e));
+							update.getSimulationExecutionId(), update.getSimulationRunId(), e));
 				}
 			} else {
 				logger.info(String.format("Update for wrong or stopped execution. Execution Id: %d. Run Id: %d",
@@ -68,7 +66,7 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 
 	private void refreshExecutionsInternal() {
 		logger.info("Refreshing simulation executions.");
-		
+
 		// check stopped executions
 		List<SimulationExecution> stoppedExecutionModels = simulationRepository
 				.listStoppedExecutions(simulationExecutions.keySet());

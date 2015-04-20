@@ -55,17 +55,18 @@ public class CompileCodeProcessor extends PackageTaskProcessorBase {
 	private void processInternalCore(PackageTask task) throws PackagingException {
 		// TODO improvement - make universal - not only maven
 		String pathToPom = PathEx.combine(task.getRepositoryLocalPath(), task.getRelativePathToPomFile());
+		File pomFile = new File(pathToPom);
 
 		InvocationRequest request = new DefaultInvocationRequest();
 		request.setInteractive(false);
-		request.setPomFile(new File(pathToPom));
+		request.setPomFile(pomFile);
 		request.setGoals(task.getMavenGoals());
 
 		Invoker invoker = new DefaultInvoker();
 		InvocationResult result;
 		try {
 			result = invoker.execute(request);
-			task.setCompileTargetDirectory(PathEx.combine(task.getRepositoryLocalPath(), "target")); // TODO improvement - other build managers?
+			task.setCompileTargetDirectory(PathEx.combine(pomFile.getParent(), "target")); // TODO improvement - other build managers?
 		} catch (MavenInvocationException e) {
 			throw new PackagingException(String.format(
 					"Error occured while invoking maven. POM file path: '%s' Goals: '%s'.", pathToPom,

@@ -21,7 +21,6 @@
 
 	<properties>
 		<!-- versions -->
-		<spring.version>4.1.1.RELEASE</spring.version>
 		<spring-boot.version>1.2.0.RELEASE</spring-boot.version>
 		<aspectj.version>1.8.2</aspectj.version>
 		<commons-io.version>2.4</commons-io.version>

@@ -19,10 +19,34 @@
 
 		<!-- versions -->
 		<jgit.version>3.6.0.201412230720-r</jgit.version>
-		<maven-invoker.version>2.1.1</maven-invoker.version>
+		<maven-invoker.version>2.2</maven-invoker.version>
 
 		<joda-time.version>2.7</joda-time.version>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>development</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<profile.storage.root>c:\Users\Jan\simulationdrive</profile.storage.root>
+			</properties>
+		</profile>
+		<profile>
+			<id>production</id>
+			<activation>
+				<property>
+					<name>environment</name>
+					<value>production</value>
+				</property>
+			</activation>
+			<properties>
+				<profile.storage.root>/media/simulationdrive</profile.storage.root>
+			</properties>
+		</profile>
+	</profiles>
 
 	<build>
 		<resources>
@@ -31,9 +55,10 @@
 				<excludes>
 					<exclude>development/</exclude>
 				</excludes>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
-	
+
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -100,7 +125,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
