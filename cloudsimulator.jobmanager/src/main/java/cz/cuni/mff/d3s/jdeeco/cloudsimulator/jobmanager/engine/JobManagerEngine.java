@@ -1,7 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine;
 
-public interface JobManagerEngine {
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.ServerEngine;
 
-	void start();
-	void stop();
+public interface JobManagerEngine extends ServerEngine{
 }

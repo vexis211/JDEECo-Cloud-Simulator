@@ -3,6 +3,9 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.TimeSpan;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.StopSimulationTask;
@@ -11,41 +14,60 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnect
 
 public class WorkerEngineImpl implements WorkerEngine {
 
-	private final WorkerTaskQueue workerTaskQueue;
-	private final JobManagerConnector jobManagerConnector;
+	private final Logger logger = Logger.getLogger(WorkerEngineImpl.class);
+
 	private final SimulationManager simulationManager;
 
-	public WorkerEngineImpl(WorkerTaskQueue workerTaskQueue, JobManagerConnector jobManagerConnector,
-			SimulationManager simulationManager) {
-		this.workerTaskQueue = workerTaskQueue;
-		this.jobManagerConnector = jobManagerConnector;
+	private final JobManagerConnector jobManagerConnector;
+	private final WorkerTaskQueue workerTaskQueue;
+	private final TimeSpan receiveMessageQueueTimeout;
+
+	private boolean stopped = false;
+
+	public WorkerEngineImpl(SimulationManager simulationManager, JobManagerConnector jobManagerConnector,
+			WorkerTaskQueue workerTaskQueue, TimeSpan receiveMessageQueueTimeout) {
 		this.simulationManager = simulationManager;
+		this.jobManagerConnector = jobManagerConnector;
+		this.workerTaskQueue = workerTaskQueue;
+		this.receiveMessageQueueTimeout = receiveMessageQueueTimeout;
 	}
 
 	@Override
 	public void start() {
 
+		logger.info("Initializing worker...");
+
 		jobManagerConnector.connect();
 		jobManagerConnector.sendWorkerStatusUpdate(WorkerStatus.Started);
 
-		while (true) {
+		while (!stopped) {
 			List<WorkerTask> tasks = getNewTasks();
 			processTasks(tasks);
 		}
 	}
 
+	@Override
+	public void stop() {
+		stopped = true;
+	}
+
 	private List<WorkerTask> getNewTasks() {
 		List<WorkerTask> tasks;
 		try {
-			tasks = workerTaskQueue.takeAll();
+			tasks = workerTaskQueue.takeAll(receiveMessageQueueTimeout.getNumberOUnits(),
+					receiveMessageQueueTimeout.getUnit());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.info("Error occured while getting new tasks.", e);
 			tasks = new ArrayList<WorkerTask>();
 		}
 		return tasks;
 	}
 
 	private void processTasks(List<WorkerTask> tasks) {
+		if (tasks.isEmpty()) {
+			return;
+		}
+		
 		tasks.forEach(x -> processTask(x));
 	}
 
@@ -54,9 +76,9 @@ public class WorkerEngineImpl implements WorkerEngine {
 		if (task instanceof RunSimulationTask) {
 			simulationManager.runSimulation((RunSimulationTask) task);
 		} else if (task instanceof StopSimulationTask) {
-			simulationManager.stopSimulation((StopSimulationTask)task);
+			simulationManager.stopSimulation((StopSimulationTask) task);
 		} else {
-			throw new UnknownWorkerTaskException("Unknown worker task: " + task);
+			logger.error("Unknown worker task: " + task);
 		}
 	}
 }

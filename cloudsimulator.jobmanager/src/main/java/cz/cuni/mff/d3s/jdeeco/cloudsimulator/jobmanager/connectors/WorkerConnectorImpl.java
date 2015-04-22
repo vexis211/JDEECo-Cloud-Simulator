@@ -39,7 +39,7 @@ public class WorkerConnectorImpl extends ServerConnectorImpl implements WorkerCo
 
 	@Override
 	public void sendTask(String workerId, WorkerTask task) {
-		logger.info(String.format("Sending taks to worker %s. Task: %s.", workerId, task));
+		logger.info(String.format("Sending tasks to worker %s. Task: %s.", workerId, task));
 		
 		sendMessage(outgoingQueuePrefix + workerId, task);
 	}

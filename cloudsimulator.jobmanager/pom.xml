@@ -31,7 +31,8 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<profile.storage.root>c:\Users\Jan\simulationdrive</profile.storage.root>
+				<profile.storage.remoteRoot>c:\Users\Jan\simulationdrive</profile.storage.remoteRoot>
+				<profile.storage.localRoot>c:\Users\Jan\simulationdrive</profile.storage.localRoot>
 			</properties>
 		</profile>
 		<profile>
@@ -43,7 +44,8 @@
 				</property>
 			</activation>
 			<properties>
-				<profile.storage.root>/media/simulationdrive</profile.storage.root>
+				<profile.storage.remoteRoot>/media/simulationdrive</profile.storage.remoteRoot>
+				<profile.storage.localRoot>/media/simulationdrive</profile.storage.localRoot>
 			</properties>
 		</profile>
 	</profiles>
@@ -134,7 +136,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.App</mainClass>
+							<mainClass>cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.JobManagerApp</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

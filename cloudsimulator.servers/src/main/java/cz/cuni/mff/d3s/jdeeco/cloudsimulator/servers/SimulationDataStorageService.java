@@ -4,6 +4,6 @@ public interface SimulationDataStorageService {
 
 	String getPackagePath(int executionId);
 
-	void saveResults(String sourcePath, int runId);
-	void saveLogs(String sourcePath, int runId);
+	void saveResults(String localSourcePath, SimulationId simulationId);
+	void saveLogs(String localSourcePath, SimulationId simulationId);
 }

@@ -3,9 +3,13 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.apache.log4j.Logger;
+
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
 
 public class AsyncSimulationExecutorDecorator implements SimulationExecutor {
+
+	private final Logger logger = Logger.getLogger(AsyncSimulationExecutorDecorator.class);
 
 	private final SimulationExecutor simulationExecutor;
 	private Future<?> future;
@@ -36,7 +40,7 @@ public class AsyncSimulationExecutorDecorator implements SimulationExecutor {
 		try {
 			future.get(); // wait for end
 		} catch (ExecutionException | InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error occured while stopping simulation with parameters: " + getParameters(), e);
 		}
 	}
 }

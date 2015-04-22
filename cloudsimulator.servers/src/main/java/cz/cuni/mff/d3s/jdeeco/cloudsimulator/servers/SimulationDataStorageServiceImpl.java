@@ -4,42 +4,49 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
 
 public class SimulationDataStorageServiceImpl implements SimulationDataStorageService {
 
-	private final String packageRootDirectory;
-	private final String resultsRootDirectory;
-	private final String logsRootDirectory;
+	private final Logger logger = Logger.getLogger(SimulationDataStorageServiceImpl.class);
 
-	public SimulationDataStorageServiceImpl(String packageRootDirectory, String resultsRootDirectory,
-			String logsRootDirectory) {
-		this.packageRootDirectory = packageRootDirectory;
-		this.resultsRootDirectory = resultsRootDirectory;
-		this.logsRootDirectory = logsRootDirectory;
+	private final String remotePackageRootDirectory;
+	private final String remoteResultsRootDirectory;
+	private final String remoteLogsRootDirectory;
+
+	public SimulationDataStorageServiceImpl(String remotePackageRootDirectory, String remoteResultsRootDirectory,
+			String remoteLogsRootDirectory) {
+		this.remotePackageRootDirectory = remotePackageRootDirectory;
+		this.remoteResultsRootDirectory = remoteResultsRootDirectory;
+		this.remoteLogsRootDirectory = remoteLogsRootDirectory;
 	}
 
 	@Override
 	public String getPackagePath(int executionId) {
-		return PathEx.combine(packageRootDirectory, executionId);
+		return PathEx.combine(remotePackageRootDirectory, executionId);
 	}
 
 	@Override
-	public void saveResults(String sourcePath, int runId) {
+	public void saveResults(String localSourcePath, SimulationId simulationId) {
+		String remoteTargetPath = PathEx.combine(remoteResultsRootDirectory, simulationId.getRunId());
 		try {
-			FileUtils.copyDirectory(new File(sourcePath), new File(PathEx.combine(resultsRootDirectory, runId)));
+			FileUtils.copyDirectory(new File(localSourcePath), new File(remoteTargetPath));
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(String.format("Saving results failed. ID: '%s', Local path: '%s', Remote path: '%s'.",
+					simulationId, localSourcePath, remoteTargetPath), e);
 		}
 	}
 
 	@Override
-	public void saveLogs(String sourcePath, int runId) {
+	public void saveLogs(String localSourcePath, SimulationId simulationId) {
+		String remoteTargetPath = PathEx.combine(remoteLogsRootDirectory, simulationId.getRunId());
 		try {
-			FileUtils.copyDirectory(new File(sourcePath), new File(PathEx.combine(logsRootDirectory, runId)));
+			FileUtils.copyDirectory(new File(localSourcePath), new File(remoteTargetPath));
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(String.format("Saving logs failed. ID: '%s', Local path: '%s', Remote path: '%s'.",
+					simulationId, localSourcePath, remoteTargetPath), e);
 		}
 	}
 }

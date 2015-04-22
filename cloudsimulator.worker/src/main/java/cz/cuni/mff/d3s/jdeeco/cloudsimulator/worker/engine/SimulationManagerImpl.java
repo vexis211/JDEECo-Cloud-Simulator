@@ -1,13 +1,10 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationId;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.StopSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnector;
@@ -23,76 +20,90 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution.SimulationExecutor
 
 public class SimulationManagerImpl implements SimulationManager, ExecutionListener, SimulationDataListener {
 
+	private final HashMap<SimulationId, TaskEntry> incompleteTasks = new HashMap<SimulationId, TaskEntry>();
+
 	private final JobManagerConnector jobManagerConnector;
+	private final SimulationDataManager simulationDataManager;
 	private final SimulationExecutorFactory simulationExecutorFactory;
 
-	private final SimulationDataManager simulationDataManager;
-	private final HashMap<Integer, RunSimulationTask> incompleteTasks = new HashMap<Integer, RunSimulationTask>();
-	private final List<SimulationExecutor> runningExecutors = new ArrayList<SimulationExecutor>();
-
-	public SimulationManagerImpl(String executionDataParentDirectory, JobManagerConnector jobManagerConnector,
+	public SimulationManagerImpl(JobManagerConnector jobManagerConnector,
 			SimulationDataManagerFactory simulationDataManagerFactory,
 			SimulationExecutorFactory simulationExecutorFactory) {
 
 		this.jobManagerConnector = jobManagerConnector;
 		this.simulationExecutorFactory = simulationExecutorFactory;
 
-		this.simulationDataManager = simulationDataManagerFactory.create(
-				PathEx.combine(executionDataParentDirectory, "executions"),
-				PathEx.combine(executionDataParentDirectory, "results"),
-				PathEx.combine(executionDataParentDirectory, "logs"), this);
+		this.simulationDataManager = simulationDataManagerFactory.create(this);
 	}
 
 	@Override
 	public void runSimulation(RunSimulationTask task) {
 
-		// prepare data
+		// add to registry
 		synchronized (incompleteTasks) {
-			incompleteTasks.put(task.getSimulationRunId(), task);
+			incompleteTasks.put(task.getSimulationId(), new TaskEntry(task));
 		}
-		simulationDataManager.prepareData(task.getSimulationRunId());
+
+		// prepare data
+		simulationDataManager.prepareData(task.getSimulationId());
 	}
 
 	@Override
-	public void dataPrepared(int simulationRunId, SimulationData data) {
-		SimulationExecutorParameters parameters = new SimulationExecutorParametersImpl(simulationRunId, data);
-		SimulationExecutor executor = simulationExecutorFactory.create(this, parameters);
+	public void dataPrepared(SimulationId simulationId, SimulationData data) {
 
-		synchronized (runningExecutors) {
-			runningExecutors.add(executor);
+		SimulationExecutorParameters parameters = new SimulationExecutorParametersImpl(simulationId, data);
+		SimulationExecutor executor = simulationExecutorFactory.create(this, parameters);
+		boolean shouldStart = false;
+
+		// assign to task in registry
+		synchronized (incompleteTasks) {
+			if (incompleteTasks.containsKey(simulationId)) { // task was not stopped
+				incompleteTasks.get(simulationId).executor = executor;
+				shouldStart = true;
+			}
 		}
-		executor.start();
+
+		// start
+		if (shouldStart) {
+			executor.start();
+		}
 	}
 
 	@Override
 	public void stopSimulation(StopSimulationTask task) {
-		synchronized (runningExecutors) {
-			List<SimulationExecutor> executorsToStop = runningExecutors.stream()
-					.filter(x -> x.getParameters().getSimulationRunId() == task.getSimulationRunId())
-					.collect(Collectors.toList());
-			for (SimulationExecutor simulationExecutor : executorsToStop) {
-				simulationExecutor.stop();
+		SimulationExecutor simulationExecutor = null;
+
+		// remove from registry
+		synchronized (incompleteTasks) {
+			if (incompleteTasks.containsKey(task.getSimulationId())) { // task was not stopped
+				TaskEntry entry = incompleteTasks.remove(task.getSimulationId());
+				simulationExecutor = entry.executor;
 			}
+		}
+
+		// stop executor
+		if (simulationExecutor != null) {
+			simulationExecutor.stop();
 		}
 	}
 
 	@Override
 	public void executionEnded(SimulationExecutor simulationExecutor) {
 		SimulationExecutorParameters parameters = simulationExecutor.getParameters();
-		
-		simulationDataManager.saveResults(parameters.getSimulationRunId(), parameters.getSimulationData());
+
+		simulationDataManager.saveResults(parameters.getSimulationId(), parameters.getSimulationData());
 		removeExecutor(simulationExecutor);
 	}
 
 	@Override
-	public void resultsSaved(int simulationRunId) {
-		jobManagerConnector.sendSimulationStatusUpdate(simulationRunId, SimulationStatus.Completed);
+	public void resultsSaved(SimulationId simulationId) {
+		jobManagerConnector.sendSimulationStatusUpdate(simulationId, SimulationStatus.Completed);
 		jobManagerConnector.sendWorkerStatusUpdate(WorkerStatus.Started);
 	}
 
 	@Override
 	public void executionStopped(SimulationExecutor simulationExecutor) {
-		jobManagerConnector.sendSimulationStatusUpdate(simulationExecutor.getParameters().getSimulationRunId(),
+		jobManagerConnector.sendSimulationStatusUpdate(simulationExecutor.getParameters().getSimulationId(),
 				SimulationStatus.Stopped);
 		jobManagerConnector.sendWorkerStatusUpdate(WorkerStatus.Started);
 
@@ -101,7 +112,7 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 
 	@Override
 	public void exceptionOccured(SimulationExecutor simulationExecutor, Exception e) {
-		jobManagerConnector.sendSimulationStatusUpdate(simulationExecutor.getParameters().getSimulationRunId(), e);
+		jobManagerConnector.sendSimulationStatusUpdate(simulationExecutor.getParameters().getSimulationId(), e);
 		jobManagerConnector.sendWorkerStatusUpdate(WorkerStatus.Started);
 
 		removeExecutor(simulationExecutor);
@@ -110,11 +121,21 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 	private void removeExecutor(SimulationExecutor simulationExecutor) {
 
 		synchronized (incompleteTasks) {
-			incompleteTasks.remove(simulationExecutor.getParameters().getSimulationRunId());
+			incompleteTasks.remove(simulationExecutor.getParameters().getSimulationId());
+		}
+	}
+
+	private class TaskEntry {
+		RunSimulationTask task;
+		SimulationExecutor executor;
+
+		public TaskEntry(RunSimulationTask task) {
+			this.task = task;
 		}
 
-		synchronized (runningExecutors) {
-			runningExecutors.remove(simulationExecutor);
+		@Override
+		public String toString() {
+			return String.format("TaskEntry [task=%s, executor=%s]", task, executor);
 		}
 	}
 }

@@ -7,29 +7,33 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationId;
 
 public class SimulationDataManagerImpl implements SimulationDataManager {
 
+	private final Logger logger = Logger.getLogger(SimulationDataManagerImpl.class);
+
 	private final List<Future<?>> runningFutures = new ArrayList<>();
 
-	private final String executionsRootDirectory;
+	private final String localExecutionsRoot;
+	private final String resultsDirectoryName;
+	private final String logsDirectoryName;
+
 	private final FutureExecutor executor;
 	private final SimulationDataListener listener;
 
-	private String resultsRootDirectory;
-	private String logsRootDirectory;
-
 	private SimulationDataRepository simulationDataRepository;
 
+	public SimulationDataManagerImpl(String localExecutionsRoot, String resultsDirectoryName, String logsDirectoryName,
+			FutureExecutor executor, SimulationDataRepository dataRepository, SimulationDataListener listener) {
 
-	public SimulationDataManagerImpl(String executionsRootDirectory, String resultsRootDirectory, String logsRootDirectory, FutureExecutor executor,
-			SimulationDataRepository dataRepository, SimulationDataListener listener) {
-		this.executionsRootDirectory = executionsRootDirectory;
-		this.resultsRootDirectory = resultsRootDirectory;
-		this.logsRootDirectory = logsRootDirectory;
+		this.localExecutionsRoot = localExecutionsRoot;
+		this.resultsDirectoryName = resultsDirectoryName;
+		this.logsDirectoryName = logsDirectoryName;
 
 		this.executor = executor;
 		this.simulationDataRepository = dataRepository;
@@ -46,35 +50,38 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 	}
 
 	@Override
-	public void prepareData(int simulationRunId) {
-		startFuture(() -> prepareDataCore(simulationRunId));
+	public void prepareData(SimulationId simulationId) {
+		startFuture(() -> prepareDataCore(simulationId));
 	}
 
-	private void prepareDataCore(int simulationRunId) {
+	private void prepareDataCore(SimulationId simulationId) {
 
-		String executionPath = PathEx.combine(executionsRootDirectory, simulationRunId);
-		String resultsPath = PathEx.combine(resultsRootDirectory, simulationRunId);
-		String logsPath = PathEx.combine(logsRootDirectory, simulationRunId);
-		SimulationData preparedData = new SimulationDataImpl(executionPath, resultsPath, logsPath);
+		String runExecutionPath = PathEx.combine(localExecutionsRoot, simulationId.getRunId());
+		String runLocalResultsPath = PathEx.combine(runExecutionPath, resultsDirectoryName);
+		String runLocalLogsPath = PathEx.combine(runExecutionPath, logsDirectoryName);
+
+		SimulationData preparedData = new SimulationDataImpl(runExecutionPath, runLocalResultsPath, runLocalLogsPath);
 
 		try {
-			String packageDir = simulationDataRepository.getPackagePath(simulationExecutionId);
-			FileUtils.copyDirectory(new File(packageDir), new File(executionPath));
+			String packageDir = simulationDataRepository.getPackagePath(simulationId);
+			FileUtils.copyDirectory(new File(packageDir), new File(runExecutionPath));
 
-			listener.dataPrepared(simulationRunId, preparedData);
+			listener.dataPrepared(simulationId, preparedData);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(
+					String.format("Simulation data preparation failed. ID: %s. Data: %s.", simulationId, preparedData),
+					e);
 		}
 	}
 
 	@Override
-	public void saveResults(int simulationRunId, SimulationData data) {
-		startFuture(() -> saveResultsCore(simulationRunId, data));
+	public void saveResults(SimulationId simulationId, SimulationData data) {
+		startFuture(() -> saveResultsCore(simulationId, data));
 	}
 
-	private void saveResultsCore(int simulationRunId, SimulationData data) {
-		simulationDataRepository.saveResults(data, simulationRunId);
-		listener.resultsSaved(simulationRunId);
+	private void saveResultsCore(SimulationId simulationId, SimulationData data) {
+		simulationDataRepository.saveResults(data, simulationId);
+		listener.resultsSaved(simulationId);
 	}
 
 	@Override

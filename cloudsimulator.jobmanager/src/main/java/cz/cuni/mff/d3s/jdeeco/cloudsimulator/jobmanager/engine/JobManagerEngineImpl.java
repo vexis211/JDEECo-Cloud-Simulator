@@ -21,6 +21,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.planning.WorkerPlan;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.planning.WorkerPlanItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerInstance;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerManager;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationId;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationIdImpl;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.commands.UpdateExecutionsCommand;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTask;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks.RunSimulationTaskImpl;
@@ -33,11 +35,11 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdate;
 public class JobManagerEngineImpl implements JobManagerEngine {
 
 	private final Logger logger = Logger.getLogger(JobManagerEngineImpl.class);
-	
+
 	private final WorkerManager workerManager;
 	private final SimulationManager simulationManager;
 	private final SimulationScheduler simulationScheduler;
-	
+
 	private final WorkerConnector workerConnector;
 	private final JobManagerUpdateQueue jobManagerUpdateQueue;
 	private final TimeSpan receiveMessageQueueTimeout;
@@ -59,12 +61,12 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 	public void start() {
 
 		logger.info("Initializing job manager engine...");
-		
+
 		simulationManager.refreshExecutions();
 		workerConnector.connect();
 
 		logger.info("Starting job manager update loop...");
-		
+
 		while (!stopped) {
 			List<JobManagerUpdate> updates = getNewUpdates();
 			applyUpdates(updates);
@@ -73,7 +75,7 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 		}
 
 		logger.info("Disconnecting from worker connector...");
-		
+
 		workerConnector.disconnect();
 	}
 
@@ -124,7 +126,8 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 
 	private <T extends JobManagerUpdate> List<T> takeUpdates(List<JobManagerUpdate> updates, Class<T> type) {
 		@SuppressWarnings("unchecked")
-		List<T> taken = updates.stream().filter(x -> type.isAssignableFrom(x.getClass())).map(x -> (T) x).collect(Collectors.toList());
+		List<T> taken = updates.stream().filter(x -> type.isAssignableFrom(x.getClass())).map(x -> (T) x)
+				.collect(Collectors.toList());
 		taken.forEach(x -> updates.remove(x));
 		return taken;
 	}
@@ -156,7 +159,8 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 	private void stopSimulationRun(WorkerInstance worker, SimulationRunEntry simulationRun) {
 		// send stop simulation task
 		String workerId = worker.getWorkerId();
-		StopSimulationTask task = new StopSimulationTaskImpl(simulationRun.getId());
+		SimulationId simulationId = new SimulationIdImpl(simulationRun.getExecution().getId(), simulationRun.getId());
+		StopSimulationTask task = new StopSimulationTaskImpl(simulationId);
 		workerConnector.sendTask(workerId, task);
 	}
 
@@ -168,7 +172,8 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 
 		// send run simulation task
 		String workerId = worker.getWorkerId();
-		RunSimulationTask task = new RunSimulationTaskImpl(simulationRun.getExecution().getId(), simulationRun.getId());
+		SimulationId simulationId = new SimulationIdImpl(simulationRun.getExecution().getId(), simulationRun.getId());
+		RunSimulationTask task = new RunSimulationTaskImpl(simulationId);
 		workerConnector.sendTask(workerId, task);
 	}
 
@@ -181,12 +186,12 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 	}
 
 	private WorkerPlanItem getPlanItemToRun(WorkerPlan workerPlan) {
-		
+
 		if (workerPlan.getWorker().getStatus() != WorkerStatus.Started) {
 			// we need to wait until worker is started
 			return null;
 		}
-		
+
 		WorkerPlanItem currentItem = workerPlan.getCurrentItem();
 		if (hasPreparedPackage(currentItem)) {
 			return currentItem;

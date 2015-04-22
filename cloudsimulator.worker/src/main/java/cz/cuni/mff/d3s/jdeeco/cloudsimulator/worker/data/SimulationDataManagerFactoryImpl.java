@@ -6,17 +6,24 @@ public class SimulationDataManagerFactoryImpl implements SimulationDataManagerFa
 
 	private final FutureExecutor futureExecutor;
 	private final SimulationDataRepository simulationDataRepository;
+	private final String localExecutionsRoot;
+	private final String resultsDirectoryName;
+	private final String logsDirectoryName;
 
-	public SimulationDataManagerFactoryImpl(FutureExecutor futureExecutor, SimulationDataRepository simulationDataRepository) {
+	public SimulationDataManagerFactoryImpl(FutureExecutor futureExecutor,
+			SimulationDataRepository simulationDataRepository, String localExecutionsRoot, String resultsDirectoryName,
+			String logsDirectoryName) {
 		this.futureExecutor = futureExecutor;
-		this.simulationDataRepository = simulationDataRepository;		
+		this.simulationDataRepository = simulationDataRepository;
+		this.localExecutionsRoot = localExecutionsRoot;
+		this.resultsDirectoryName = resultsDirectoryName;
+		this.logsDirectoryName = logsDirectoryName;
 	}
 
 	@Override
-	public SimulationDataManager create(String executionsRootDirectory, String resultsRootDirectory, String logsRootDirectory,
-			SimulationDataListener listener) {
-		SimulationDataManager manager = new SimulationDataManagerImpl(executionsRootDirectory, resultsRootDirectory, logsRootDirectory,
-				futureExecutor, simulationDataRepository, listener);
+	public SimulationDataManager create(SimulationDataListener listener) {
+		SimulationDataManager manager = new SimulationDataManagerImpl(localExecutionsRoot, resultsDirectoryName,
+				logsDirectoryName, futureExecutor, simulationDataRepository, listener);
 		return manager;
 	}
 }

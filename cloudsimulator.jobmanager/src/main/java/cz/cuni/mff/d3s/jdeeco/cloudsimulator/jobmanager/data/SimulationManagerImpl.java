@@ -36,17 +36,17 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 	@Override
 	public void updateStatus(List<SimulationStatusUpdate> updates) {
 		for (SimulationStatusUpdate update : updates) {
-			if (simulationExecutions.containsKey(update.getSimulationExecutionId())) {
-				SimulationExecutionEntry executionEntry = simulationExecutions.get(update.getSimulationExecutionId());
+			int executionId = update.getSimulationId().getExecutionId();
+
+			if (simulationExecutions.containsKey(executionId)) {
+				SimulationExecutionEntry executionEntry = simulationExecutions.get(executionId);
 				try {
 					executionEntry.updateRunStatus(update);
 				} catch (RuntimeException e) {
-					logger.error(String.format("Simulation status update failed. Execution Id: %d. Run Id: %d.",
-							update.getSimulationExecutionId(), update.getSimulationRunId(), e));
+					logger.error(String.format("Simulation status update failed. %s.", update.getSimulationId()), e);
 				}
 			} else {
-				logger.info(String.format("Update for wrong or stopped execution. Execution Id: %d. Run Id: %d",
-						update.getSimulationExecutionId(), update.getSimulationRunId()));
+				logger.info(String.format("Update for wrong or stopped execution. %s.", update.getSimulationId()));
 			}
 		}
 	}

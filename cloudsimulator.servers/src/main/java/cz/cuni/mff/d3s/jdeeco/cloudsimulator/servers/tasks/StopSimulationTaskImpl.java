@@ -1,17 +1,19 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.tasks;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationId;
+
 public class StopSimulationTaskImpl extends WorkerTaskImpl implements StopSimulationTask {
 
 	private static final long serialVersionUID = -5967562853897509291L;
 
-	private final int simulationRunId;
+	private final SimulationId simulationId;
 
-	public StopSimulationTaskImpl(int simulationRunId) {
-		this.simulationRunId = simulationRunId;
+	public StopSimulationTaskImpl(SimulationId simulationId) {
+		this.simulationId = simulationId;
 	}
 
 	@Override
-	public int getSimulationRunId() {
-		return simulationRunId;
+	public SimulationId getSimulationId() {
+		return simulationId;
 	}
 }

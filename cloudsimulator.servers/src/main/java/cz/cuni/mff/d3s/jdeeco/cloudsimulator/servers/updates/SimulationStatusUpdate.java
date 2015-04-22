@@ -1,11 +1,10 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationId;
 
 public interface SimulationStatusUpdate extends WorkerUpdate {
-	int getSimulationExecutionId();
-	int getSimulationRunId();
-	
+	SimulationId getSimulationId();
 	SimulationStatus getSimulationStatus();	
 	String getError();
 }

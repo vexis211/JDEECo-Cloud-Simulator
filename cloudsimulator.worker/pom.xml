@@ -12,17 +12,133 @@
 		<relativePath>../cloudsimulator.serversparent/pom.xml</relativePath>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	
+
+	<profiles>
+		<profile>
+			<id>development</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<profile.storage.remoteRoot>c:\Users\Jan\simulationdrive</profile.storage.remoteRoot>
+				<profile.storage.localRoot>c:\Users\Jan\simulationdrive</profile.storage.localRoot>
+			</properties>
+		</profile>
+		<profile>
+			<id>production</id>
+			<activation>
+				<property>
+					<name>environment</name>
+					<value>production</value>
+				</property>
+			</activation>
+			<properties>
+				<profile.storage.remoteRoot>/media/simulationdrive</profile.storage.remoteRoot>
+				<profile.storage.localRoot>/media/simulationdrive</profile.storage.localRoot>
+			</properties>
+		</profile>
+	</profiles>
+
+
+	<build>	
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>development/</exclude>
+				</excludes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>${buildnumber-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>true</doCheck>
+					<doUpdate>false</doUpdate>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>compile-copy</id>
+						<phase>compile</phase>
+						<configuration>
+							<target>
+								<!-- Generate property file build.properties with buildNumber, buildTimestamp and revision parameters. Revision is 
+									set from changeSet parameter from buildnumber-maven-plugin. -->
+								<!-- <echo file="src/main/resources/properties/build.properties">build.buildNumber=${timestamp}${line.separator}</echo> -->
+								<echo file="src/main/resources/properties/build.properties">build.buildTimestamp=${timestamp}${line.separator}</echo>
+								<!-- <echo file="src/main/resources/properties/build.properties" append="true">build.revision=${changeSet}</echo> -->
+
+								<!-- Copy build number -->
+								<copy file="src/main/resources/properties/build.properties" todir="${project.build.directory}/classes/properties" />
+
+								<!-- Copy OpenStack credentials -->
+								<copy file="${basedir}/../../jdeeco-simulator-openstack-credentials.properties" tofile="${project.build.directory}/classes/properties/openstack-credentials.properties" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.WorkerApp</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>cloudsimulator.servers</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.neo4j</groupId>
-			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
-			<version>2.1.5</version>
 		</dependency>
 	</dependencies>
 </project>

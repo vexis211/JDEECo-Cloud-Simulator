@@ -1,5 +1,5 @@
 
-package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager;
+package cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers;
 
 import java.io.FileNotFoundException;
 
@@ -7,29 +7,30 @@ import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.Log4jConfigurer;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerEngine;
+public class ServerApp {
 
-public class App {
-
+	private static Logger logger;
 	
-	public static void main(String[] args) throws FileNotFoundException {
-
+	public void run() throws FileNotFoundException {
 		// configure logger from XML configuration file
         Log4jConfigurer.initLogging("classpath:configuration/log4j.xml");
+        logger = Logger.getLogger(ServerApp.class);
+        logger.info("Initialized logging.");
         
-    	Logger logger = Logger.getLogger(App.class);
-		logger.info("Initialized logging.");
-
 		logger.info("Creating application context...");
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("configuration/application-context.xml");
 
 		logger.info("Resolving engine...");
-		JobManagerEngine engine = (JobManagerEngine) context.getBean("jobManagerEngine");
+		ServerEngine engine = (ServerEngine) context.getBean(getServerEngineBeanName());
 
 		logger.info("Starting engine...");
 		engine.start();
 
 		logger.info("Destroying context...");		
 		context.close();
+	}
+
+	protected String getServerEngineBeanName() {
+		return "serverEngine";
 	}
 }

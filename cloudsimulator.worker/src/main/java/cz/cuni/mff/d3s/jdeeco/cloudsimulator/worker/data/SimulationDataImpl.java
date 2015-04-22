@@ -1,29 +1,36 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data;
 
 public class SimulationDataImpl implements SimulationData {
-	
-	private final String executionPath;
-	private final String resultsPath;
-	private final String logsPath;
 
-	public SimulationDataImpl(String executionPath, String resultsPath, String logsPath) {
-		this.executionPath = executionPath;
-		this.resultsPath = resultsPath;
-		this.logsPath = logsPath;
+	private final String runExecutionPath;
+	private final String runResultsPath;
+	private final String runLogsPath;
+
+	public SimulationDataImpl(String runExecutionPath, String runResultsPath, String runLogsPath) {
+		this.runExecutionPath = runExecutionPath;
+		this.runResultsPath = runResultsPath;
+		this.runLogsPath = runLogsPath;
 	}
-	
+
 	@Override
 	public String getExecutionPath() {
-		return executionPath;
+		return runExecutionPath;
 	}
 
 	@Override
-	public String getResultsPath() {
-		return resultsPath;
+	public String getLocalResultsPath() {
+		return runResultsPath;
 	}
 
 	@Override
-	public String getLogsPath() {
-		return logsPath;
+	public String getLocalLogsPath() {
+		return runLogsPath;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("SimulationDataImpl [executionPath=%s, resultsPath=%s, logsPath=%s]", runExecutionPath,
+				runResultsPath, runLogsPath);
+	}
+
 }

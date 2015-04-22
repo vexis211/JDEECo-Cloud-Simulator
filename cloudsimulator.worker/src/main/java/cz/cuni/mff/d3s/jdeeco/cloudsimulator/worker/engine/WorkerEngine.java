@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine;
 
-public interface WorkerEngine {
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.ServerEngine;
 
-	void start();
+public interface WorkerEngine extends ServerEngine {
 }

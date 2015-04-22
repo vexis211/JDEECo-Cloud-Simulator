@@ -16,7 +16,7 @@
 		http://activemq.apache.org/schema/core
 		http://activemq.apache.org/schema/core/activemq-core-5.10.0.xsd">
 
-	<!-- Properties in Spring configuration files -->
+	<!-- Import of properties -->
 	<context:property-placeholder
 		location="
 		classpath:properties/hibernate.properties,
@@ -25,6 +25,8 @@
 		classpath:properties/build.properties,
 		classpath:properties/openstack-credentials.properties" />
 
+	<!-- Import of configurations -->
+	
 	<import resource="classpath*:configuration/hibernate-session.xml" />
 	<import resource="classpath*:configuration/hibernate-daos.xml" />
 
@@ -76,9 +78,9 @@
 	<bean id="simulationRunEntryFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.SimulationRunEntryFactoryImpl" />
 
 	<bean id="simulationDataStorageService" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationDataStorageServiceImpl">
-		<constructor-arg name="packageRootDirectory" value="${simulation.storage.packagesRoot}" />
-		<constructor-arg name="resultsRootDirectory" value="${simulation.storage.runResultsRoot}" />
-		<constructor-arg name="logsRootDirectory" value="${simulation.storage.runLogsRoot}" />
+		<constructor-arg name="remotePackageRootDirectory" value="${simulation.storage.remotePackagesRoot}" />
+		<constructor-arg name="remoteResultsRootDirectory" value="${simulation.storage.remoteRunResultsRoot}" />
+		<constructor-arg name="remoteLogsRootDirectory" value="${simulation.storage.remoteRunLogsRoot}" />
 	</bean>
 
 	<!-- Packaging -->
@@ -98,7 +100,7 @@
 		<constructor-arg name="executor" ref="executor" />
 		<constructor-arg name="codeRepositoryManager" ref="codeRepositoryManager" />
 		<constructor-arg name="simulationDataStorageService" ref="simulationDataStorageService" />
-		<constructor-arg name="preparationRootDir" value="${packaging.storage.preparationRoot}" />
+		<constructor-arg name="preparationRootDir" value="${packaging.storage.localPreparationRoot}" />
 	</bean>
 
 	<bean id="packageTaskFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.PackageTaskFactoryImpl" />
@@ -147,7 +149,7 @@
 		<constructor-arg name="outgoingQueuePrefix" value="${jms.outgoingQueuePrefix}" />
 		<constructor-arg name="jobManagerUpdateQueue" ref="jobManagerUpdateQueue" />
 	</bean>
-	
+
 	<bean id="workerConnectorReceiveTimeout" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.TimeSpan">
 		<constructor-arg name="unit" type="java.util.concurrent.TimeUnit" value="SECONDS" />
 		<constructor-arg name="numberOUnits" value="10" />

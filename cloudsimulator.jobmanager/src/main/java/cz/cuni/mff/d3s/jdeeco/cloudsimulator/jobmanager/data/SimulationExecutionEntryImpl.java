@@ -101,7 +101,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 			return;
 		}
 		
-		int simulationRunId = update.getSimulationRunId();
+		int simulationRunId = update.getSimulationId().getRunId();
 
 		SimulationRunEntry simulationRunEntry;
 		if (startedRuns.containsKey(simulationRunId)) {

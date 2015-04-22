@@ -1,11 +1,11 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.data;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.Disposable;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationId;
 
 
 public interface SimulationDataManager extends Disposable {
 
-	void prepareData(int simulationRunId);
-
-	void saveResults(int simulationRunId, SimulationData data);
+	void prepareData(SimulationId simulationId);
+	void saveResults(SimulationId simulationId, SimulationData data);
 }
