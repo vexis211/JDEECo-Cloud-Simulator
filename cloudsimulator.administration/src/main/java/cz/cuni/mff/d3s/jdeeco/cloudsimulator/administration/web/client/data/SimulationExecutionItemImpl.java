@@ -45,8 +45,8 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 		}
 
 		this.status = execution.getStatus();
-		this.statusDesc = execution.getStatus().toString(); // TODO improvement
-															// - % done??
+		this.statusDesc = execution.getStatus().toString(); // TODO improvement - % done
+
 		this.startedDate = execution.getStarted();
 		this.endedDate = execution.getEnded();
 	}
@@ -140,7 +140,7 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 	@Override
 	public void setEndDateString(String endDateString) {
 		this.endDateString = endDateString;
-		
+
 		Out<Date> parserdDate = new Out<Date>();
 		if (TODATE_FORMAT.tryParse(endDateString, parserdDate)) {
 			this.endDate = parserdDate.get();

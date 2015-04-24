@@ -52,7 +52,7 @@ public class ActivateController {
 	}
 
 	private String renderInvalidLink() {
-		return String.format("redirect:%s?%s=3", appContext.getSiteRoot(), UriParamSettings.FAILURE); // TODO link
+		return String.format("redirect:%s?%s=3", appContext.getSiteRoot(), UriParamSettings.FAILURE);
 	}
 
 	private String renderOK() {

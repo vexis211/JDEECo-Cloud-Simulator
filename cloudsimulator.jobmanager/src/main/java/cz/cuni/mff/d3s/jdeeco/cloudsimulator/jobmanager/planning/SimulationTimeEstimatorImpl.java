@@ -11,6 +11,6 @@ public class SimulationTimeEstimatorImpl implements SimulationTimeEstimator {
 			return execution.getExecutionStatistics().getAverageJobTimeInMillis();
 		}
 		
-		return  1000 * 60 * 5; // TODO implement
+		return  1000 * 60 * 5; // TODO improvement - better estimate :-)
 	}
 }

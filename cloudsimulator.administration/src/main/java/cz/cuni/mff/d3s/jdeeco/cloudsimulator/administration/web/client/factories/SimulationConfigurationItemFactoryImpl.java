@@ -25,7 +25,7 @@ public class SimulationConfigurationItemFactoryImpl implements SimulationConfigu
 		SimulationDataItem dataItem = dataItemFactory.create(configuration.getSimulationData());
 
 		Optional<SimulationExecution> lastExecutionOptional = configuration.getSimulationExecutions().stream()
-				.max((e1, e2) -> e1.getId().compareTo(e2.getId())); // TODO speed up
+				.max((e1, e2) -> e1.getId().compareTo(e2.getId())); // TODO improvement - speed up
 		SimulationExecutionItem lastExecutionItem = lastExecutionOptional.isPresent() ? executionItemFactory
 				.create(lastExecutionOptional.get()) : null;
 

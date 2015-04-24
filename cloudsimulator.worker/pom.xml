@@ -86,9 +86,6 @@
 
 								<!-- Copy build number -->
 								<copy file="src/main/resources/properties/build.properties" todir="${project.build.directory}/classes/properties" />
-
-								<!-- Copy OpenStack credentials -->
-								<copy file="${basedir}/../../jdeeco-simulator-openstack-credentials.properties" tofile="${project.build.directory}/classes/properties/openstack-credentials.properties" />
 							</target>
 						</configuration>
 						<goals>

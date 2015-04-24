@@ -79,7 +79,7 @@ public class WorkerManagerImpl implements WorkerManager {
 
 	@Override
 	public DateTime whenWorkerWillBePrepared() {
-		// TODO here is place for estimate optimization
+		// TODO improvement - here is place for estimate optimization
 		if (stoppedWorkersById.isEmpty()) {
 			return DateTime.now().plus(workerCreateAndStartStatistics.getAverageJobTimeInMillis());
 		} else {

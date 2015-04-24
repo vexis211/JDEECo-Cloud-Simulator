@@ -452,7 +452,6 @@ public class UserServiceImpl implements UserService, SecurityService {
 	@Transactional(readOnly = false)
 	@Override
 	public void deleteUser(User user) throws UserOperationException {
-		// TODO check
 		userDao.delete(user);
 	}
 

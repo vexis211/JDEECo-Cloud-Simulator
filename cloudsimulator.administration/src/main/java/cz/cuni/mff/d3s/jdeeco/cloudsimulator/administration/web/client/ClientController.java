@@ -36,7 +36,7 @@ public class ClientController {
 	 * Validate new-password form. If it was OK, change password and return
 	 * success.
 	 * 
-	 * TODO: Encoding in error message fixed, but do we want to transfer text to the client.
+	 * TODO improvement - Encoding in error message fixed, but do we want to transfer text to the client.
 	 * I would prefer another field ("Success", "OldBad", "NoMatch") and processing on the client.
 	 * 
 	 * @param newPasswordForm

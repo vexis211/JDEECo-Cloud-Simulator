@@ -33,8 +33,8 @@ public class SimulationExecutorImpl implements SimulationExecutor {
 	public void start() {
 		this.stoppedManually = false;
 		
-		String executionFilePath = PathEx.combine(parameters.getRunExecutionDirectory(), "TODO");
-		ProcessBuilder processBuilder = new ProcessBuilder(String.format("java -jar %s", executionFilePath));
+		String executionFilePath = PathEx.combine(parameters.getRunExecutionDirectory(), "TODO"); // TODO
+		ProcessBuilder processBuilder = new ProcessBuilder(String.format("java -jar \"%s\"", executionFilePath));
 
 		processBuilder.directory(new File(parameters.getRunExecutionDirectory()));
 

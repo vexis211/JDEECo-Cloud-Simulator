@@ -18,7 +18,7 @@ public class OpenStackInfrastructureInitializerParameters {
     public static final String KEYPAIR_NAME = "ssh_keypair";
 
     // computing
-    public static final String JOB_MANAGER_TEMPLATE_NAME = "JobManager-Template"; // TODO
+    public static final String JOB_MANAGER_TEMPLATE_NAME = "JobManager-Template";
     public static final String JOB_MANAGER_NAME = "JobManager-Instance";
 
     public static final int INITIAL_WORKER_COUNT = 3;

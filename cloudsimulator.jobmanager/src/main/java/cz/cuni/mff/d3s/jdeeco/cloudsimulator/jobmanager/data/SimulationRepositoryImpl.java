@@ -46,7 +46,7 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 		int toAddCount = execution.getRunCount() - simulationRuns.size();
 		
 		if (toAddCount > 0) {
-			// TODO do much better
+			// TODO improvement - do much better
 			for (int i = 0; i < toAddCount; i++) {
 				SimulationRun newRun = new SimulationRun(execution);
 				simulationRuns.add(newRun);

@@ -57,10 +57,10 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>compile-configuration</id>
+						<id>compile-copy</id>
 						<phase>compile</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<!-- Generate property file build.properties with buildNumber, buildTimestamp
 									and revision parameters. Revision is set from changeSet parameter from buildnumber-maven-plugin. -->
 								<!-- <echo file="src/main/resources/properties/build.properties">build.buildNumber=${timestamp}${line.separator}</echo> -->
@@ -72,7 +72,7 @@
 										<include name="build.properties" />
 									</fileset>
 								</copy>
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>

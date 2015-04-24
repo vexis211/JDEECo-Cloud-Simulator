@@ -29,7 +29,7 @@ public class PackagePreparatorImpl implements PackagePreparator, PackagingExcept
 		CopyCompiledToPreparingDirectoryProcessor copyCompiledToPreparingDirectoryProcessor = new CopyCompiledToPreparingDirectoryProcessor(
 				preparationRootDir, executor, this);
 
-		// TODO - run script processor
+		// TODO phase2 - run script processor
 		SavePackageProcessor savePackageProcessor = new SavePackageProcessor(executor, this,
 				simulationDataStorageService);
 		ClearPreparingDirectoryProcessor clearPreparingDirectoryProcessor = new ClearPreparingDirectoryProcessor(

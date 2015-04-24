@@ -197,7 +197,7 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 			return currentItem;
 		}
 
-		// TODO is OK to prefer another package with another priority??
+		// TODO phase2 - is OK to prefer another package with another priority??
 		for (WorkerPlanItem planItem : workerPlan) {
 			if (hasPreparedPackage(planItem)) {
 				return planItem;

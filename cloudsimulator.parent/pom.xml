@@ -10,7 +10,8 @@
 		<module>../cloudsimulator.common</module>
 		<module>../cloudsimulator.data</module>
 		<module>../cloudsimulator.serversparent</module>
-		<module>../cloudsimulator.client</module>
+		<module>../cloudsimulator.simulation</module>
+		<module>../cloudsimulator.simulation-archetype</module>
 	</modules>
 
 	<properties>
@@ -19,12 +20,16 @@
 		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
 
 		<!-- versions -->
-		<java.version>1.8</java.version>
+		<java-code.version>1.8</java-code.version>
 		<spring.version>4.1.1.RELEASE</spring.version>
+
+		<jdeeco.version>2.0.0</jdeeco.version>
 
 		<junit.version>4.12</junit.version>
 		<log4j.version>1.2.17</log4j.version>
 		<slf4j.version>1.7.7</slf4j.version>
+
+		<eclipse-emf.version>2.9.0-v20130528-0742</eclipse-emf.version>
 
 		<!-- plugin versions -->
 		<maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
@@ -74,6 +79,11 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
 
 	</dependencies>
 
@@ -85,8 +95,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven-compiler-plugin.version}</version>
 				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
+					<source>${java-code.version}</source>
+					<target>${java-code.version}</target>
 					<encoding>${project.encoding}</encoding>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
@@ -99,6 +109,7 @@
 				<version>${maven-resources-plugin.version}</version>
 				<configuration>
 					<encoding>${project.encoding}</encoding>
+					<escapeString>\</escapeString>
 				</configuration>
 			</plugin>
 
