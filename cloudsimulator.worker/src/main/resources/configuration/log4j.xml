@@ -12,7 +12,7 @@
 	</appender>
 
 	<!-- Application Loggers -->
-	<logger name="cz.cuni.mff">
+	<logger additivity="false" name="cz.cuni.mff">
 		<level value="all" />
 		<appender-ref ref="console" />
 	</logger>
