@@ -52,6 +52,28 @@
 		<url>https://github.com/vexis211/JDEECo-Cloud-Simulator</url>
 	</scm>
 
+	<!-- Profile configuration -->
+	<profiles>
+		<!-- The configuration of the development profile -->
+		<profile>
+			<id>development</id>
+			<!-- The development profile is active by default -->
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<build.profile.id>development</build.profile.id>
+			</properties>
+		</profile>
+		<!-- The configuration of the production profile -->
+		<profile>
+			<id>production</id>
+			<properties>
+				<build.profile.id>production</build.profile.id>
+			</properties>
+		</profile>
+	</profiles>
+
 	<dependencies>
 
 		<!-- Tests -->

@@ -24,33 +24,7 @@
 		<joda-time.version>2.7</joda-time.version>
 	</properties>
 
-	<profiles>
-		<profile>
-			<id>development</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<profile.storage.remoteRoot>c:\Users\Jan\simulationdrive</profile.storage.remoteRoot>
-				<profile.storage.localRoot>c:\Users\Jan\simulationdrive</profile.storage.localRoot>
-			</properties>
-		</profile>
-		<profile>
-			<id>production</id>
-			<activation>
-				<property>
-					<name>environment</name>
-					<value>production</value>
-				</property>
-			</activation>
-			<properties>
-				<profile.storage.remoteRoot>/media/simulationdrive</profile.storage.remoteRoot>
-				<profile.storage.localRoot>/media/simulationdrive</profile.storage.localRoot>
-			</properties>
-		</profile>
-	</profiles>
-
-	<build>
+	<build>	
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -60,6 +34,10 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+		
+		<filters>
+			<filter>profiles/profile-${build.profile.id}.properties</filter>
+		</filters>
 
 		<plugins>
 			<plugin>

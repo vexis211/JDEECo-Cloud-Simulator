@@ -21,7 +21,7 @@
 		location="
 		classpath:properties/hibernate.properties,
 		classpath:properties/jms.properties,
-		classpath:properties/profile.properties,
+		classpath:properties/config.properties,
 		classpath:properties/build.properties,
 		classpath:properties/openstack-credentials.properties" />
 
@@ -30,7 +30,7 @@
 	<import resource="classpath*:configuration/hibernate-session.xml" />
 	<import resource="classpath*:configuration/hibernate-daos.xml" />
 
-	<import resource="classpath*:configuration/jms-context.xml" />
+	<import resource="classpath*:configuration/jms-server-context.xml" />
 
 
 	<bean id="executor" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.CustomThreadPoolExecutor" scope="singleton">

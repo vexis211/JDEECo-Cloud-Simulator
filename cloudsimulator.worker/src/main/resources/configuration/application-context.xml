@@ -20,11 +20,11 @@
 	<context:property-placeholder
 		location="
 		classpath:properties/jms.properties,
-		classpath:properties/profile.properties,
+		classpath:properties/config.properties,
 		classpath:properties/build.properties" />
 
 	<!-- Import of configurations -->
-	<import resource="classpath*:configuration/jms-context.xml" />
+	<import resource="classpath*:configuration/jms-client-context.xml" />
 
 
 	<!-- Main -->
