@@ -5,4 +5,5 @@ public interface SimulationData {
 	String getExecutionPath();
 	String getLocalResultsPath();
 	String getLocalLogsPath();
+	String getStartupFile();
 }

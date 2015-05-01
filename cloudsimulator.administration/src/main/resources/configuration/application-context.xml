@@ -47,7 +47,7 @@
 		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.jobmanager.JobManagerControllerImpl"
 		scope="singleton">
 		<constructor-arg name="jmsTemplate" ref="jmsTemplate" />
-		<constructor-arg name="jobManagerControlQueue" value="${jms.jobManagerControlQueue}" />
+		<constructor-arg name="jobManagerControlQueue" value="${jms.jobManagerQueue}" />
 	</bean>
 
 	<!-- Services -->

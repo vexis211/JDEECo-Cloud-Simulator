@@ -38,6 +38,9 @@
         <property name="mavenGoals" type="string">
             <column name="MavenGoals" length="1000" not-null="true" />
         </property>
+        <property name="startupFile" type="string">
+            <column name="StartupFile" length="256" not-null="true" />
+        </property>
         
         <set name="simulationConfigurations" table="simulation_configuration" inverse="true" lazy="true" fetch="select">
             <key>

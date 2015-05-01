@@ -20,6 +20,7 @@ public class SimulationData implements java.io.Serializable {
 	private String repositoryURL;
 	private String pomDirectory;
 	private String mavenGoals;
+	private String startupFile;
 
 	private Set<SimulationConfiguration> simulationConfigurations = new HashSet<SimulationConfiguration>(0);
 
@@ -27,7 +28,7 @@ public class SimulationData implements java.io.Serializable {
 	}
 
 	public SimulationData(User creator, Project project, String name, String description, VCSType vcsType, String repositoryURL,
-			String pomDirectory, String mavenGoals) {
+			String pomDirectory, String mavenGoals, String startupFile) {
 		this.creator = creator;
 		this.project = project;
 		this.name = name;
@@ -36,6 +37,7 @@ public class SimulationData implements java.io.Serializable {
 		this.repositoryURL = repositoryURL;
 		this.pomDirectory = pomDirectory;
 		this.mavenGoals = mavenGoals;
+		this.startupFile = startupFile;
 	}
 
 	public Integer getId() {
@@ -117,6 +119,14 @@ public class SimulationData implements java.io.Serializable {
 	public void setMavenGoals(String mavenGoals) {
 		this.mavenGoals = mavenGoals;
 	}
+
+	public String getStartupFile() {
+		return startupFile;
+	}
+
+	public void setStartupFile(String startupFile) {
+		this.startupFile = startupFile;
+	}
 	
 	public Set<SimulationConfiguration> getSimulationConfigurations() {
 		return this.simulationConfigurations;
@@ -125,5 +135,4 @@ public class SimulationData implements java.io.Serializable {
 	public void setSimulationConfigurations(Set<SimulationConfiguration> simulationConfigurations) {
 		this.simulationConfigurations = simulationConfigurations;
 	}
-
 }

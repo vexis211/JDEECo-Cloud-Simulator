@@ -45,8 +45,8 @@
 
 	<bean id="jobManagerConnector" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnectorImpl">
 		<constructor-arg name="jmsTemplate" ref="jmsTemplate" />
-		<constructor-arg name="incomingQueuePrefix" value="${jms.incomingQueuePrefix}" />
-		<constructor-arg name="outgoingQueue" value="${jms.outgoingQueue}" />
+		<constructor-arg name="incomingQueuePrefix" value="${jms.workerQueuePrefix}" />
+		<constructor-arg name="outgoingQueue" value="${jms.jobManagerQueue}" />
 		<constructor-arg name="workerTaskQueue" ref="workerTaskQueue" />
 		<constructor-arg name="receiveTimeout" ref="jobManagerConnectorReceiveTimeout" />
 		<constructor-arg name="workerInfoProvider" ref="workerInfoProvider" />

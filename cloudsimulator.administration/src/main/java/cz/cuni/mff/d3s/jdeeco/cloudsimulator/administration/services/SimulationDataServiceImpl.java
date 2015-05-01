@@ -40,13 +40,13 @@ public class SimulationDataServiceImpl implements SimulationDataService {
 	@Transactional(readOnly = false)
 	@Override
 	public void createData(int projectId, String name, String description, VCSType vcsType, String repositoryUrl,
-			String pomDirectory, String mavenGoals) {
+			String pomDirectory, String mavenGoals, String startupFile) {
 
 		User currentUser = UserHelper.getAuthenticatedUser();
 		Project project = projectDao.findById(projectId);
 
 		SimulationData data = new SimulationData(currentUser, project, name, description, vcsType, repositoryUrl,
-				pomDirectory, mavenGoals);
+				pomDirectory, mavenGoals, startupFile);
 		
 		simulationDataDao.saveOrUpdate(data);
 	}
@@ -54,7 +54,7 @@ public class SimulationDataServiceImpl implements SimulationDataService {
 	@Transactional(readOnly = false)
 	@Override
 	public void editData(int dataId, String name, String description, VCSType vcsType, String repositoryUrl,
-			String pomDirectory, String mavenGoals) {
+			String pomDirectory, String mavenGoals, String startupFile) {
 		SimulationData data = simulationDataDao.findById(dataId);
 
 		data.setName(name);
@@ -63,6 +63,7 @@ public class SimulationDataServiceImpl implements SimulationDataService {
 		data.setRepositoryURL(repositoryUrl);
 		data.setPomDirectory(pomDirectory);
 		data.setMavenGoals(mavenGoals);
+		data.setStartupFile(startupFile);
 
 		simulationDataDao.saveOrUpdate(data);
 	}

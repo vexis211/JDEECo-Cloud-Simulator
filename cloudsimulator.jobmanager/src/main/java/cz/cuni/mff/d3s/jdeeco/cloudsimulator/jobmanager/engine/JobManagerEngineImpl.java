@@ -172,8 +172,8 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 
 		// send run simulation task
 		String workerId = worker.getWorkerId();
-		SimulationId simulationId = new SimulationIdImpl(simulationRun.getExecution().getId(), simulationRun.getId());
-		RunSimulationTask task = new RunSimulationTaskImpl(simulationId);
+		SimulationId simulationId = new SimulationIdImpl(execution.getId(), simulationRun.getId());
+		RunSimulationTask task = new RunSimulationTaskImpl(simulationId, execution.getStartupFile());
 		workerConnector.sendTask(workerId, task);
 	}
 

@@ -8,6 +8,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpd
 public interface SimulationExecutionEntry {
 
 	int getId();
+	String getStartupFile();
+	
 	SimulationStatus getStatus();
 
 	int getNotStartedRunsCount();

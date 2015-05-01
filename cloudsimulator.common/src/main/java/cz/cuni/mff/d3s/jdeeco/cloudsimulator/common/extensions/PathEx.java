@@ -12,4 +12,7 @@ public class PathEx {
 	public static String combine(String first, Object second, Object third) {
 		return Paths.get(first, second.toString(), third.toString()).toString();
 	}
+	public static String combine(String first, Object second, Object third, Object fourth) {
+		return Paths.get(first, second.toString(), third.toString(), fourth.toString()).toString();
+	}
 }

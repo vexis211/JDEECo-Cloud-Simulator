@@ -93,7 +93,7 @@ public class SimulationDataController {
 
 		simulationDataService.createData(projectId, simulationDataItem.getName(), simulationDataItem.getDescription(),
 				simulationDataItem.getVcsType(), simulationDataItem.getRepositoryUrl(),
-				simulationDataItem.getPomDirectory(), simulationDataItem.getMavenGoals());
+				simulationDataItem.getPomDirectory(), simulationDataItem.getMavenGoals(), simulationDataItem.getStartupFile());
 
 		return ProjectController.RedirectToProject(appContext.getSiteRoot(), projectId);
 	}
@@ -135,7 +135,7 @@ public class SimulationDataController {
 
 		simulationDataService.editData(dataId, simulationDataItem.getName(), simulationDataItem.getDescription(),
 				simulationDataItem.getVcsType(), simulationDataItem.getRepositoryUrl(),
-				simulationDataItem.getPomDirectory(), simulationDataItem.getMavenGoals());
+				simulationDataItem.getPomDirectory(), simulationDataItem.getMavenGoals(), simulationDataItem.getStartupFile());
 
 		return RedirectToData(dataId);
 	}

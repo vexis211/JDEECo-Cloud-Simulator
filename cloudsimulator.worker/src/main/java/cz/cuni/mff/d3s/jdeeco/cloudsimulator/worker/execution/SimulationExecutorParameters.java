@@ -11,4 +11,5 @@ public interface SimulationExecutorParameters {
 	String getRunExecutionDirectory();
 	String getRunLogsPath();
 	String getRunResultsPath();
+	String getStartupFile();
 }

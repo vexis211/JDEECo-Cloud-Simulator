@@ -39,6 +39,11 @@ public class SimulationExecutorParametersImpl implements SimulationExecutorParam
 	}
 
 	@Override
+	public String getStartupFile() {
+		return data.getStartupFile();
+	}
+
+	@Override
 	public String toString() {
 		return String.format("SimulationExecutorParametersImpl [simulationId=%s, data=%s]", simulationId, data);
 	}

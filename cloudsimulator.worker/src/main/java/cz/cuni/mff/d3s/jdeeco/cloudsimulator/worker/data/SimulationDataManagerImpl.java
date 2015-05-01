@@ -50,17 +50,17 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 	}
 
 	@Override
-	public void prepareData(SimulationId simulationId) {
-		startFuture(() -> prepareDataCore(simulationId));
+	public void prepareData(SimulationId simulationId, String startupFile) {
+		startFuture(() -> prepareDataCore(simulationId, startupFile));
 	}
 
-	private void prepareDataCore(SimulationId simulationId) {
+	private void prepareDataCore(SimulationId simulationId, String startupFile) {
 
 		String runExecutionPath = PathEx.combine(localExecutionsRoot, simulationId.getRunId());
 		String runLocalResultsPath = PathEx.combine(runExecutionPath, resultsDirectoryName);
 		String runLocalLogsPath = PathEx.combine(runExecutionPath, logsDirectoryName);
 
-		SimulationData preparedData = new SimulationDataImpl(runExecutionPath, runLocalResultsPath, runLocalLogsPath);
+		SimulationData preparedData = new SimulationDataImpl(runExecutionPath, runLocalResultsPath, runLocalLogsPath, startupFile);
 
 		try {
 			String packageDir = simulationDataRepository.getPackagePath(simulationId);

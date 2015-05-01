@@ -16,6 +16,7 @@ public class SimulationDataItemImpl implements SimulationDataItem {
 	private String repositoryUrl;
 	private String pomDirectory;
 	private String mavenGoals;
+	private String startupFile;
 
 	public SimulationDataItemImpl() {
 	}
@@ -31,6 +32,7 @@ public class SimulationDataItemImpl implements SimulationDataItem {
 		this.repositoryUrl = data.getRepositoryURL();
 		this.pomDirectory = data.getPomDirectory();
 		this.mavenGoals = data.getMavenGoals();
+		this.startupFile = data.getStartupFile();
 	}
 
 	@Override
@@ -111,5 +113,15 @@ public class SimulationDataItemImpl implements SimulationDataItem {
 	@Override
 	public void setMavenGoals(String mavenGoals) {
 		this.mavenGoals = mavenGoals;
+	}
+
+	@Override
+	public String getStartupFile() {
+		return startupFile;
+	}
+
+	@Override
+	public void setStartupFile(String startupFile) {
+		this.startupFile = startupFile;
 	}
 }

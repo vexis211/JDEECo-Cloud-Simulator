@@ -45,7 +45,7 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 		}
 
 		// prepare data
-		simulationDataManager.prepareData(task.getSimulationId());
+		simulationDataManager.prepareData(task.getSimulationId(), task.getStartupFile());
 	}
 
 	@Override

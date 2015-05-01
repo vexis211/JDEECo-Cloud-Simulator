@@ -29,4 +29,7 @@ public interface SimulationDataItem {
 	
 	String getMavenGoals();
 	void setMavenGoals(String mavenGoals);
+	
+	String getStartupFile();
+	void setStartupFile(String startupFile);
 }

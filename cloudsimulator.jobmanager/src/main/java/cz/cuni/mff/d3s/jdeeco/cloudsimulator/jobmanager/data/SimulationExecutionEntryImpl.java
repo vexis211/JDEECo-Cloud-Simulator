@@ -24,6 +24,8 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 
 	private final ExecutionDeadlineSettings deadlineSettings;
 
+	private final String startupFile;
+	
 	private boolean isPackagePrepared = false;
 	private boolean repeatedlyThrowsError = false;
 	private boolean started = false;
@@ -35,6 +37,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 		this.listener = listener;
 		this.executionStatistics = executionStatistics;
 
+		this.startupFile = data.getSimulationConfiguration().getSimulationData().getStartupFile();
 		this.deadlineSettings = new ExecutionDeadlineSettings(data.getEndSpecificationType(),
 				data.getEndDate() != null ? new DateTime(data.getEndDate()) : null);
 
@@ -47,6 +50,11 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 	@Override
 	public int getId() {
 		return this.data.getId();
+	}
+
+	@Override
+	public String getStartupFile() {
+		return startupFile;
 	}
 
 	@Override

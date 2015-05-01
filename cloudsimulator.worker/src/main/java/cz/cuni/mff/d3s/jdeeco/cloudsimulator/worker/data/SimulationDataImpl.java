@@ -5,11 +5,13 @@ public class SimulationDataImpl implements SimulationData {
 	private final String runExecutionPath;
 	private final String runResultsPath;
 	private final String runLogsPath;
+	private final String startupFile;
 
-	public SimulationDataImpl(String runExecutionPath, String runResultsPath, String runLogsPath) {
+	public SimulationDataImpl(String runExecutionPath, String runResultsPath, String runLogsPath, String startupFile) {
 		this.runExecutionPath = runExecutionPath;
 		this.runResultsPath = runResultsPath;
 		this.runLogsPath = runLogsPath;
+		this.startupFile = startupFile;
 	}
 
 	@Override
@@ -28,9 +30,13 @@ public class SimulationDataImpl implements SimulationData {
 	}
 
 	@Override
+	public String getStartupFile() {
+		return startupFile;
+	}
+
+	@Override
 	public String toString() {
 		return String.format("SimulationDataImpl [executionPath=%s, resultsPath=%s, logsPath=%s]", runExecutionPath,
 				runResultsPath, runLogsPath);
 	}
-
 }
