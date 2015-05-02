@@ -33,6 +33,20 @@
 	</properties>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>development/</exclude>
+				</excludes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		
+		<filters>
+			<filter>profiles/profile-${build.profile.id}.properties</filter>
+		</filters>
+		
 		<plugins>
 
 			<plugin>

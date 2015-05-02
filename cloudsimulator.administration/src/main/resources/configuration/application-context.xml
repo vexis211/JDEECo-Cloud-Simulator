@@ -39,7 +39,7 @@
 		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.AppContextImpl"
 		scope="singleton">
 		<property name="appVersionNumber" value="${build.buildTimestamp}" />
-		<property name="siteRoot" value="${profile.siteRoot}" />
+		<property name="siteRoot" value="${config.siteRoot}" />
 	</bean>
 
 

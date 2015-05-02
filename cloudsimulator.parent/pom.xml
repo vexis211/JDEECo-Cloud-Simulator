@@ -71,6 +71,12 @@
 			<properties>
 				<build.profile.id>production</build.profile.id>
 			</properties>
+			<activation>
+				<property>
+					<name>environment</name>
+					<value>production</value>
+				</property>
+			</activation>
 		</profile>
 	</profiles>
 

@@ -14,6 +14,7 @@ sudo tar xzf ${tomcat_name}.tar.gz
 # close nano
 # variables will be loaded after restart, to load it now type: source /etc/profile.d/tomcat.sh
 
+tomcat_name=apache-tomcat-8.0.20
 
 sudo sh -c 'echo "export TOMCAT_HOME=/opt/${tomcat_name}
 export PATH=$PATH:$TOMCAT_HOME/bin"\
@@ -27,7 +28,7 @@ sudo rm /opt/${tomcat_name}.tar.gz
 
 #sudo /opt/${tomcat_name}/bin/shutdown.sh
 #sudo /opt/${tomcat_name}/bin/startup.sh
-# ssh -L 28080:localhost:8080 centos@openstack.d3s.mff.cuni.cz -p 10011 -i .ssh/skalicky-default.pem -N -v
+# ssh -L 8080:localhost:8080 centos@openstack.d3s.mff.cuni.cz -p 10011 -i .ssh/skalicky-default.pem -N -v
 # sudo mv ~/jdeeco-simulator-administration.war /opt/${tomcat_name}/webapps/
 
 

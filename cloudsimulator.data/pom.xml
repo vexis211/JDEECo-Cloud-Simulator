@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-  	<artifactId>cloudsimulator.data</artifactId>
+	<artifactId>cloudsimulator.data</artifactId>
 	<name>cloudsimulator.data</name>
 	<packaging>jar</packaging>
 
@@ -21,6 +21,20 @@
 		<hibernate-validator.version>5.1.2.Final</hibernate-validator.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 	</properties>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.hbm.xml</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
 
 	<dependencies>
 		<!-- Dependent modules -->

@@ -21,16 +21,6 @@
 
 	<!-- JMS -->
 
-	<!-- lets create an embedded ActiveMQ Broker -->
-	<amq:broker useJmx="false" persistent="false" start="true">
-		<amq:transportConnectors>
-			<amq:transportConnector uri="${jms.brokerUri}" />
-		</amq:transportConnectors>
-	</amq:broker>
-
-	<!-- ActiveMQ destinations to use -->
-	<!--<amq:queue id="destination" physicalName="org.apache.activemq.spring.Test.spring.embedded" /> -->
-	
 	<!-- JMS ConnectionFactory to use, configuring the embedded broker using XML -->
 	<amq:connectionFactory id="jmsFactory" brokerURL="${jms.brokerUri}" />
 
