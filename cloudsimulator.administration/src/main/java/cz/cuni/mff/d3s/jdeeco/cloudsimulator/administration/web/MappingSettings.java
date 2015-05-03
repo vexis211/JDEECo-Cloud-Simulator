@@ -19,10 +19,11 @@ public class MappingSettings {
 	public static final String MAIN = "/main";
 
 	
-	public static final String NEWPASSWORD = ACTION + "/client/newpassword";
-	public static final String CHANGEPASSWORD = ACTION + "/client/changepassword";
 	public static final String LOGOUT = ACTION + "/client/logout";
 
+
+	public static final String NEWPASSWORD = MAIN + "/client/newpassword";
+	public static final String CHANGEPASSWORD = MAIN + "/client/changepassword";
 
 	public static final String PROJECT_ROOT = MAIN + "/project";
 	public static final String PROJECT = PROJECT_ROOT + "/{projectId}";

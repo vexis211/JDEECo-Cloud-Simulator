@@ -11,10 +11,10 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.StringEx;
 /** Validator used for new password */
 public class NewPasswordValidator implements Validator {
 
-	private static final String PASSWORD_NOT_MATCH_MESSAGE = "Password does not match with its verification!";
-	private static final String PASSWORD__INVALID_CHARACTERS_MESSAGE = "Password has invalid characters. Only alpha-numberic characters are allowed.";
-	private static final String PASSWORD_LENGTH_MESSAGE = "Password must have at least 8 characters!";
-	private static final String EMAIL_NOT_SPECIFIED_MESSAGE = "Email is not specified.";
+	public static final String PASSWORD_NOT_MATCH_MESSAGE = "Password does not match with its verification!";
+	public static final String PASSWORD_INVALID_CHARACTERS_MESSAGE = "Password has invalid characters. Only alpha-numberic characters are allowed.";
+	public static final String PASSWORD_LENGTH_MESSAGE = "Password must have at least 8 characters!";
+	public static final String EMAIL_NOT_SPECIFIED_MESSAGE = "Email is not specified.";
 
 	@Resource
 	private PasswordHelper passwordHelper;
@@ -45,7 +45,7 @@ public class NewPasswordValidator implements Validator {
 				errors.rejectValue(NewPasswordForm.PASSWORD_FIELD, "error.too-weak", PASSWORD_LENGTH_MESSAGE);
 			} else if (passwordHelper.hasPasswordIncorrectCharacters(validatedObj.getPassword())) {
 				errors.rejectValue(NewPasswordForm.PASSWORD_FIELD, "errors.invalid-characters",
-						PASSWORD__INVALID_CHARACTERS_MESSAGE);
+						PASSWORD_INVALID_CHARACTERS_MESSAGE);
 			} else if (!validatedObj.getPassword().equals(validatedObj.getPasswordVerify())) {
 				errors.rejectValue(NewPasswordForm.PASSWORD_VERIFY_FIELD, "errors.not-match",
 						PASSWORD_NOT_MATCH_MESSAGE);

@@ -24,34 +24,30 @@ public class ChangePasswordValidator implements Validator {
 		return ChangePasswordForm.class.equals(clazz);
 	}
 
-	private static final String NO_EMAIL = "Email is not specified.";
-	private static final String SHORT_PASSWORD = "Zadané heslo musí mať aspoň 8 znakov!";
-	private static final String BAD_PASS_CHARS = "Heslo obsahuje neplatné znaky. Iba alfanumerické znaky sú povolené!";
-	private static final String PASS_DONOT_MATCH = "Zadané heslo sa nezhoduje!";
-	private static final String BAD_PASS = "Vaše súčasné heslo nesúhlasí!";
+	private static final String OLD_PASSWORD_NOT_CORRECT_MESSAGE = "Your old password is not correct!";
 
 	@Override
 	public void validate(Object target, Errors errors) {
 		ChangePasswordForm validatedObj = (ChangePasswordForm) target;
 		if (validatedObj == null) {
-			errors.rejectValue("email", "error.not-specified", NO_EMAIL);
+			errors.rejectValue("email", "error.not-specified", NewPasswordValidator.EMAIL_NOT_SPECIFIED_MESSAGE);
 		} else {
 			User loggedUser = UserHelper.getAuthenticatedUser();
 
 			// validation of old password
 			if (!passwordEncoder.matches(validatedObj.getOldPassword(), loggedUser.getPassword())) {
-				errors.rejectValue(ChangePasswordForm.OLD_PASSWORD_FIELD, "errors.not-match", BAD_PASS);
+				errors.rejectValue(ChangePasswordForm.OLD_PASSWORD_FIELD, "errors.not-match", OLD_PASSWORD_NOT_CORRECT_MESSAGE);
 			}
 			// validation for new password
 			else if (passwordHelper.isPasswordTooWeak(validatedObj.getNewPassword())) {
-				errors.rejectValue(ChangePasswordForm.NEW_PASSWORD_FIELD, "errors.too-weak", SHORT_PASSWORD);
+				errors.rejectValue(ChangePasswordForm.NEW_PASSWORD_FIELD, "errors.too-weak", NewPasswordValidator.PASSWORD_LENGTH_MESSAGE);
 
 			} else if (passwordHelper.hasPasswordIncorrectCharacters(validatedObj.getNewPassword())) {
-				errors.rejectValue(ChangePasswordForm.NEW_PASSWORD_FIELD, "errors.invalid-characters", BAD_PASS_CHARS);
+				errors.rejectValue(ChangePasswordForm.NEW_PASSWORD_FIELD, "errors.invalid-characters", NewPasswordValidator.PASSWORD_INVALID_CHARACTERS_MESSAGE);
 			}
 			// validation of password verify field
 			else if (!validatedObj.getNewPassword().equals(validatedObj.getNewPasswordVerify())) {
-				errors.rejectValue(ChangePasswordForm.NEW_PASSWORD_VERIFY_FIELD, "errors.not-match", PASS_DONOT_MATCH);
+				errors.rejectValue(ChangePasswordForm.NEW_PASSWORD_VERIFY_FIELD, "errors.not-match", NewPasswordValidator.PASSWORD_NOT_MATCH_MESSAGE);
 			}
 		}
 	}
