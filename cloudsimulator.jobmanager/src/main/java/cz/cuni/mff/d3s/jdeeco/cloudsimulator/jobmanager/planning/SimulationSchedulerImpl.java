@@ -52,6 +52,7 @@ public class SimulationSchedulerImpl implements SimulationScheduler {
 		simulationPlan.update(allWorkers);
 
 		List<SimulationExecutionEntry> allExecutions = simulationManager.listExecutions();
+		// TODO fix
 		DateTime workerTimeToStart = workerManager.whenWorkerWillBePrepared();
 
 		// add items to simulation plan

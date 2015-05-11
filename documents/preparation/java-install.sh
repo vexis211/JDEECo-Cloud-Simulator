@@ -18,21 +18,6 @@ sudo alternatives --set javac /opt/jdk1.8.0_40/bin/javac
 # install nano - vim is too big
 sudo yum -y install nano
 
-# set environment variables
-# sudo nano /etc/profile.d/java.sh
-# export JAVA_HOME=/opt/jdk1.8.0_40
-# export JRE_HOME=/opt/jdk1.8.0_40/jre
-# export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
-# close nano
-# variables will be loaded after restart, to load it now type: source /etc/profile.d/java.sh
-
-sudo sh -c 'echo "export JAVA_HOME=/opt/jdk1.8.0_40
-export JRE_HOME=/opt/jdk1.8.0_40/jre
-export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin"\
->/etc/profile.d/java.sh'
-
-source /etc/profile.d/java.sh
-
 # clean installers
 sudo rm /opt/server-jre-8u40-linux-x64.tar.gz
 

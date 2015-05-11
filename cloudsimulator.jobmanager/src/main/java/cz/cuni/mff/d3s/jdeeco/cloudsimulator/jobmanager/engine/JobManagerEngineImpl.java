@@ -19,6 +19,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.planning.SimulationPlan;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.planning.SimulationScheduler;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.planning.WorkerPlan;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.planning.WorkerPlanItem;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results.ResultsAggregatedUpdate;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerInstance;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationId;
@@ -111,6 +112,8 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 		simulationManager.updateStatus(simulationStatusUpdates);
 		List<PackagePreparedUpdate> packagePreparedUpdates = takeUpdates(updates, PackagePreparedUpdate.class);
 		simulationManager.updatePackageNames(packagePreparedUpdates);
+		List<ResultsAggregatedUpdate> resultsAggregatedUpdates = takeUpdates(updates, ResultsAggregatedUpdate.class);
+		simulationManager.updateResultsAggregated(resultsAggregatedUpdates);
 
 		// commands
 		// are there any other updates?

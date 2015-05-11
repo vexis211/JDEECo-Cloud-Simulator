@@ -19,3 +19,17 @@ mount /dev/vdb /media/simulationdrive
 
 # install samba and share simulationdrive
 source tomcat-install.sh
+
+# start-up script
+sudo sh -c 'echo "
+
+export JAVA_HOME=/opt/jdk1.8.0_40
+export JRE_HOME=/opt/jdk1.8.0_40/jre
+
+export TOMCAT_HOME=/opt/apache-tomcat-8.0.20
+
+export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin:$TOMCAT_HOME/bin
+
+java -jar /home/centos/jobmanager/cloudsimulator.jobmanager-0.0.1-SNAPSHOT.jar
+">>/etc/rc.d/rc.local'
+sudo chmod +x /etc/rc.d/rc.local

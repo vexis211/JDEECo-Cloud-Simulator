@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.PackagePreparedUpdate;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.SimplePackageManager;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results.ResultsAggregatedUpdate;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results.SimpleResultsAggregator;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpdate;
 
 public class SimulationManagerImpl implements SimulationManager, SimulationExecutionEntryListener {
@@ -20,12 +22,15 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 	private final SimulationRepository simulationRepository;
 	private final SimulationExecutionEntryFactory simulationExecutionEntryFactory;
 	private final SimplePackageManager simplePackageManager;
+	private final SimpleResultsAggregator simpleResultsAggregator;
 
 	public SimulationManagerImpl(SimulationRepository simulationRepository,
-			SimulationExecutionEntryFactory simulationExecutionEntryFactory, SimplePackageManager simplePackageManager) {
+			SimulationExecutionEntryFactory simulationExecutionEntryFactory, SimplePackageManager simplePackageManager,
+			SimpleResultsAggregator simpleResultsAggregator) {
 		this.simulationRepository = simulationRepository;
 		this.simulationExecutionEntryFactory = simulationExecutionEntryFactory;
 		this.simplePackageManager = simplePackageManager;
+		this.simpleResultsAggregator = simpleResultsAggregator;
 	}
 
 	@Override
@@ -56,6 +61,16 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 		for (PackagePreparedUpdate update : updates) {
 			SimulationExecutionEntry simulationExecutionEntry = simulationExecutions.get(update.getExecutionId());
 			simulationExecutionEntry.setIsPackagePrepared();
+		}
+	}
+
+	@Override
+	public void updateResultsAggregated(List<ResultsAggregatedUpdate> updates) {
+		for (ResultsAggregatedUpdate update : updates) {
+			int executionId = update.getExecutionId();
+			simulationExecutions.remove(executionId);
+			// TODO save aggregated results to DB
+			simulationRepository.markExecutionAsCompleted(executionId);
 		}
 	}
 
@@ -113,6 +128,6 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 
 	@Override
 	public void executionCompleted(SimulationExecutionEntry executionEntry) {
-		simulationRepository.markExecutionAsCompleted(executionEntry.getId());
+		simpleResultsAggregator.aggregateResults(executionEntry);
 	}
 }

@@ -1,0 +1,23 @@
+# add python and python/scripts to path
+
+sudo yum -y install python-devel
+
+sudo yum -y install epel-release
+sudo yum -y install python-pip
+
+sudo wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
+sudo python ez_setup.py
+sudo yum install -y libffi libffi-devel
+ 
+sudo pip install requests==2.5.3
+ 
+# sudo pip install python-PROJECTclient
+sudo pip install python-novaclient
+sudo pip install python-neutronclient
+sudo pip install python-cinderclient
+
+sudo yum install gcc
+
+sudo pip install certifi
+
+source skalicky-openrc.sh

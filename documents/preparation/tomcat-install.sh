@@ -14,14 +14,6 @@ sudo tar xzf ${tomcat_name}.tar.gz
 # close nano
 # variables will be loaded after restart, to load it now type: source /etc/profile.d/tomcat.sh
 
-tomcat_name=apache-tomcat-8.0.20
-
-sudo sh -c 'echo "export TOMCAT_HOME=/opt/${tomcat_name}
-export PATH=$PATH:$TOMCAT_HOME/bin"\
->/etc/profile.d/tomcat.sh'
-
-source /etc/profile.d/tomcat.sh
-
 # clean installers
 sudo rm /opt/${tomcat_name}.tar.gz
 
