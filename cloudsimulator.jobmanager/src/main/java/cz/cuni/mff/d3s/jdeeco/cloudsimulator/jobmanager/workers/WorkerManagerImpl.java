@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.cloud.CloudMachine;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.cloud.CloudMachineBuilderParams;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.cloud.CloudMachineService;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.JobStatistics;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.SafeJobStatisticsImpl;
@@ -18,12 +19,11 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdate;
 public class WorkerManagerImpl implements WorkerManager {
 
 	private final Logger logger = Logger.getLogger(WorkerManagerImpl.class);
-	
+
 	private final HashMap<String, WorkerInstance> runningWorkersById = new HashMap<>();
 	private final HashMap<String, WorkerInstance> stoppedWorkersById = new HashMap<>();
 	private final CloudMachineService cloudMachineService;
-	private final String workerTemplateName;
-	private final String workerFlavorName;
+	private final CloudMachineBuilderParams workerBuilderParams;
 	private final WorkerIdGenerator workerIdGenerator;
 	private final JobStatistics<String> workerStartStatistics;
 	private final JobStatistics<String> workerCreateAndStartStatistics;
@@ -31,11 +31,10 @@ public class WorkerManagerImpl implements WorkerManager {
 	private int desiredCreatedWorkerCount = 3; // default value
 	private int desiredRunningWorkerCount = 1; // default value
 
-	public WorkerManagerImpl(CloudMachineService cloudMachineService, String workerTemplateName,
-			String workerFlavorName, WorkerIdGenerator workerIdGenerator) {
+	public WorkerManagerImpl(CloudMachineService cloudMachineService, CloudMachineBuilderParams workerBuilderParams,
+			WorkerIdGenerator workerIdGenerator) {
 		this.cloudMachineService = cloudMachineService;
-		this.workerTemplateName = workerTemplateName;
-		this.workerFlavorName = workerFlavorName;
+		this.workerBuilderParams = workerBuilderParams;
 		this.workerIdGenerator = workerIdGenerator;
 
 		this.workerStartStatistics = new SafeJobStatisticsImpl<String>();
@@ -47,7 +46,7 @@ public class WorkerManagerImpl implements WorkerManager {
 
 	private void initializeWorkerMap() {
 		logger.info("Initializing worker manager from cloud machine servis...");
-		
+
 		for (CloudMachine cloudMachine : cloudMachineService.listMachines()) {
 			WorkerInstance worker = getWorker(cloudMachine);
 			if (worker.getStatus() == WorkerStatus.Stopped) {
@@ -110,8 +109,7 @@ public class WorkerManagerImpl implements WorkerManager {
 	private WorkerInstance createWorker() {
 		String workerId = workerIdGenerator.generate();
 
-		CloudMachine cloudMachine = cloudMachineService.buildMachineFromTemplate(workerTemplateName, workerFlavorName,
-				workerId).build();
+		CloudMachine cloudMachine = cloudMachineService.buildMachineFromTemplate(workerId, workerBuilderParams).build();
 		WorkerInstance worker = getWorker(cloudMachine);
 		return worker;
 	}
@@ -125,7 +123,7 @@ public class WorkerManagerImpl implements WorkerManager {
 	public void stopWorker(WorkerInstance worker) {
 		cloudMachineService.stopMachine(worker.getCloudMachine());
 		worker.setStatus(WorkerStatus.Stopped);
-		
+
 		runningWorkersById.remove(worker.getWorkerId());
 		stoppedWorkersById.put(worker.getWorkerId(), worker);
 	}
@@ -191,7 +189,6 @@ public class WorkerManagerImpl implements WorkerManager {
 			}
 		}
 	}
-	
 
 	private boolean deleteStoppedWorker() {
 		if (!stoppedWorkersById.isEmpty()) {

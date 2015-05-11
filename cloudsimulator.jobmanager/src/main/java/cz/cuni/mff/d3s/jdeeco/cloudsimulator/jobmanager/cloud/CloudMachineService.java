@@ -6,7 +6,7 @@ public interface CloudMachineService {
 
 	List<CloudMachine> listMachines();
 	CloudMachine getMachineWithName(String machineName);
-	CloudMachineBuilder buildMachineFromTemplate(String templateName, String flavorName, String machineName);
+	CloudMachineBuilder buildMachineFromTemplate(String machineName, CloudMachineBuilderParams builderParams);
 	
 	void startMachine(CloudMachine machine);
 	void stopMachine(CloudMachine machine);

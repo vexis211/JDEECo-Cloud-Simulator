@@ -50,9 +50,8 @@ public class OpenStackMachineServiceImpl extends OpenStackComponent implements O
 	}
 
 	@Override
-	public OpenStackMachineBuilder buildMachineFromTemplate(String templateName, String flavorName,
-			String machineName) {
-		return new OpenStackMachineBuilder(openStackConnector, this, templateName, flavorName, machineName);
+	public OpenStackMachineBuilder buildMachineFromTemplate(String machineName, CloudMachineBuilderParams builderParams) {
+		return new OpenStackMachineBuilder(openStackConnector, this, machineName, builderParams);
 	}
 
 	@Override

@@ -26,7 +26,7 @@
 		classpath:properties/openstack-credentials.properties" />
 
 	<!-- Import of configurations -->
-	
+
 	<import resource="classpath*:configuration/hibernate-session.xml" />
 	<import resource="classpath*:configuration/hibernate-daos.xml" />
 
@@ -63,6 +63,7 @@
 		<constructor-arg name="simulationRepository" ref="simulationRepository" />
 		<constructor-arg name="simulationExecutionEntryFactory" ref="simulationExecutionEntryFactory" />
 		<constructor-arg name="simplePackageManager" ref="simplePackageManager" />
+		<constructor-arg name="simpleResultsAggregator" ref="simpleResultsAggregator" />
 	</bean>
 
 	<bean id="simulationRepository" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.SimulationRepositoryImpl"
@@ -138,6 +139,11 @@
 		<constructor-arg name="password" value="${openStack.connect.password}" />
 	</bean>
 
+	<bean id="cloudMachineBuilderParams" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.cloud.CloudMachineBuilderParamsImpl">
+		<constructor-arg name="templateName" value="${openStack.machine.templateName}" />
+		<constructor-arg name="flavorName" value="${openStack.machine.flavorName}" />
+		<constructor-arg name="networkName" value="${openStack.machine.networkName}" />
+	</bean>
 
 	<!-- Workers -->
 
@@ -158,8 +164,7 @@
 	<bean id="workerManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerManagerImpl" scope="singleton">
 		<constructor-arg name="cloudMachineService" ref="cloudMachineService" />
 		<constructor-arg name="workerIdGenerator" ref="workerIdGenerator" />
-		<constructor-arg name="workerTemplateName" value="${openStack.machine.templateName}" />
-		<constructor-arg name="workerFlavorName" value="${openStack.machine.flavorName}" />
+		<constructor-arg name="workerBuilderParams" ref="cloudMachineBuilderParams" />
 	</bean>
 
 	<bean id="workerIdGenerator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerIdGeneratorImpl"
@@ -196,6 +201,15 @@
 		<constructor-arg name="maximumNumberOfWorkers" value="${simulationScheduler.maximumNumberOfWorkers}" />
 		<constructor-arg name="desiredCreatedWorkerCountRatio" value="${simulationScheduler.desiredCreatedWorkerCountRatio}" />
 		<constructor-arg name="desiredRunningWorkerCountRatio" value="${simulationScheduler.desiredRunningWorkerCountRatio}" />
+	</bean>
+
+	<!-- Results -->
+	<bean id="resultsAggregator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results.ResultsAggregatorImpl">
+	</bean>
+
+	<bean id="simpleResultsAggregator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results.SimpleResultsAggregatorImpl">
+		<constructor-arg name="resultsAggregator" ref="resultsAggregator" />
+		<constructor-arg name="jobManagerUpdateQueue" ref="jobManagerUpdateQueue" />
 	</bean>
 
 </beans>

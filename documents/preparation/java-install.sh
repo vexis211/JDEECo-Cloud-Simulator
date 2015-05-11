@@ -15,9 +15,6 @@ sudo alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_40/bin/javac 2
 sudo alternatives --set jar /opt/jdk1.8.0_40/bin/jar
 sudo alternatives --set javac /opt/jdk1.8.0_40/bin/javac
 
-# install nano - vim is too big
-sudo yum -y install nano
-
 # clean installers
 sudo rm /opt/server-jre-8u40-linux-x64.tar.gz
 
