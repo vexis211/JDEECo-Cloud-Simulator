@@ -6,19 +6,25 @@ import org.openstack4j.model.compute.Server.Status;
 public class OpenStackMachine implements CloudMachine {
 
 	private final Server server;
-	private CloudMachineStatus status;
+	private final CloudMachineStatus status;
 
 	public OpenStackMachine(Server server) {
 		this.server = server;
+		this.status = getStatusFrom(server);
+	}
+
+	private CloudMachineStatus getStatusFrom(Server server) {
+
+		if (server.getStatus() == null) {
+			return CloudMachineStatus.Starting;
+		}
 
 		Status serverStatus = server.getStatus();
 		switch (serverStatus) {
 		case ACTIVE:
-			this.status = CloudMachineStatus.Started;
-			break;
+			return CloudMachineStatus.Started;
 		default:
-			this.status = CloudMachineStatus.Stopped;
-			break;
+			return CloudMachineStatus.Stopped;
 		}
 	}
 

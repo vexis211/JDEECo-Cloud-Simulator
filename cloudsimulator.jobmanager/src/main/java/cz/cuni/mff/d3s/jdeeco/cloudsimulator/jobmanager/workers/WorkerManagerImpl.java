@@ -65,7 +65,7 @@ public class WorkerManagerImpl implements WorkerManager {
 	public int getCurrentAvailableWorkerCount() {
 		return runningWorkersById.size();
 	}
-
+	
 	@Override
 	public List<WorkerInstance> listAvailableWorkers() {
 		return runningWorkersById.values().stream().collect(Collectors.toList());
@@ -91,41 +91,38 @@ public class WorkerManagerImpl implements WorkerManager {
 		WorkerInstance workerToStart;
 		if (stoppedWorkersById.isEmpty()) {
 			// create new worker
-			workerToStart = startWorker();
-			workerCreateAndStartStatistics.jobStarted(workerToStart.getWorkerId());
+			String workerId = workerIdGenerator.generate();
+			workerCreateAndStartStatistics.jobStarted(workerId);
+			CloudMachine cloudMachine = cloudMachineService.buildMachineFromTemplate(workerId, workerBuilderParams)
+					.build();
+			workerToStart = getWorker(cloudMachine);
 		} else {
 			// get stopped worker
 			String workerId = stoppedWorkersById.entrySet().stream().findAny().get().getKey();
 			workerToStart = stoppedWorkersById.remove(workerId);
 			workerStartStatistics.jobStarted(workerToStart.getWorkerId());
+			cloudMachineService.startMachine(workerToStart.getCloudMachine());
 		}
 
-		startWorker(workerToStart);
+		runningWorkersById.put(workerToStart.getWorkerId(), workerToStart);
 		workerToStart.setStatus(WorkerStatus.Starting);
 
 		return workerToStart;
 	}
 
-	private WorkerInstance createWorker() {
-		String workerId = workerIdGenerator.generate();
-
-		CloudMachine cloudMachine = cloudMachineService.buildMachineFromTemplate(workerId, workerBuilderParams).build();
-		WorkerInstance worker = getWorker(cloudMachine);
-		return worker;
-	}
-
-	private void startWorker(WorkerInstance stoppedWorker) {
-		cloudMachineService.startMachine(stoppedWorker.getCloudMachine());
-		runningWorkersById.put(stoppedWorker.getWorkerId(), stoppedWorker);
-	}
-
 	@Override
-	public void stopWorker(WorkerInstance worker) {
+	public boolean stopWorker(WorkerInstance worker) {
+		if (getCurrentAvailableWorkerCount() <= desiredRunningWorkerCount) {
+			return false;
+		}
+		
 		cloudMachineService.stopMachine(worker.getCloudMachine());
 		worker.setStatus(WorkerStatus.Stopped);
 
 		runningWorkersById.remove(worker.getWorkerId());
 		stoppedWorkersById.put(worker.getWorkerId(), worker);
+		
+		return true;
 	}
 
 	@Override
@@ -153,34 +150,18 @@ public class WorkerManagerImpl implements WorkerManager {
 
 	private void checkDesiredWorkerCounts() {
 
-		int runningWorkerCountDiff = desiredRunningWorkerCount - getCurrentAvailableWorkerCount();
+		// create/delete workers to get desired number of created workers
+		int workerCountDiff = desiredCreatedWorkerCount - (runningWorkersById.size() + stoppedWorkersById.size());
 
-		// (create and) start workers
-		if (runningWorkerCountDiff > 0) {
-			for (int i = 0; i < runningWorkerCountDiff; i++) {
+		// (create and) start workers - even workers which should be only created needs to be started to initialize,
+		if (workerCountDiff > 0) {
+			for (int i = 0; i < workerCountDiff; i++) {
 				if (startWorker() != null) {
 					break;
 				}
 			}
 		}
-		// simulation scheduler stops workers, which it does not need
-
-		// create/delete workers to get desired number of created workers
-		int workerCountDiff = desiredCreatedWorkerCount
-				- (getCurrentAvailableWorkerCount() + stoppedWorkersById.size());
-
-		// create workers but not start them
-		if (workerCountDiff > 0) {
-			for (int i = 0; i < workerCountDiff; i++) {
-				WorkerInstance newWorker = createWorker();
-				if (newWorker != null) {
-					stoppedWorkersById.put(newWorker.getWorkerId(), newWorker);
-				} else {
-					break;
-				}
-			}
-		}
-		// delete workers, which are stopped
+		// delete workers, which are stopped and are not needed
 		else if (workerCountDiff < 0) {
 			for (int i = 0; i < -workerCountDiff; i++) {
 				if (!deleteStoppedWorker()) {
@@ -188,6 +169,8 @@ public class WorkerManagerImpl implements WorkerManager {
 				}
 			}
 		}
+
+		// simulation scheduler stops workers, which it does not need!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 
 	private boolean deleteStoppedWorker() {
@@ -200,4 +183,5 @@ public class WorkerManagerImpl implements WorkerManager {
 
 		return false;
 	}
+
 }

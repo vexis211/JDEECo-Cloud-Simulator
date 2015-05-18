@@ -20,6 +20,9 @@ public class WorkerInstanceImpl implements WorkerInstance {
 		this.lastStatusChange = DateTime.now();
 
 		switch (cloudMachine.getStatus()) {
+		case Starting:
+			this.status = WorkerStatus.Starting;			
+			break;
 		case Started:
 			this.status = WorkerStatus.Started;			
 			break;

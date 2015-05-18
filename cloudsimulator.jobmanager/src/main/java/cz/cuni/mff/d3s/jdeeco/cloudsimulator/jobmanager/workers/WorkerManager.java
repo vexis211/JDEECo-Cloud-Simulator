@@ -14,7 +14,7 @@ public interface WorkerManager {
 
 	DateTime whenWorkerWillBePrepared();
 	WorkerInstance startWorker();
-	void stopWorker(WorkerInstance worker);
+	boolean stopWorker(WorkerInstance worker);
 	
 	List<WorkerInstance> listAvailableWorkers();
 		

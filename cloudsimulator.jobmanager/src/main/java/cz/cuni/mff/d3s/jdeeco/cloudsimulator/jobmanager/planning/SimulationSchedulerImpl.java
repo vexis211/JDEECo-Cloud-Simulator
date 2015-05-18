@@ -173,10 +173,7 @@ public class SimulationSchedulerImpl implements SimulationScheduler {
 		List<WorkerPlan> removedWorkerPlans = simulationPlan.clearEmptyWorkerPlans();
 		
 		for (WorkerPlan removedWorkerPlan : removedWorkerPlans) {
-			if (workerManager.getCurrentAvailableWorkerCount() <= 1) {
-				// we want at least one worker to run
-				return;
-			}
+			// in some cases worker will not be stopped
 			workerManager.stopWorker(removedWorkerPlan.getWorker());
 		}
 	}
