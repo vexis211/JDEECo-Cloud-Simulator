@@ -73,7 +73,7 @@ public class OpenStackMachineBuilder extends OpenStackComponent implements Cloud
 		// boot the server
 		Server newServer = getClient().compute().servers().boot(newServerCreate);
 
-		OpenStackMachine machine = openStackMachineService.registerCreatedMachine(newServer);
+		OpenStackMachine machine = openStackMachineService.registerCreatedMachine(newServer, machineName);
 		return machine;
 	}
 }

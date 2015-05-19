@@ -6,10 +6,12 @@ import org.openstack4j.model.compute.Server.Status;
 public class OpenStackMachine implements CloudMachine {
 
 	private final Server server;
+	private final String machineName;
 	private final CloudMachineStatus status;
 
-	public OpenStackMachine(Server server) {
+	public OpenStackMachine(Server server, String machineName) {
 		this.server = server;
+		this.machineName = machineName;
 		this.status = getStatusFrom(server);
 	}
 
@@ -35,7 +37,7 @@ public class OpenStackMachine implements CloudMachine {
 
 	@Override
 	public String getName() {
-		return server.getName();
+		return machineName;
 	}
 
 	@Override

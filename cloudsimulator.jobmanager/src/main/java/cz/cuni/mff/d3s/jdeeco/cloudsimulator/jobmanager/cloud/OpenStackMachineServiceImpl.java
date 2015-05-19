@@ -39,11 +39,11 @@ public class OpenStackMachineServiceImpl extends OpenStackComponent implements O
 
 	private void updateFromCloud() {
 		getClient().compute().servers().list().stream().filter(x -> !machinesById.containsKey(x.getId()))
-				.forEach(x -> addMachine(x));
+				.forEach(x -> addMachine(x, x.getName()));
 	}
 
-	private OpenStackMachine addMachine(Server server) {
-		OpenStackMachine machine = new OpenStackMachine(server);
+	private OpenStackMachine addMachine(Server server, String machineName) {
+		OpenStackMachine machine = new OpenStackMachine(server, machineName);
 		machinesById.put(machine.getId(), machine);
 		machinesByName.put(machine.getName(), machine);
 		return machine;
@@ -55,8 +55,8 @@ public class OpenStackMachineServiceImpl extends OpenStackComponent implements O
 	}
 
 	@Override
-	public OpenStackMachine registerCreatedMachine(Server newServer) {
-		return addMachine(newServer);
+	public OpenStackMachine registerCreatedMachine(Server newServer, String machineName) {
+		return addMachine(newServer, machineName);
 	}
 
 	@Override

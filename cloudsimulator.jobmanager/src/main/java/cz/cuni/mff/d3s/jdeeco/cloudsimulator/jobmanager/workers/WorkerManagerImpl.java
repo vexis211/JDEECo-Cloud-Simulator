@@ -47,7 +47,9 @@ public class WorkerManagerImpl implements WorkerManager {
 	private void initializeWorkerMap() {
 		logger.info("Initializing worker manager from cloud machine servis...");
 
-		for (CloudMachine cloudMachine : cloudMachineService.listMachines()) {
+		List<CloudMachine> workerCloudMachines = cloudMachineService.listMachines().stream()
+				.filter(x -> x.getName().startsWith(WorkerIdGenerator.ID_PREFIX)).collect(Collectors.toList());
+		for (CloudMachine cloudMachine : workerCloudMachines) {
 			WorkerInstance worker = getWorker(cloudMachine);
 			if (worker.getStatus() == WorkerStatus.Stopped) {
 				stoppedWorkersById.put(worker.getWorkerId(), worker);
@@ -65,7 +67,7 @@ public class WorkerManagerImpl implements WorkerManager {
 	public int getCurrentAvailableWorkerCount() {
 		return runningWorkersById.size();
 	}
-	
+
 	@Override
 	public List<WorkerInstance> listAvailableWorkers() {
 		return runningWorkersById.values().stream().collect(Collectors.toList());
@@ -115,13 +117,13 @@ public class WorkerManagerImpl implements WorkerManager {
 		if (getCurrentAvailableWorkerCount() <= desiredRunningWorkerCount) {
 			return false;
 		}
-		
+
 		cloudMachineService.stopMachine(worker.getCloudMachine());
 		worker.setStatus(WorkerStatus.Stopped);
 
 		runningWorkersById.remove(worker.getWorkerId());
 		stoppedWorkersById.put(worker.getWorkerId(), worker);
-		
+
 		return true;
 	}
 
@@ -156,7 +158,7 @@ public class WorkerManagerImpl implements WorkerManager {
 		// (create and) start workers - even workers which should be only created needs to be started to initialize,
 		if (workerCountDiff > 0) {
 			for (int i = 0; i < workerCountDiff; i++) {
-				if (startWorker() != null) {
+				if (startWorker() == null) {
 					break;
 				}
 			}
