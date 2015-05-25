@@ -1,8 +1,8 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager;
 
-import java.io.File;
-
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
+//import java.io.File;
+//
+//import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.vcs.GitRepositoryProvider;
 
 public class Test {
@@ -20,12 +20,12 @@ public class Test {
 		repoProvider.update(localRepoPath);
 	}
 
-	private static void testSlashesInPath() {
-		String firstPart = "c:\\Users\\Jan\\SimulationData";
-		String secondPart = "/executions/packages";
-		
-		String combine = PathEx.combine(firstPart, secondPart);
-		File file = new File(combine);
-		file.mkdirs();
-	}
+//	private static void testSlashesInPath() {
+//		String firstPart = "c:\\Users\\Jan\\SimulationData";
+//		String secondPart = "/executions/packages";
+//		
+//		String combine = PathEx.combine(firstPart, secondPart);
+//		File file = new File(combine);
+//		file.mkdirs();
+//	}
 }

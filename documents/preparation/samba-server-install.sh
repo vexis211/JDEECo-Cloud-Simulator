@@ -28,19 +28,19 @@ read only = no"\
 >/etc/samba/smb.conf'
 
 # enable services - samba, netbios
-systemctl enable smb.service
-systemctl enable nmb.service
+sudo systemctl enable smb.service
+sudo systemctl enable nmb.service
 # restart services
-systemctl restart smb.service
-systemctl restart nmb.service
+sudo systemctl restart smb.service
+sudo systemctl restart nmb.service
 # check if services are active
-systemctl is-active smb.service
-systemctl is-active nmb.service
+sudo systemctl is-active smb.service
+sudo systemctl is-active nmb.service
 
 # fix disk ownership
 sudo chmod 777 /media/simulationdrive/
 sudo chown -R nobody:nobody /media/simulationdrive/
-chcon -t samba_share_t /media/simulationdrive/
+sudo chcon -t samba_share_t /media/simulationdrive/
 
 # restart samba service - for sure
-systemctl restart smb.service
+sudo systemctl restart smb.service

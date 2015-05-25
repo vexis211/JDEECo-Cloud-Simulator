@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# launch instance from image
+# flavour: 2.2048
+
 # connect
 ssh -p 10012 centos@openstack.d3s.mff.cuni.cz -i .ssh/skalicky-default.pem
 
@@ -18,9 +21,11 @@ sudo yum -y install samba-client
 sudo yum -y install cifs-utils
 
 # mount samba drive
+# every time check IP of jobmanager !!!!!!!!!!!!!!!!!!!!!!!!!!
 sudo mkdir /media/simulationdrive
-sudo sh -c 'echo "//10.50.0.16/simulationdrive  /media/simulationdrive  cifs  guest,uid=1000,iocharset=utf8  0  0" >> /etc/fstab'
+sudo sh -c 'echo "//10.50.0.36/simulationdrive  /media/simulationdrive  cifs  guest,uid=1000,iocharset=utf8  0  0" >> /etc/fstab'
 sudo mount -a
+sudo chmod 777 /media/simulationdrive
 
 # start-up script
 sudo sh -c 'echo "

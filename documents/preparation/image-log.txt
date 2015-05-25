@@ -1,0 +1,10 @@
+JobManager
+- rights to simulationdrive
+
+- for new:
+	- attach simulationdrive
+	- check samba
+
+
+Worker-Template
+- rights to simulationdrive

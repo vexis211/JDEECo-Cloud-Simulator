@@ -26,6 +26,16 @@
 		<amq:transportConnectors>
 			<amq:transportConnector uri="${jms.brokerUri}" />
 		</amq:transportConnectors>
+		<amq:systemUsage>
+			<amq:systemUsage>
+				<amq:storeUsage>
+					<amq:storeUsage limit="512 mb" />
+				</amq:storeUsage>
+				<amq:tempUsage>
+					<amq:tempUsage limit="512 mb" />
+				</amq:tempUsage>
+			</amq:systemUsage>
+		</amq:systemUsage>
 	</amq:broker>
 
 	<!-- ActiveMQ destinations to use -->

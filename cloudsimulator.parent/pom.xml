@@ -10,6 +10,7 @@
 		<module>../cloudsimulator.common</module>
 		<module>../cloudsimulator.data</module>
 		<module>../cloudsimulator.serversparent</module>
+		<module>../cloudsimulator.logging</module>
 		<module>../cloudsimulator.simulation</module>
 		<module>../cloudsimulator.simulation-archetype</module>
 	</modules>

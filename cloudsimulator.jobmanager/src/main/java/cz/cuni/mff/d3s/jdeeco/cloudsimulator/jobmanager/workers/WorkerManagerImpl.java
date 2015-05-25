@@ -47,9 +47,7 @@ public class WorkerManagerImpl implements WorkerManager {
 	private void initializeWorkerMap() {
 		logger.info("Initializing worker manager from cloud machine servis...");
 
-		List<CloudMachine> workerCloudMachines = cloudMachineService.listMachines().stream()
-				.filter(x -> x.getName().startsWith(WorkerIdGenerator.ID_PREFIX)).collect(Collectors.toList());
-		for (CloudMachine cloudMachine : workerCloudMachines) {
+		for (CloudMachine cloudMachine : cloudMachineService.listMachines()) {
 			WorkerInstance worker = getWorker(cloudMachine);
 			if (worker.getStatus() == WorkerStatus.Stopped) {
 				stoppedWorkersById.put(worker.getWorkerId(), worker);
