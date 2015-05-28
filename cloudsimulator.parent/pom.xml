@@ -37,6 +37,7 @@
 		<maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
 		<maven-resources-plugin.version>2.7</maven-resources-plugin.version>
 		<maven-release-plugin.version>2.5.1</maven-release-plugin.version>
+		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 		<buildnumber-maven-plugin.version>1.3</buildnumber-maven-plugin.version>
 		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
 		<maven-war-plugin.version>2.6</maven-war-plugin.version>
@@ -81,6 +82,20 @@
 		</profile>
 	</profiles>
 
+	<repositories>
+		<repository>
+			<id>d3s</id>
+			<name>D3S maven repository</name>
+			<url>https://gitlab.d3s.mff.cuni.cz:8443/nexus/content/repositories/releases</url>
+		</repository>
+		<repository>
+			<id>d3s-myrepo</id>
+			<name>My D3S maven repository</name>
+			<url>https://gitlab.d3s.mff.cuni.cz:8443/nexus/content/repositories/skalicky</url>
+		</repository>
+	</repositories>
+	
+	
 	<dependencies>
 
 		<!-- Tests -->
@@ -116,8 +131,20 @@
 
 	</dependencies>
 
-	<build>
+	<distributionManagement>
+		<repository>
+			<id>deployment</id>
+			<name>Releases</name>
+			<url>https://gitlab.d3s.mff.cuni.cz:8443/nexus/content/repositories/skalicky</url>
+		</repository>
+		<snapshotRepository>
+			<id>deployment</id>
+			<name>Snapshots</name>
+			<url>https://gitlab.d3s.mff.cuni.cz:8443/nexus/content/repositories/skalicky</url>
+		</snapshotRepository>
+	</distributionManagement>
 
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -161,6 +188,12 @@
 						<checkModificationExclude>pom.xml</checkModificationExclude>
 					</checkModificationExcludes>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>${maven-deploy-plugin.version}</version>
 			</plugin>
 
 		</plugins>

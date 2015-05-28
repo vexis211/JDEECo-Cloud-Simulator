@@ -1,4 +1,4 @@
-package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation;
+package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +19,7 @@ import cz.cuni.mff.d3s.deeco.runtime.RuntimeFrameworkBuilder;
 
 public class SimulationBootstrapperImpl implements SimulationBootstrapper {
 
-	private Logger logger;
+	private static Logger logger;
 
 	@Override
 	public void initializeLogging() throws FileNotFoundException {

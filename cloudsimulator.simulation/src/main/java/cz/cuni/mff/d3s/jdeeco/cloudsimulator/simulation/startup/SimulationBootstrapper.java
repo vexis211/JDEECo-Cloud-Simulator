@@ -1,4 +1,4 @@
-package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation;
+package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup;
 
 import java.io.FileNotFoundException;
 
