@@ -13,7 +13,7 @@ public class StatisticsSumProcessor<T extends Number> implements StatisticsValue
 	}
 
 	@Override
-	public void persist(StatisticsPersister<T> persister) {
-		persister.persistScalarValue(StatisticsSaveMode.Sum, sum);
+	public void persist(StatisticsPersister persister) {
+		persister.addScalarValue(StatisticsSaveMode.Sum, sum);
 	}
 }

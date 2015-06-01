@@ -15,7 +15,7 @@ public class StatisticsAvgProcessor<T extends Number> implements StatisticsValue
 	}
 
 	@Override
-	public void persist(StatisticsPersister<T> persister) {
-		persister.persistScalarValue(StatisticsSaveMode.Avg, count != 0 ? sum / count : 0d);
+	public void persist(StatisticsPersister persister) {
+		persister.addScalarValue(StatisticsSaveMode.Avg, count != 0 ? sum / count : 0d);
 	}
 }

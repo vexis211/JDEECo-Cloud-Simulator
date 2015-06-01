@@ -17,11 +17,11 @@ public class StatisticsVectorProcessor<T> implements StatisticsValueProcessor<T>
 	}
 
 	@Override
-	public void persist(StatisticsPersister<T> persister) {
-		persister.startPersistingVector(StatisticsSaveMode.Vector);
+	public void persist(StatisticsPersister persister) {
+		persister.startVector(StatisticsSaveMode.Vector);
 		for (T value : values) {
-			persister.persistVectorValue(value);
+			persister.addVectorValue(value);
 		}
-		persister.endPersistingVector();
+		persister.endVector();
 	}
 }

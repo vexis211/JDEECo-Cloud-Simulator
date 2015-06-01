@@ -18,7 +18,7 @@ public class StatisticsMinNumberProcessor<T extends Number> implements Statistic
 	}
 
 	@Override
-	public void persist(StatisticsPersister<T> persister) {
-		persister.persistScalarValue(StatisticsSaveMode.Min, isSet ? minValue: null);
+	public void persist(StatisticsPersister persister) {
+		persister.addScalarValue(StatisticsSaveMode.Min, isSet ? minValue: null);
 	}
 }

@@ -28,7 +28,7 @@ public class StatisticsProcessorImpl<T> implements StatisticsProcessor<T> {
 	}
 
 	@Override
-	public void persist(StatisticsPersister<T> persister) {
+	public void persist(StatisticsPersister persister) {
 		persister.startStatistic(statisticId);
 
 		for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {

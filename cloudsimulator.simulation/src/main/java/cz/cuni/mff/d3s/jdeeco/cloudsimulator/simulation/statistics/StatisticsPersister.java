@@ -1,12 +1,15 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics;
 
-public interface StatisticsPersister<T> {
+public interface StatisticsPersister {
+	void start();
+	void end();
+	
 	void startStatistic(String statisticId);
 	void endStatistic();
 
-	void persistScalarValue(StatisticsSaveMode mode, Object value);
+	void addScalarValue(StatisticsSaveMode mode, Object value);
 
-	void startPersistingVector(StatisticsSaveMode mode);
-	void persistVectorValue(Object value);
-	void endPersistingVector();
+	void startVector(StatisticsSaveMode mode);
+	void addVectorValue(Object value);
+	void endVector();
 }

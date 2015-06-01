@@ -4,5 +4,5 @@ public interface StatisticsProcessor<T> {
 	String getStatisticId();
 	
 	void process(T value);
-	void persist(StatisticsPersister<T> persister);
+	void persist(StatisticsPersister persister);
 }

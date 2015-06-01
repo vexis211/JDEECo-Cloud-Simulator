@@ -18,7 +18,7 @@ public class StatisticsMaxNumberProcessor<T extends Number> implements Statistic
 	}
 
 	@Override
-	public void persist(StatisticsPersister<T> persister) {
-		persister.persistScalarValue(StatisticsSaveMode.Max, isSet ? maxValue: null);
+	public void persist(StatisticsPersister persister) {
+		persister.addScalarValue(StatisticsSaveMode.Max, isSet ? maxValue: null);
 	}
 }

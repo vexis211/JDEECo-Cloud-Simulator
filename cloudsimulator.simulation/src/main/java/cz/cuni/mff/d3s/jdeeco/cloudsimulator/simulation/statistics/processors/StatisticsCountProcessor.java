@@ -14,7 +14,7 @@ public class StatisticsCountProcessor<T> implements StatisticsValueProcessor<T> 
 
 
 	@Override
-	public void persist(StatisticsPersister<T> persister) {
-		persister.persistScalarValue(StatisticsSaveMode.Count, count);
+	public void persist(StatisticsPersister persister) {
+		persister.addScalarValue(StatisticsSaveMode.Count, count);
 	}
 }
