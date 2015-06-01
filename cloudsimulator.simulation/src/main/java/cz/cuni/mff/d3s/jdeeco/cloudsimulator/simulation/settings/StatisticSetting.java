@@ -6,6 +6,10 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 @XStreamAlias("Statistic")
 public class StatisticSetting {
 
+	@XStreamAlias("Type")
+	@XStreamAsAttribute
+	private final StatisticSettingType type;
+	
 	@XStreamAlias("Id")
 	@XStreamAsAttribute
 	private final String id;
@@ -14,16 +18,21 @@ public class StatisticSetting {
 	@XStreamAsAttribute
 	private final String save;
 
+	public StatisticSetting(StatisticSettingType type, String id, String save) {
+		this.type = type;
+		this.id = id;
+		this.save = save;
+	}
+
+	public StatisticSettingType getType() {
+		return type;
+	}
+
 	public String getId() {
 		return id;
 	}
 
 	public String getSave() {
 		return save;
-	}
-
-	public StatisticSetting(String id, String save) {
-		this.id = id;
-		this.save = save;
 	}
 }

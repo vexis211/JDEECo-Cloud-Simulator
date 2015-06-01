@@ -4,14 +4,15 @@
     <Profiles>
       <Profile Id="profile1">
         <Default Save="Min"/>
-        <Statistic Id="Hit" Save="Count"/>
-        <Statistic Id="HulaHula" Save="Count"/>
+        <Statistic Type="Plain" Id="Hit" Save="Count"/>
+        <Statistic Type="Plain" Id="HulaHula" Save="Count"/>
       </Profile>
       <Profile Id="profile2">
+        <Default Save="Min,Max,Avg,Vector"/>
         <Import ProfileId="profile1"/>
         <Import ProfileId="profile1"/>
-        <Statistic Id="Test1" Save="Count"/>
-        <Statistic Id="Test2" Save="Vector"/>
+        <Statistic Type="Plain" Id="Test1" Save="Count"/>
+        <Statistic Type="Regex" Id="Test2" Save="Vector"/>
       </Profile>
     </Profiles>
   </Statistics>

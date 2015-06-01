@@ -22,7 +22,7 @@ public class StatisticsSettingsProfile {
 
 	@XStreamImplicit(itemFieldName = "Statistic")
 	private final ArrayList<StatisticSetting> statistics;
-
+	
 	public StatisticsSettingsProfile(String id, DefaultStatisticSetting defaultStatistic,
 			List<StatisticsSettingsProfileImport> imports, List<StatisticSetting> statistics) {
 		this.id = id;

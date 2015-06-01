@@ -1,7 +1,7 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.StatisticSetting;
+import java.util.EnumSet;
 
 public interface StatisticsConfiguration {
-	void initialize(StatisticSetting setting);
+	EnumSet<StatisticsSaveMode> getSaveModes(String statisticId);
 }
