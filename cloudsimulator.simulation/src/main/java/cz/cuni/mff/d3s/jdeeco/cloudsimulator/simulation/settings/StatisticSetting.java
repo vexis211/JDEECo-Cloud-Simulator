@@ -3,6 +3,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.StatisticSettingType;
+
 @XStreamAlias("Statistic")
 public class StatisticSetting {
 

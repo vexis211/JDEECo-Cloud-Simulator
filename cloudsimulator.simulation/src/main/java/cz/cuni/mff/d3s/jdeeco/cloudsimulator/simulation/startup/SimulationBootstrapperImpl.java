@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.apache.log4j.Logger;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.Log4jConfigurer;
 
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessor;
@@ -16,10 +17,15 @@ import cz.cuni.mff.d3s.deeco.runtime.RuntimeConfiguration.Execution;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeConfiguration.Scheduling;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFrameworkBuilder;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.asserts.Assert;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.asserts.AssertHandler;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.statistics.Statistics;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.statistics.StatisticsHandler;
 
 public class SimulationBootstrapperImpl implements SimulationBootstrapper {
 
 	private static Logger logger;
+	private static ClassPathXmlApplicationContext context;
 
 	@Override
 	public void initializeLogging() throws FileNotFoundException {
@@ -30,12 +36,22 @@ public class SimulationBootstrapperImpl implements SimulationBootstrapper {
 		Log4jConfigurer.initLogging("classpath:configuration/log4j.xml");
 		logger = Logger.getLogger(SimulationBootstrapperImpl.class);
 		logger.info("Initialized logging.");
+
+		// application context
+		logger.info("Creating application context...");
+		context = new ClassPathXmlApplicationContext("configuration/application-context.xml");
+
+		// configure statistics
+		Statistics.Handler = (StatisticsHandler) context.getBean("statisticsHandler");
+
+		// configure asserts
+		Assert.Handler = (AssertHandler) context.getBean("assertHandler");
 	}
 
 	@Override
 	public void startSimulation(SimulationStartParameters startParameters) throws AnnotationProcessorException {
 		logger.info("Starting simulation...");
-		
+
 		AnnotationProcessor processor = new AnnotationProcessor(RuntimeMetadataFactoryExt.eINSTANCE);
 		RuntimeMetadata model = RuntimeMetadataFactoryExt.eINSTANCE.createRuntimeMetadata();
 
@@ -48,4 +64,10 @@ public class SimulationBootstrapperImpl implements SimulationBootstrapper {
 		runtime.start();
 	}
 
+	public void dispose() {
+		if (context != null) {
+			logger.info("Destroying context...");
+			context.close();
+		}
+	}
 }

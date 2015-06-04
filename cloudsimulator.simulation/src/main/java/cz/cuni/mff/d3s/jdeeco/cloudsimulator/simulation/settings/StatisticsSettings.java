@@ -10,26 +10,26 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 public class StatisticsSettings {
 
 	@XStreamAlias("Default")
-	private final DefaultStatisticSetting defaultStatistic;
+	private final DefaultStatisticSetting defaultSetting;
 
 	@XStreamAlias("Profiles")
 	private final ArrayList<StatisticsSettingsProfile> profiles;
 
 	public DefaultStatisticSetting getDefaultStatistic() {
-		return defaultStatistic;
+		return defaultSetting;
 	}
 
 	public List<StatisticsSettingsProfile> getProfiles() {
 		return profiles;
 	}
 
-	public StatisticsSettings(DefaultStatisticSetting defaultStatistic, List<StatisticsSettingsProfile> profiles) {
-		this.defaultStatistic = defaultStatistic;
+	public StatisticsSettings(DefaultStatisticSetting defaultSetting, List<StatisticsSettingsProfile> profiles) {
+		this.defaultSetting = defaultSetting;
 		this.profiles = profiles != null ? new ArrayList<StatisticsSettingsProfile>(profiles) : null;
 	}
 
 	private Object readResolve() throws IOException {
-		if (this.defaultStatistic == null) {
+		if (this.defaultSetting == null) {
 			throw new IOException("Cannot read object: Default element is compulsory.");
 		}
 		return this;

@@ -1,4 +1,6 @@
 <SimulationSettings>
+  <!-- Time = 10 * 60 * 1000 -->
+  <SimulationEnd Type="RealTime" Time="600000" /> 
   <Statistics>
     <Default Save="Min,Max"/>
     <Profiles>

@@ -8,42 +8,42 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("Profile")
-public class StatisticsSettingsProfile {
+public class AssertSettingsProfile {
 
 	@XStreamAsAttribute
 	@XStreamAlias("Id")
 	private final String id;
 
 	@XStreamAlias("Default")
-	private final DefaultStatisticSetting defaultStatisticSetting;
+	private final DefaultAssertSetting defaultAssertSetting;
 
 	@XStreamImplicit(itemFieldName = "Import")
 	private final ArrayList<SettingsProfileImport> profileImports;
 
-	@XStreamImplicit(itemFieldName = "Statistic")
-	private final ArrayList<StatisticSetting> statisticSettings;
+	@XStreamImplicit(itemFieldName = "Assert")
+	private final ArrayList<AssertGroupSetting> assertGroupSettings;
 	
-	public StatisticsSettingsProfile(String id, DefaultStatisticSetting defaultStatisticSetting,
-			List<SettingsProfileImport> profileImports, List<StatisticSetting> statisticSettings) {
+	public AssertSettingsProfile(String id, DefaultAssertSetting defaultAssertSetting,
+			List<SettingsProfileImport> profileImports, List<AssertGroupSetting> assertGroupSettings) {
 		this.id = id;
-		this.defaultStatisticSetting = defaultStatisticSetting;
+		this.defaultAssertSetting = defaultAssertSetting;
 		this.profileImports = profileImports != null ? new ArrayList<SettingsProfileImport>(profileImports) : null;
-		this.statisticSettings = statisticSettings != null ? new ArrayList<StatisticSetting>(statisticSettings) : null;
+		this.assertGroupSettings = assertGroupSettings != null ? new ArrayList<AssertGroupSetting>(assertGroupSettings) : null;
 	}
 
 	public String getId() {
 		return id;
 	}
 
-	public DefaultStatisticSetting getDefaultStatisticSettings() {
-		return defaultStatisticSetting;
+	public DefaultAssertSetting getDefaultAssertSettings() {
+		return defaultAssertSetting;
 	}
 
 	public List<SettingsProfileImport> getProfileImports() {
 		return profileImports;
 	}
 
-	public List<StatisticSetting> getStatisticSettings() {
-		return statisticSettings;
+	public List<AssertGroupSetting> getAssertGroupSettings() {
+		return assertGroupSettings;
 	}
 }

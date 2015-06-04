@@ -24,5 +24,7 @@ public class App
 		
 		SimulationStartParameters startParameters = new SimulationStartParametersImpl(rootComponent);
 		bootstrapper.startSimulation(startParameters);
+		
+		bootstrapper.destroy();
     }
 }

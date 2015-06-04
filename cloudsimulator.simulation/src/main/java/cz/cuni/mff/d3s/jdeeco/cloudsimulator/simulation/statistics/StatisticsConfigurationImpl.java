@@ -19,7 +19,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.DefaultStatisti
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.StatisticSetting;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.StatisticsSettings;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.StatisticsSettingsProfile;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.StatisticsSettingsProfileImport;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SettingsProfileImport;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.StatisticsSettingsProvider;
 
 public class StatisticsConfigurationImpl implements StatisticsConfiguration {
 
@@ -32,8 +33,8 @@ public class StatisticsConfigurationImpl implements StatisticsConfiguration {
 	private final StatisticsSettings settings;
 	private final String statisticsProfileId;
 
-	public StatisticsConfigurationImpl(StatisticsSettings settings, String statisticsProfileId) {
-		this.settings = settings;
+	public StatisticsConfigurationImpl(StatisticsSettingsProvider settingsProvider, String statisticsProfileId) {
+		this.settings = settingsProvider.getStatisticsSettings();
 		this.statisticsProfileId = statisticsProfileId;
 
 		this.initializeSettings();
@@ -77,7 +78,7 @@ public class StatisticsConfigurationImpl implements StatisticsConfiguration {
 			applyStatisticsFromProfile(profile);
 
 			// we want to let later added imports to have preference between previously added imports
-			List<StatisticsSettingsProfileImport> profileImports = profile.getImports();
+			List<SettingsProfileImport> profileImports = profile.getProfileImports();
 			for (int i = profileImports.size() - 1; i >= 0; i--) {
 				String importProfileId = profileImports.get(i).getProfileId();
 				if (profileId2Profile.containsKey(importProfileId)) {
@@ -106,15 +107,15 @@ public class StatisticsConfigurationImpl implements StatisticsConfiguration {
 	}
 
 	private void applyDefaultFromProfile(StatisticsSettingsProfile profile) {
-		if (this.defaultSaveModes == null && profile.getDefaultStatistic() != null) {
-			String saveModesString = profile.getDefaultStatistic().getSave();
+		if (this.defaultSaveModes == null && profile.getDefaultStatisticSettings() != null) {
+			String saveModesString = profile.getDefaultStatisticSettings().getSave();
 			this.defaultSaveModes = StatisticsSaveModesParser.parseSaveModes(saveModesString);
 		}
 	}
 
 	private final void applyStatisticsFromProfile(StatisticsSettingsProfile profile) {
 
-		for (StatisticSetting statisticSetting : profile.getStatistics()) {
+		for (StatisticSetting statisticSetting : profile.getStatisticSettings()) {
 			String toMatch = statisticSetting.getId();
 			EnumSet<StatisticsSaveMode> saveMode = StatisticsSaveModesParser.parseSaveModes(statisticSetting.getSave());
 
@@ -137,8 +138,8 @@ public class StatisticsConfigurationImpl implements StatisticsConfiguration {
 	}
 
 	public final EnumSet<StatisticsSaveMode> getDefaultSaveModes(StatisticsSettingsProfile profile) {
-		DefaultStatisticSetting defaultStatistics = profile.getDefaultStatistic() != null ? profile
-				.getDefaultStatistic() : this.settings.getDefaultStatistic();
+		DefaultStatisticSetting defaultStatistics = profile.getDefaultStatisticSettings() != null ? profile
+				.getDefaultStatisticSettings() : this.settings.getDefaultStatistic();
 		return StatisticsSaveModesParser.parseSaveModes(defaultStatistics.getSave());
 	}
 

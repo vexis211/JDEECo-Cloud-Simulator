@@ -5,8 +5,17 @@ import java.util.List;
 
 public class AggregateAssertHandler implements AssertHandler {
 
-	private final List<AssertHandler> handlers = new ArrayList<>();
+	private final List<AssertHandler> handlers;
 
+	public AggregateAssertHandler() {
+		this.handlers = new ArrayList<>();
+	}
+	
+	public AggregateAssertHandler(List<AssertHandler> handlers) {
+		this.handlers = new ArrayList<AssertHandler>(handlers);
+	}
+	
+	
 	public void addHandler(AssertHandler handler) {
 		synchronized (handlers) {
 			handlers.add(handler);

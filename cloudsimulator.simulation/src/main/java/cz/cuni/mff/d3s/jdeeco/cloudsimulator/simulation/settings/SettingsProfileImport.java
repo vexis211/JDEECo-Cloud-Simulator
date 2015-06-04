@@ -4,7 +4,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("Import")
-public class StatisticsSettingsProfileImport {
+public class SettingsProfileImport {
 
 	@XStreamAlias("ProfileId")
 	@XStreamAsAttribute
@@ -14,7 +14,7 @@ public class StatisticsSettingsProfileImport {
 		return profileId;
 	}
 
-	public StatisticsSettingsProfileImport(String profileId) {
+	public SettingsProfileImport(String profileId) {
 		this.profileId = profileId;
 	}
 }

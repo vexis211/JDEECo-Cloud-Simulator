@@ -8,4 +8,5 @@ public interface SimulationBootstrapper {
 	void initializeLogging() throws FileNotFoundException;
 
 	void startSimulation(SimulationStartParameters startParameters) throws AnnotationProcessorException;
+	void dispose();
 }
