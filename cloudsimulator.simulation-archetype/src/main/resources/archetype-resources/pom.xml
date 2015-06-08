@@ -16,6 +16,11 @@
 			<url>https://gitlab.d3s.mff.cuni.cz:8443/nexus/content/repositories/releases</url>
 		</repository>
 		<repository>
+			<id>d3s-myrepo</id>
+			<name>My D3S maven repository</name>
+			<url>https://gitlab.d3s.mff.cuni.cz:8443/nexus/content/repositories/skalicky</url>
+		</repository>
+		<repository>
 			<id>ProjectLibraries</id>
 			<name>Repository in project's lib subdirectory</name>
 			<layout>default</layout>

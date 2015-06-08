@@ -19,17 +19,20 @@ import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFrameworkBuilder;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.asserts.Assert;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.asserts.AssertHandler;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.statistics.Statistics;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.statistics.StatisticsHandler;
 
 public class SimulationBootstrapperImpl implements SimulationBootstrapper {
 
 	private static Logger logger;
-	private static ClassPathXmlApplicationContext context;
+	
+	private static ClassPathXmlApplicationContext context;	
+	private static StatisticsManager statisticsManager;
 
 	@Override
 	public void initializeLogging() throws FileNotFoundException {
-		File logsDir = new File("logs");
+		File logsDir = new File("logs"); // TODO improvement - from settings
 		logsDir.mkdirs();
 
 		// configure logger from XML configuration file
@@ -41,9 +44,14 @@ public class SimulationBootstrapperImpl implements SimulationBootstrapper {
 		logger.info("Creating application context...");
 		context = new ClassPathXmlApplicationContext("configuration/application-context.xml");
 
+		// directory for statistics, ...
+		File resultsDir = new File("results"); // TODO improvement - from settings
+		resultsDir.mkdirs();
+		
 		// configure statistics
 		Statistics.Handler = (StatisticsHandler) context.getBean("statisticsHandler");
-
+		statisticsManager = (StatisticsManager) context.getBean("statisticsManager");
+		
 		// configure asserts
 		Assert.Handler = (AssertHandler) context.getBean("assertHandler");
 	}
@@ -65,6 +73,10 @@ public class SimulationBootstrapperImpl implements SimulationBootstrapper {
 	}
 
 	public void dispose() {
+		if (statisticsManager != null) {
+			statisticsManager.persistStatistics();
+		}
+		
 		if (context != null) {
 			logger.info("Destroying context...");
 			context.close();

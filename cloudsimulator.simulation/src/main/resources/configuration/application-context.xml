@@ -14,8 +14,7 @@
 		http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
 
 	<!-- Import of properties -->
-	<!-- <context:property-placeholder location=" classpath:properties/config.properties, classpath:properties/build.properties" 
-		/> -->
+	<context:property-placeholder location="classpath:properties/config.properties" />
 
 	<!-- Statistics -->
 
@@ -28,31 +27,45 @@
 		scope="singleton">
 		<constructor-arg name="statisticsConfiguration" ref="statisticsConfiguration" />
 		<constructor-arg name="statisticsProcessorFactoryProvider" ref="statisticsProcessorFactoryProvider" />
+		<constructor-arg name="statisticsPersister" ref="statisticsPersister" />
 	</bean>
 
 	<bean id="statisticsConfiguration" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsConfigurationImpl"
 		scope="singleton">
 		<constructor-arg name="settingsProvider" ref="xmlSettingsProvider" />
-		<constructor-arg name="statisticsProfileId" value="${TODO}" />
+		<constructor-arg name="statisticsProfileId" value="${simulation.statistics.profileId}" />
 	</bean>
 
 	<bean id="xmlSettingsProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.XmlSettingsProviderImpl"
-		scope="singleton" />
+		scope="singleton">
+		<constructor-arg name="settingsFileName" value="${simulation.settings.filePath}" />
+	</bean>
 
 	<bean id="statisticsProcessorFactoryProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsProcessorFactoryProviderImpl" />
+
+	<bean id="statisticsPersister" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsPersisterImpl">
+		<constructor-arg name="persistFile" value="${simulation.statistics.outputFile}" />
+	</bean>
 
 
 	<!-- Asserts -->
 
-	<bean id="assertHandler" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.asserts.AggregateAssertHandler" scope="singleton">
-		<constructor-arg name="handlers">
-			<list>
-				<ref bean="loggingAssertHandler" />
-				<!-- TODO exit assert handler -->
-			</list>
-		</constructor-arg>
+	<bean id="assertHandler" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.logging.ProcessingAssertHandler"
+		scope="singleton">
+		<constructor-arg name="assertManager" ref="assertManager" />
 	</bean>
 
-	<bean id="loggingAssertHandler" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.logging.LoggingAssertHandler"
-		scope="singleton" />
+	<bean id="assertManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.AssertManagerImpl" scope="singleton">
+		<constructor-arg name="assertConfiguration" ref="statisticsConfiguration" />
+		<constructor-arg name="assertProcessorFactory" ref="statisticsProcessorFactoryProvider" />
+	</bean>
+
+	<bean id="assertConfiguration" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.AssertConfigurationImpl"
+		scope="singleton">
+		<constructor-arg name="settingsProvider" ref="xmlSettingsProvider" />
+		<constructor-arg name="assertsProfileId" value="${simulation.asserts.profileId}" />
+	</bean>
+
+	<bean id="assertProcessorFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.AssertProcessorFactoryImpl" />
+
 </beans>

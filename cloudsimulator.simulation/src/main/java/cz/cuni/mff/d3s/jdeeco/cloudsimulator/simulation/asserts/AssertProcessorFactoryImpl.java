@@ -40,5 +40,4 @@ public class AssertProcessorFactoryImpl implements AssertProcessorFactory {
 
 		return processors.size() == 1 ? processors.get(0) : new AggregateAssertProcessor(assertGroup, processors);
 	}
-
 }
