@@ -2,7 +2,10 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.statistics;
 
 public class Statistics {
 	public static StatisticsHandler Handler = new VoidStatisticsHandler();
-	
+
+	public static void Write(String id) {
+		Handler.write(id);
+	}
 	public static void Write(String id, boolean value) {
 		Handler.write(id, value);
 	}

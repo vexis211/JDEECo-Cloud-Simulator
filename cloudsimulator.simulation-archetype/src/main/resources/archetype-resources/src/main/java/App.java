@@ -17,7 +17,7 @@ public class App
     public static void main(String[] args) throws Exception
     {
     	SimulationBootstrapper bootstrapper = new SimulationBootstrapperImpl();
-    	bootstrapper.initializeLogging();
+    	bootstrapper.initialize();
     	
     	// TODO replace with your component
 		Object rootComponent = new HelloWorld("HELLO");

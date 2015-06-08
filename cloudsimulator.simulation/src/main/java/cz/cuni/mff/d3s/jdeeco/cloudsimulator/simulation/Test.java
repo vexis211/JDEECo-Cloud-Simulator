@@ -20,6 +20,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.DefaultAssertSe
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.DefaultStatisticSetting;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SettingsProfileImport;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SimulationEndSettings;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SimulationRunSettings;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SimulationRunSettingsProfile;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SimulationSettings;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.StatisticSetting;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.StatisticsSettings;
@@ -33,17 +35,21 @@ public class Test {
 
 	private static void testXml() {
 
-		// end
+		// run
 		SimulationEndSettings simulationEndSettings = new SimulationEndSettings(
 				SimulationEndSpecificationType.RealTime, 10 * 60 * 1000);
+
+		SimulationRunSettings simulationRunSettings = new SimulationRunSettings(
+				Arrays.asList(new SimulationRunSettingsProfile("default", simulationEndSettings)));
 
 		// asserts
 		DefaultAssertSetting defaultAssertSetting = new DefaultAssertSetting(AssertAction.Log.toString());
 		List<AssertGroupSetting> assertGroups = Arrays.asList(new AssertGroupSetting("Severe", AssertAction.ExitRun
 				.toString()));
-		
-		AssertSettingsProfile assertProfile1 = new AssertSettingsProfile("assertProfile1", defaultAssertSetting, null, assertGroups);
-		
+
+		AssertSettingsProfile assertProfile1 = new AssertSettingsProfile("assertProfile1", defaultAssertSetting, null,
+				assertGroups);
+
 		AssertsSettings assertsSettings = new AssertsSettings(defaultAssertSetting, Arrays.asList(assertProfile1));
 
 		// statistics
@@ -51,15 +57,14 @@ public class Test {
 				"Min"), null, Arrays.asList(new StatisticSetting(StatisticSettingType.Plain, "Hit", "Count"),
 				new StatisticSetting(StatisticSettingType.Plain, "HulaHula", "Count")));
 		StatisticsSettingsProfile profile2 = new StatisticsSettingsProfile("profile2", new DefaultStatisticSetting(
-				"Min,Max,Avg,Vector"), Arrays.asList(new SettingsProfileImport("profile1"),
-				new SettingsProfileImport("profile1")), Arrays.asList(new StatisticSetting(
-				StatisticSettingType.Plain, "Test1", "Count"), new StatisticSetting(StatisticSettingType.Regex,
-				"Test2", "Vector")));
+				"Min,Max,Avg,Vector"), Arrays.asList(new SettingsProfileImport("profile1"), new SettingsProfileImport(
+				"profile1")), Arrays.asList(new StatisticSetting(StatisticSettingType.Plain, "Test1", "Count"),
+				new StatisticSetting(StatisticSettingType.Regex, "Test2", "Vector")));
 
 		StatisticsSettings statisticsSettings = new StatisticsSettings(new DefaultStatisticSetting("Min,Max"),
 				Arrays.asList(profile1, profile2));
 
-		SimulationSettings settings = new SimulationSettings(simulationEndSettings, assertsSettings, statisticsSettings);
+		SimulationSettings settings = new SimulationSettings(simulationRunSettings, assertsSettings, statisticsSettings);
 
 		XStream xStream = new XStream();
 		xStream.processAnnotations(SimulationSettings.class);

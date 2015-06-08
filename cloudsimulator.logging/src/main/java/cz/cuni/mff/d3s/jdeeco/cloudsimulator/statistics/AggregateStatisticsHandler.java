@@ -20,6 +20,15 @@ public class AggregateStatisticsHandler implements StatisticsHandler {
 	}
 
 	@Override
+	public void write(String id) {
+		synchronized (handlers) {
+			for (StatisticsHandler handler : handlers) {
+				handler.write(id);
+			}
+		}
+	}
+
+	@Override
 	public void write(String id, boolean value) {
 		synchronized (handlers) {
 			for (StatisticsHandler handler : handlers) {

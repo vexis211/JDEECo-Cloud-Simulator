@@ -4,8 +4,8 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("SimulationSettings")
 public class SimulationSettings {
-	@XStreamAlias("SimulationEnd")
-	private final SimulationEndSettings simulationEndSettings;
+	@XStreamAlias("SimulationRun")
+	private final SimulationRunSettings simulationRunSettings;
 
 	@XStreamAlias("Asserts")
 	private final AssertsSettings assertsSettings;
@@ -13,15 +13,15 @@ public class SimulationSettings {
 	@XStreamAlias("Statistics")
 	private final StatisticsSettings statisticsSettings;
 
-	public SimulationSettings(SimulationEndSettings simulationEndSettings, AssertsSettings assertsSettings,
+	public SimulationSettings(SimulationRunSettings simulationRunSettings, AssertsSettings assertsSettings,
 			StatisticsSettings statisticsSettings) {
-		this.simulationEndSettings = simulationEndSettings;
+		this.simulationRunSettings = simulationRunSettings;
 		this.assertsSettings = assertsSettings;
 		this.statisticsSettings = statisticsSettings;
 	}
 
-	public SimulationEndSettings getSimulationEndSettings() {
-		return simulationEndSettings;
+	public SimulationRunSettings getSimulationRunSettings() {
+		return simulationRunSettings;
 	}
 
 	public AssertsSettings getAssertsSettings() {

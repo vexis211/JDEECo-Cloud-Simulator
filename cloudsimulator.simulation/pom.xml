@@ -19,14 +19,8 @@
 		<xstream.version>1.4.8</xstream.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>ProjectLibraries</id>
-			<name>Repository in project's lib subdirectory</name>
-			<layout>default</layout>
-			<url>file:///${project.basedir}/lib</url>
-		</repository>
-	</repositories>
+	<!-- <repositories> <repository> <id>ProjectLibraries</id> <name>Repository in project's lib subdirectory</name> <layout>default</layout> 
+		<url>file:///${project.basedir}/lib</url> </repository> </repositories> -->
 
 	<dependencies>
 		<dependency>
@@ -77,11 +71,25 @@
 			<artifactId>cz.cuni.mff.d3s.jdeeco.core</artifactId>
 			<version>${jdeeco.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
-			<artifactId>cz.cuni.mff.d3s.jdeeco.simulation</artifactId>
+			<artifactId>cz.cuni.mff.d3s.jdeeco.network</artifactId>
 			<version>${jdeeco.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
+			<artifactId>cz.cuni.mff.d3s.jdeeco.network.omnet</artifactId>
+			<version>${jdeeco.version}</version>
+		</dependency>
+		<!-- <dependency>
+			<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
+			<artifactId>cz.cuni.mff.d3s.jdeeco.network.matsim</artifactId>
+			<version>${jdeeco.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
+			<artifactId>cz.cuni.mff.d3s.jdeeco.network.matsim-omnet</artifactId>
+			<version>${jdeeco.version}</version>
+		</dependency> -->
 	</dependencies>
 </project>

@@ -5,7 +5,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsSav
 
 public class StatisticsCountProcessor<T> implements StatisticsValueProcessor<T> {
 
-	private int count;
+	private long count;
 
 	@Override
 	public void process(T value) {

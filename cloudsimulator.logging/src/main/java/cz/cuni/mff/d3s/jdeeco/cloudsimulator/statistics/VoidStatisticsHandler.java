@@ -3,6 +3,10 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.statistics;
 public class VoidStatisticsHandler implements StatisticsHandler {
 
 	@Override
+	public void write(String id) {
+	}
+
+	@Override
 	public void write(String id, boolean value) {
 	}
 

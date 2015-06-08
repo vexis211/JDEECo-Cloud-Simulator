@@ -1,7 +1,7 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings;
 
 public class XmlSettingsProviderImpl implements SimulationSettingsProvider, AssertsSettingsProvider,
-		StatisticsSettingsProvider {
+		StatisticsSettingsProvider, SimulationRunSettingsProvider {
 
 	private final String settingsFileName;
 	private SimulationSettings simulationSettings;
@@ -29,6 +29,13 @@ public class XmlSettingsProviderImpl implements SimulationSettingsProvider, Asse
 		LoadSimulationSettings();
 
 		return simulationSettings.getStatisticsSettings();
+	}
+
+	@Override
+	public SimulationRunSettings getSimulationRunSettings() {
+		LoadSimulationSettings();
+		
+		return simulationSettings.getSimulationRunSettings();
 	}
 
 	private void LoadSimulationSettings() {

@@ -68,4 +68,12 @@
 
 	<bean id="assertProcessorFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.AssertProcessorFactoryImpl" />
 
+	<!-- Run -->
+
+	<bean id="simulationRunConfiguration" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup.SimulationRunConfigurationImpl"
+		scope="singleton">
+		<constructor-arg name="simulationRunSettingsProvider" ref="xmlSettingsProvider" />
+		<constructor-arg name="simulationRunProfileId" ref="${simulation.run.profileId}" />
+	</bean>
+
 </beans>

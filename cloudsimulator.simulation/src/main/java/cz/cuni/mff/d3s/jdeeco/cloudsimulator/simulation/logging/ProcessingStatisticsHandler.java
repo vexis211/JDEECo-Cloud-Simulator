@@ -10,7 +10,12 @@ public class ProcessingStatisticsHandler implements StatisticsHandler {
 	public ProcessingStatisticsHandler(StatisticsManager statisticsManager) {
 		this.statisticsManager = statisticsManager;
 	}
-	
+
+	@Override
+	public void write(String id) {
+		write(id, 1);
+	}
+
 	@Override
 	public void write(String id, boolean value) {
 		statisticsManager.getComparableProcessor(id, boolean.class).process(value);

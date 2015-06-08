@@ -20,12 +20,6 @@
 			<name>My D3S maven repository</name>
 			<url>https://gitlab.d3s.mff.cuni.cz:8443/nexus/content/repositories/skalicky</url>
 		</repository>
-		<repository>
-			<id>ProjectLibraries</id>
-			<name>Repository in project's lib subdirectory</name>
-			<layout>default</layout>
-			<url>file:///\${project.basedir}/lib</url>
-		</repository>
 	</repositories>
 
 	<dependencies>
@@ -100,10 +94,9 @@
 			<artifactId>cz.cuni.mff.d3s.jdeeco.core</artifactId>
 			<version>${jdeeco.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
-			<artifactId>cz.cuni.mff.d3s.jdeeco.simulation</artifactId>
+			<artifactId>cz.cuni.mff.d3s.jdeeco.network</artifactId>
 			<version>${jdeeco.version}</version>
 		</dependency>
 	</dependencies>

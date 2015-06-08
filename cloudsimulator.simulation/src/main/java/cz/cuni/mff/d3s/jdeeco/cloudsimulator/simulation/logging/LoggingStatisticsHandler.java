@@ -14,6 +14,11 @@ public class LoggingStatisticsHandler implements StatisticsHandler {
 	}
 
 	@Override
+	public void write(String id) {
+		writeInternal(id, "");
+	}
+	
+	@Override
 	public void write(String id, boolean value) {
 		writeInternal(id, String.valueOf(value));
 	}
