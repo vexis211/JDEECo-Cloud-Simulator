@@ -21,9 +21,9 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.strategy.KnowledgeInsertingStrategy;
 import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
 import cz.cuni.mff.d3s.jdeeco.publishing.DefaultKnowledgePublisher;
 
-public abstract class SimulationApp {
+public abstract class SimulationBase {
 
-	private static Logger logger = Logger.getLogger(SimulationApp.class);
+	private static Logger logger = Logger.getLogger(SimulationBase.class);
 
 	private ClassPathXmlApplicationContext context;
 	private StatisticsManager statisticsManager;
@@ -105,7 +105,7 @@ public abstract class SimulationApp {
 
 	protected abstract DEECoSimulation configureSimulation(String profileId);
 
-	protected DEECoSimulation GetSimulationPlain() {
+	protected DEECoSimulation createSimulationWithDeeco() {
 		SimulationTimer simulationTimer = new DiscreteEventTimer(); // also "new WallTimeSchedulerNotifier()"
 
 		DEECoSimulation simulation = new DEECoSimulation(simulationTimer);
@@ -117,7 +117,7 @@ public abstract class SimulationApp {
 		return simulation;
 	}
 
-	protected DEECoSimulation GetSimulationWithOmnet() {
+	protected DEECoSimulation createSimulationWithOmnet() {
 		OMNeTSimulation omnet = new OMNeTSimulation();
 
 		// Create main application container
@@ -130,7 +130,7 @@ public abstract class SimulationApp {
 		return simulation;
 	}
 
-	// protected DEECoSimulation GetSimulationWithMatsim() {
+	// protected DEECoSimulation createSimulationWithMatsim() {
 	// MATSimSimulation matSim = new MATSimSimulation("input/config.xml");
 	//
 	// // Create main application container
@@ -148,7 +148,7 @@ public abstract class SimulationApp {
 	// return simulation;
 	// }
 
-	// protected DEECoSimulation GetSimulationWithMatsimOmnet() {
+	// protected DEECoSimulation createSimulationWithMatsimOmnet() {
 	//
 	// // Create joint OMNeT-MATSim simulation plug-in
 	// OMNeTMATSimSimulation omnetmatsim = new OMNeTMATSimSimulation("input/config.xml");

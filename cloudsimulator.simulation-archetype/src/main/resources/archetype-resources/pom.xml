@@ -99,6 +99,21 @@
 			<artifactId>cz.cuni.mff.d3s.jdeeco.network</artifactId>
 			<version>${jdeeco.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
+			<artifactId>cz.cuni.mff.d3s.jdeeco.network.omnet</artifactId>
+			<version>${jdeeco.version}</version>
+		</dependency>
+		<!-- <dependency>
+			<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
+			<artifactId>cz.cuni.mff.d3s.jdeeco.network.matsim</artifactId>
+			<version>${jdeeco.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
+			<artifactId>cz.cuni.mff.d3s.jdeeco.network.matsim-omnet</artifactId>
+			<version>${jdeeco.version}</version>
+		</dependency> -->
 	</dependencies>
 
 	<build>
