@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("Asserts")
 public class AssertsSettings {
 
-	@XStreamImplicit(itemFieldName = "Default")
+	@XStreamAlias("Default")
 	private final DefaultAssertSetting defaultSetting;
 
 	@XStreamAlias("Profiles")

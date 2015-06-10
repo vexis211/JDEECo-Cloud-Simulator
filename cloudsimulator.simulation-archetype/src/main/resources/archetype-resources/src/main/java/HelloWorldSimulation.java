@@ -12,11 +12,24 @@ public class HelloWorldSimulation extends SimulationBase {
 	protected DEECoSimulation configureSimulation(String profileId) {
 		DEECoSimulation simulation = createSimulationWithDeeco();
 
-		/* create first deeco node */
-		DEECoNode deecoNode1 = simulation.createNode(new PositionPlugin(0, SimpleBroadcastDevice.DEFAULT_RANGE));
-		/* deploy components and ensembles */
-		deecoNode1.deployComponent(new HelloWorld("HELLO"));
+		if (profileId != "default")
+		{
+			/* create first deeco node */
+			DEECoNode deecoNode1 = simulation.createNode(new PositionPlugin(0, SimpleBroadcastDevice.DEFAULT_RANGE));
+			/* deploy components and ensembles */
+			deecoNode1.deployComponent(new HelloWorld("HELLO"));
+		} else {
+			/* create first deeco node */
+			DEECoNode deecoNode1 = simulation.createNode(new PositionPlugin(0, SimpleBroadcastDevice.DEFAULT_RANGE));
+			/* deploy components and ensembles */
+			deecoNode1.deployComponent(new HelloWorld("HI"));
 
+			/* create second deeco node */
+			DEECoNode deecoNode2 = simulation.createNode(new PositionPlugin(0, SimpleBroadcastDevice.DEFAULT_RANGE));
+			/* deploy components and ensembles */
+			deecoNode2.deployComponent(new HelloWorld("BUY"));
+		}
+		
 		return simulation;
 	}
 }

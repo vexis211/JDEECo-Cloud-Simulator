@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.SimulationEndSpecificationType;
 
+@XStreamAlias("SimulationEnd")
 public class SimulationEndSettings {
 	@XStreamAsAttribute
 	@XStreamAlias("Type")

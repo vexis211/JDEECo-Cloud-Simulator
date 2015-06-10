@@ -1,6 +1,20 @@
 <SimulationSettings>
-  <!-- Time = 10 * 60 * 1000 -->
-  <SimulationEnd Type="RealTime" Time="600000" /> 
+  <SimulationRun>
+    <Profiles>
+      <Profile Id="default">
+        <SimulationEnd Type="RealTime" Time="600000"/>
+      </Profile>
+    </Profiles>
+  </SimulationRun>
+  <Asserts>
+    <Default Actions="Log"/>
+    <Profiles>
+      <Profile Id="assertProfile1">
+        <Default reference="../../../Default"/>
+        <Assert Id="Severe" Actions="ExitRun"/>
+      </Profile>
+    </Profiles>
+  </Asserts>
   <Statistics>
     <Default Save="Min,Max"/>
     <Profiles>
