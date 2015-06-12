@@ -7,14 +7,14 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
-@XStreamAlias("Profile")
+@XStreamAlias("StatisticProfile")
 public class StatisticsSettingsProfile {
 
 	@XStreamAsAttribute
 	@XStreamAlias("Id")
 	private final String id;
 
-	@XStreamAlias("Default")
+	@XStreamAlias("DefaultStatistic")
 	private final DefaultStatisticSetting defaultStatisticSetting;
 
 	@XStreamImplicit(itemFieldName = "Import")

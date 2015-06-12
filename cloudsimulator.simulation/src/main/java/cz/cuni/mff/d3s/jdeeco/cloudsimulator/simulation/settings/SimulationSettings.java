@@ -4,7 +4,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("SimulationSettings")
 public class SimulationSettings {
-	@XStreamAlias("SimulationRun")
+	@XStreamAlias("SimulationRuns")
 	private final SimulationRunSettings simulationRunSettings;
 
 	@XStreamAlias("Asserts")

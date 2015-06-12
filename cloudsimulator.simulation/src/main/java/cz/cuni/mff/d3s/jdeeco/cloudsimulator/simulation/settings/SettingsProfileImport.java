@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-@XStreamAlias("Import")
+@XStreamAlias("ProfileImport")
 public class SettingsProfileImport {
 
 	@XStreamAlias("ProfileId")

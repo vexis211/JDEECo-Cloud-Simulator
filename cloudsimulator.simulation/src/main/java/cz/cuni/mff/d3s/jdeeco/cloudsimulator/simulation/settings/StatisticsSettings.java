@@ -9,10 +9,10 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("Statistics")
 public class StatisticsSettings {
 
-	@XStreamAlias("Default")
+	@XStreamAlias("DefaultStatistic")
 	private final DefaultStatisticSetting defaultSetting;
 
-	@XStreamAlias("Profiles")
+	@XStreamAlias("StatisticProfiles")
 	private final ArrayList<StatisticsSettingsProfile> profiles;
 
 	public DefaultStatisticSetting getDefaultStatistic() {

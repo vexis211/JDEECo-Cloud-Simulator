@@ -67,6 +67,7 @@ public class Test {
 		SimulationSettings settings = new SimulationSettings(simulationRunSettings, assertsSettings, statisticsSettings);
 
 		XStream xStream = new XStream();
+		xStream.setMode(XStream.NO_REFERENCES);
 		xStream.processAnnotations(SimulationSettings.class);
 		xStream.autodetectAnnotations(true);
 

@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-@XStreamAlias("Default")
+@XStreamAlias("DefaultAssert")
 public class DefaultAssertSetting {
 
 	@XStreamAlias("Actions")

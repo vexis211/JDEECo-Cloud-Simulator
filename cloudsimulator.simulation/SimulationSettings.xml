@@ -1,35 +1,35 @@
 <SimulationSettings>
-  <SimulationRun>
-    <Profiles>
-      <Profile Id="default">
+  <SimulationRuns>
+    <SimulationRunProfiles>
+      <SimulationRunProfile Id="default">
         <SimulationEnd Type="RealTime" Time="600000"/>
-      </Profile>
-    </Profiles>
-  </SimulationRun>
+      </SimulationRunProfile>
+    </SimulationRunProfiles>
+  </SimulationRuns>
   <Asserts>
-    <Default Actions="Log"/>
-    <Profiles>
-      <Profile Id="assertProfile1">
-        <Default reference="../../../Default"/>
-        <Assert Id="Severe" Actions="ExitRun"/>
-      </Profile>
-    </Profiles>
+    <DefaultAssert Actions="Log"/>
+    <AssertProfiles>
+      <AssertProfile Id="assertProfile1">
+        <DefaultAssert Actions="Log"/>
+        <AssertGroup Id="Severe" Actions="ExitRun"/>
+      </AssertProfile>
+    </AssertProfiles>
   </Asserts>
   <Statistics>
-    <Default Save="Min,Max"/>
-    <Profiles>
-      <Profile Id="profile1">
-        <Default Save="Min"/>
+    <DefaultStatistic Save="Min,Max"/>
+    <StatisticProfiles>
+      <StatisticProfile Id="profile1">
+        <DefaultStatistic Save="Min"/>
         <Statistic Type="Plain" Id="Hit" Save="Count"/>
         <Statistic Type="Plain" Id="HulaHula" Save="Count"/>
-      </Profile>
-      <Profile Id="profile2">
-        <Default Save="Min,Max,Avg,Vector"/>
+      </StatisticProfile>
+      <StatisticProfile Id="profile2">
+        <DefaultStatistic Save="Min,Max,Avg,Vector"/>
         <Import ProfileId="profile1"/>
         <Import ProfileId="profile1"/>
         <Statistic Type="Plain" Id="Test1" Save="Count"/>
         <Statistic Type="Regex" Id="Test2" Save="Vector"/>
-      </Profile>
-    </Profiles>
+      </StatisticProfile>
+    </StatisticProfiles>
   </Statistics>
 </SimulationSettings>

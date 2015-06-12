@@ -7,20 +7,20 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
-@XStreamAlias("Profile")
+@XStreamAlias("AssertProfile")
 public class AssertSettingsProfile {
 
 	@XStreamAsAttribute
 	@XStreamAlias("Id")
 	private final String id;
 
-	@XStreamAlias("Default")
+	@XStreamAlias("DefaultAssert")
 	private final DefaultAssertSetting defaultAssertSetting;
 
-	@XStreamImplicit(itemFieldName = "Import")
+	@XStreamImplicit(itemFieldName = "ProfileImport")
 	private final ArrayList<SettingsProfileImport> profileImports;
 
-	@XStreamImplicit(itemFieldName = "Assert")
+	@XStreamImplicit(itemFieldName = "AssertGroup")
 	private final ArrayList<AssertGroupSetting> assertGroupSettings;
 	
 	public AssertSettingsProfile(String id, DefaultAssertSetting defaultAssertSetting,

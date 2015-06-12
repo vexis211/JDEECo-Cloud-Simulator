@@ -9,10 +9,10 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("Asserts")
 public class AssertsSettings {
 
-	@XStreamAlias("Default")
+	@XStreamAlias("DefaultAssert")
 	private final DefaultAssertSetting defaultSetting;
 
-	@XStreamAlias("Profiles")
+	@XStreamAlias("AssertProfiles")
 	private final ArrayList<AssertSettingsProfile> profiles;
 
 	public AssertsSettings(DefaultAssertSetting defaultSetting, List<AssertSettingsProfile> profiles) {

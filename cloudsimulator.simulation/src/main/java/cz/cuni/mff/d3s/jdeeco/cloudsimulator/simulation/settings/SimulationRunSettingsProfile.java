@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-@XStreamAlias("Profile")
+@XStreamAlias("SimulationRunProfile")
 public class SimulationRunSettingsProfile {
 
 	@XStreamAsAttribute

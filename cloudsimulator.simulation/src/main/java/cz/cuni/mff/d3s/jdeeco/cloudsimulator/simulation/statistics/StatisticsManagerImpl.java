@@ -69,11 +69,18 @@ public class StatisticsManagerImpl implements StatisticsManager {
 
 	@Override
 	public void persistStatistics() {
+		// initialize persister
+		statisticsPersister.start();
+		
+		// persist statistics
 		for (ProcessorStore<?> store : processorStores.values()) {
 			for (StatisticsProcessor<?> processor : store.getProcessors()) {
 				processor.persist(statisticsPersister);
 			}
 		}
+		
+		// write endings, flush, save, ...
+		statisticsPersister.end();
 	}
 
 	private class ProcessorStore<T> {

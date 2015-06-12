@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("SimulationRunSettings")
+@XStreamAlias("SimulationRuns")
 public class SimulationRunSettings {
 
-	@XStreamAlias("Profiles")
+	@XStreamAlias("SimulationRunProfiles")
 	private final ArrayList<SimulationRunSettingsProfile> profiles;
 
 	public SimulationRunSettings(List<SimulationRunSettingsProfile> profiles) {

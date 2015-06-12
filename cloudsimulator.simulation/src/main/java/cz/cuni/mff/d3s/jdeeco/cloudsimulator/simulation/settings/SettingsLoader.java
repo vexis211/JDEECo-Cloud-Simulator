@@ -17,6 +17,7 @@ public class SettingsLoader {
 
 	public SettingsLoader() {
 		this.xStream = new XStream();
+		this.xStream.setMode(XStream.NO_REFERENCES);
 		this.xStream.processAnnotations(SimulationSettings.class);
 		this.xStream.autodetectAnnotations(true);
 	}
