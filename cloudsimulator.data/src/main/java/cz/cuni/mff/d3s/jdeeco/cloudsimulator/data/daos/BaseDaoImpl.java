@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class BaseDaoImpl<T> implements BaseDao<T> {
 
-	private final Logger logger = Logger.getLogger(BaseDaoImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(BaseDaoImpl.class);
 
 	protected SessionFactory sessionFactory;
 

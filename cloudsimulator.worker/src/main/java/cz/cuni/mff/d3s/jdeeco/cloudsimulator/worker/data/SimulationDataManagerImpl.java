@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
@@ -15,7 +17,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationId;
 
 public class SimulationDataManagerImpl implements SimulationDataManager {
 
-	private final Logger logger = Logger.getLogger(SimulationDataManagerImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(SimulationDataManagerImpl.class);
 
 	private final List<Future<?>> runningFutures = new ArrayList<>();
 
@@ -60,7 +62,8 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 		String runLocalResultsPath = PathEx.combine(runExecutionPath, resultsDirectoryName);
 		String runLocalLogsPath = PathEx.combine(runExecutionPath, logsDirectoryName);
 
-		SimulationData preparedData = new SimulationDataImpl(runExecutionPath, runLocalResultsPath, runLocalLogsPath, startupFile);
+		SimulationData preparedData = new SimulationDataImpl(runExecutionPath, runLocalResultsPath, runLocalLogsPath,
+				startupFile);
 
 		try {
 			String packageDir = simulationDataRepository.getPackagePath(simulationId);

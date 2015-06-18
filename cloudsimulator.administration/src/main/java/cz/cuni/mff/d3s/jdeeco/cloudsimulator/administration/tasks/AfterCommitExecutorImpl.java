@@ -3,23 +3,15 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.tasks;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-/**
- * AfterCommitExecutor
- * 
- * @author Vladimír Matěna
- *
- *         The AfterCommit executor executes code when transaction finish successfully. It registers itself with
- *         transaction manager in order to receive transaction state updates. The callbacks are stored on the thread
- *         local storage and executed once the transaction commits.
- */
 public class AfterCommitExecutorImpl extends TransactionSynchronizationAdapter implements AfterCommitExecutor {
 
 	private static final ThreadLocal<Queue<Runnable>> callbacks = new ThreadLocal<Queue<Runnable>>();
-	private Logger logger = Logger.getLogger(AfterCommitExecutorImpl.class);
+	private Logger logger = LoggerFactory.getLogger(AfterCommitExecutorImpl.class);
 
 	/**
 	 * Execute

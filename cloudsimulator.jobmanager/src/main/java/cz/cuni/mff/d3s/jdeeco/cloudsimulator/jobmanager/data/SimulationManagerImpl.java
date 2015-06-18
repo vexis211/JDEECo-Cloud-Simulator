@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.PackagePreparedUpdate;
@@ -15,7 +16,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpd
 
 public class SimulationManagerImpl implements SimulationManager, SimulationExecutionEntryListener {
 
-	private final Logger logger = Logger.getLogger(SimulationManagerImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(SimulationManagerImpl.class);
 
 	private final HashMap<Integer, SimulationExecutionEntry> simulationExecutions = new HashMap<>();
 
@@ -40,6 +41,8 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 
 	@Override
 	public void updateStatus(List<SimulationStatusUpdate> updates) {
+		
+		// TODO!!!!!!!!!!!!!!!!!!!!
 		for (SimulationStatusUpdate update : updates) {
 			int executionId = update.getSimulationId().getExecutionId();
 
@@ -51,7 +54,7 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 					logger.error(String.format("Simulation status update failed. %s.", update.getSimulationId()), e);
 				}
 			} else {
-				logger.info(String.format("Update for wrong or stopped execution. %s.", update.getSimulationId()));
+				logger.info("Update for wrong or stopped execution. {}.", update.getSimulationId());
 			}
 		}
 	}

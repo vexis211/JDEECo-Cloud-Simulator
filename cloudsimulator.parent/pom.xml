@@ -23,6 +23,7 @@
 		<!-- versions -->
 		<java-code.version>1.8</java-code.version>
 		<spring.version>4.1.1.RELEASE</spring.version>
+		<aspectj.version>1.8.6</aspectj.version>
 
 		<jdeeco.version>3.0.1</jdeeco.version>
 

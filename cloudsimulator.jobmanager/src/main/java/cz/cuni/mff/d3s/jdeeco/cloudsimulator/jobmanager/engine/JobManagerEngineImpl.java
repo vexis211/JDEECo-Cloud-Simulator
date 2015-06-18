@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.TimeSpan;
@@ -35,7 +36,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdate;
 
 public class JobManagerEngineImpl implements JobManagerEngine {
 
-	private final Logger logger = Logger.getLogger(JobManagerEngineImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(JobManagerEngineImpl.class);
 
 	private final WorkerManager workerManager;
 	private final SimulationManager simulationManager;
@@ -123,7 +124,7 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 		}
 
 		if (!updates.isEmpty()) {
-			logger.error("Unknown job manager updates: " + Arrays.toString(updates.toArray()));
+			logger.error("Unknown job manager updates: {}", Arrays.toString(updates.toArray()));
 		}
 	}
 

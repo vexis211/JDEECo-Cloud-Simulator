@@ -1,13 +1,13 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts;
 
 import java.util.EnumSet;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.AssertAction;
 
 public class AssertManagerImpl implements AssertManager {
 
-	private final HashMap<String, AssertProcessor> groups2processors = new HashMap<String, AssertProcessor>();
+	private final ConcurrentHashMap<String, AssertProcessor> groups2processors = new ConcurrentHashMap<String, AssertProcessor>();
 	private final AssertConfiguration assertConfiguration;
 	private final AssertProcessorFactory processorFactory;
 
@@ -25,7 +25,7 @@ public class AssertManagerImpl implements AssertManager {
 		} else {
 			EnumSet<AssertAction> assertActions = assertConfiguration.getAssertActions(assertGroup);
 			processor = processorFactory.create(assertGroup, assertActions);
-			groups2processors.put(assertGroup, processor);
+			groups2processors.putIfAbsent(assertGroup, processor);
 		}
 
 		return processor;

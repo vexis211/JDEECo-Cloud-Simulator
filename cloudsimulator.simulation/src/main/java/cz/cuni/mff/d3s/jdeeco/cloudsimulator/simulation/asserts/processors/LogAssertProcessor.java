@@ -1,11 +1,11 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.processors;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LogAssertProcessor extends BaseAssertProcessor {
 
-	private static Logger logger = LogManager.getLogger(LogAssertProcessor.class);
+	private static Logger logger = LoggerFactory.getLogger(LogAssertProcessor.class);
 
 	public LogAssertProcessor(String assertGroup) {
 		super(assertGroup);
@@ -13,11 +13,11 @@ public class LogAssertProcessor extends BaseAssertProcessor {
 
 	@Override
 	public void processSuccess(String message) {
-		logger.info(String.format("Assert succedeed - Group: '%s' - Message: '%s'", getAssertGroup(), message));
+		logger.info("Assert succedeed - Group: '{}' - Message: '{}'", getAssertGroup(), message);
 	}
 
 	@Override
 	public void processFail(String message) {
-		logger.info(String.format("Assert failed!!! - Group: '%s' - Message: '%s'", getAssertGroup(), message));
+		logger.info("Assert failed!!! - Group: '{}' - Message: '{}'", getAssertGroup(), message);
 	}
 }

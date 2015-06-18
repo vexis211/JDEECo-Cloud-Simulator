@@ -2,7 +2,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.cloud;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openstack4j.api.Builders;
 import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.Image;
@@ -15,7 +16,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackConnector;
 
 public class OpenStackMachineBuilder extends OpenStackComponent implements CloudMachineBuilder {
 
-	private final Logger logger = Logger.getLogger(OpenStackMachineBuilder.class);
+	private final Logger logger = LoggerFactory.getLogger(OpenStackMachineBuilder.class);
 
 	private final OpenStackMachineService openStackMachineService;
 

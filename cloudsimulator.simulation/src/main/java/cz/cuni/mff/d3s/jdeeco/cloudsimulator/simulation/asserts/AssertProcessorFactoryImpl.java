@@ -4,17 +4,26 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationExitReason;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.processors.AggregateAssertProcessor;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.processors.FailExitAssertProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.processors.LogAssertProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.AssertAction;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup.SimulationController;
 
 public class AssertProcessorFactoryImpl implements AssertProcessorFactory {
 
 	@SuppressWarnings("unused")
-	private static Logger logger = LogManager.getLogger(AssertProcessorFactoryImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(AssertProcessorFactoryImpl.class);
+
+	private final SimulationController simulationController;
+
+	public AssertProcessorFactoryImpl(SimulationController simulationController) {
+		this.simulationController = simulationController;
+	}
 
 	@Override
 	public AssertProcessor create(String assertGroup, EnumSet<AssertAction> assertActions) {
@@ -27,12 +36,13 @@ public class AssertProcessorFactoryImpl implements AssertProcessorFactory {
 				processors.add(new LogAssertProcessor(assertGroup));
 				break;
 			case ExitRun:
-				// TODO
+				processors.add(new FailExitAssertProcessor(assertGroup, SimulationExitReason.RunExitCalled,
+						simulationController));
 				break;
 			case ExitExecution:
-				// TODO
+				processors.add(new FailExitAssertProcessor(assertGroup, SimulationExitReason.ExecutionExitCalled,
+						simulationController));
 				break;
-
 			default:
 				throw new EnumConstantNotPresentException(action.getClass(), action.toString());
 			}

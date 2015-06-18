@@ -12,8 +12,8 @@ import java.util.Stack;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.DefaultStatisticSetting;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.StatisticSetting;
@@ -24,7 +24,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.StatisticsSetti
 
 public class StatisticsConfigurationImpl implements StatisticsConfiguration {
 
-	private static final Logger logger = LogManager.getLogger(StatisticsConfigurationImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(StatisticsConfigurationImpl.class);
 
 	private final HashMap<String, EnumSet<StatisticsSaveMode>> exactDefinitions = new HashMap<String, EnumSet<StatisticsSaveMode>>();
 	private final HashMap<String, EnumSet<StatisticsSaveMode>> patternDefinitions = new HashMap<String, EnumSet<StatisticsSaveMode>>();
@@ -106,7 +106,7 @@ public class StatisticsConfigurationImpl implements StatisticsConfiguration {
 		}
 	}
 
-	private void applyDefaultFromProfile(StatisticsSettingsProfile profile) {
+	private final void applyDefaultFromProfile(StatisticsSettingsProfile profile) {
 		if (this.defaultSaveModes == null && profile.getDefaultStatisticSettings() != null) {
 			String saveModesString = profile.getDefaultStatisticSettings().getSave();
 			this.defaultSaveModes = StatisticsSaveModesParser.parseSaveModes(saveModesString);
@@ -137,12 +137,7 @@ public class StatisticsConfigurationImpl implements StatisticsConfiguration {
 		}
 	}
 
-	public final EnumSet<StatisticsSaveMode> getDefaultSaveModes(StatisticsSettingsProfile profile) {
-		DefaultStatisticSetting defaultStatistics = profile.getDefaultStatisticSettings() != null ? profile
-				.getDefaultStatisticSettings() : this.settings.getDefaultStatistic();
-		return StatisticsSaveModesParser.parseSaveModes(defaultStatistics.getSave());
-	}
-
+	
 	@Override
 	public EnumSet<StatisticsSaveMode> getSaveModes(String statisticId) {
 		if (exactDefinitions.containsKey(statisticId)) {

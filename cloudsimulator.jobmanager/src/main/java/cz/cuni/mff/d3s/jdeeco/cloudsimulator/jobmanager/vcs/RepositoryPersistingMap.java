@@ -9,11 +9,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RepositoryPersistingMap {
 
-	private final Logger logger = Logger.getLogger(RepositoryPersistingMap.class);
+	private final Logger logger = LoggerFactory.getLogger(RepositoryPersistingMap.class);
 
 	private static final String SEPARATOR = "\t";
 
@@ -37,8 +38,8 @@ public class RepositoryPersistingMap {
 						remote2Local.put(parts[0], parts[1]);
 						local2Remote.put(parts[1], parts[0]);
 					} else {
-						logger.error(String.format("Incorrect repository file format! File: %s. Line: %s",
-								dataFile.getAbsolutePath(), line));
+						logger.error("Incorrect repository file format! File: {}. Line: {}",
+								dataFile.getAbsolutePath(), line);
 					}
 				}
 

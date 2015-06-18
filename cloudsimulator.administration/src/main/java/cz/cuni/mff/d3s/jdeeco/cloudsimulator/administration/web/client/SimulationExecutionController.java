@@ -5,7 +5,8 @@ import java.util.Date;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -27,7 +28,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories
 public class SimulationExecutionController {
 
 	@SuppressWarnings("unused")
-	private final Logger logger = Logger.getLogger(SimulationExecutionController.class);
+	private final Logger logger = LoggerFactory.getLogger(SimulationExecutionController.class);
 
 	private static final String EXECUTION_VIEW = "main/execution/simulationExecution";
 	private static final String ADDEXECUTION_VIEW = "main/execution/addSimulationExecution";

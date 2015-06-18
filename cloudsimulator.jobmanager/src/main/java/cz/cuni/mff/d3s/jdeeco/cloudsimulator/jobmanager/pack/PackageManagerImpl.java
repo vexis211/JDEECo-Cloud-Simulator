@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 
 public class PackageManagerImpl implements PackageManager, PackagePreparatorListener {
 
-	private final Logger logger = Logger.getLogger(PackageManagerImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(PackageManagerImpl.class);
 
 	private final Object locker = new Object();
 	private final HashMap<Integer, PackageManagerEntry> entries = new HashMap<>();
@@ -77,7 +78,7 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 			entry.isPrepared = true;
 		}
 
-		logger.info(String.format("Package for execution id: %d is prepared.", executionId));
+		logger.info("Package for execution id: {} is prepared.", executionId);
 		listeners.forEach(x -> x.packagePrepared(execution.getId()));
 	}
 

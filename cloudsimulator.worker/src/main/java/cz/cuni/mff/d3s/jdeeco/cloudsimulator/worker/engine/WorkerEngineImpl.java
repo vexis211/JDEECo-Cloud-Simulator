@@ -3,7 +3,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.TimeSpan;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
@@ -14,7 +15,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnect
 
 public class WorkerEngineImpl implements WorkerEngine {
 
-	private final Logger logger = Logger.getLogger(WorkerEngineImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(WorkerEngineImpl.class);
 
 	private final SimulationManager simulationManager;
 
@@ -67,7 +68,7 @@ public class WorkerEngineImpl implements WorkerEngine {
 		if (tasks.isEmpty()) {
 			return;
 		}
-		
+
 		tasks.forEach(x -> processTask(x));
 	}
 
@@ -78,7 +79,7 @@ public class WorkerEngineImpl implements WorkerEngine {
 		} else if (task instanceof StopSimulationTask) {
 			simulationManager.stopSimulation((StopSimulationTask) task);
 		} else {
-			logger.error("Unknown worker task: " + task);
+			logger.error("Unknown worker task: {}", task);
 		}
 	}
 }

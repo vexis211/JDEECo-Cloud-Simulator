@@ -2,14 +2,14 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts;
 
 import java.util.EnumSet;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.AssertAction;
 
 public class AssertActionsParser {
 
-	private static final Logger logger = LogManager.getLogger(AssertActionsParser.class);
+	private static final Logger logger = LoggerFactory.getLogger(AssertActionsParser.class);
 
 	public static final EnumSet<AssertAction> parseAssertActions(String assertActionsString) {
 		EnumSet<AssertAction> actions = EnumSet.noneOf(AssertAction.class);
@@ -23,13 +23,12 @@ public class AssertActionsParser {
 			AssertAction parsedAction = parseAssertAction(part);
 
 			if (parsedAction == null) {
-				logger.error(String.format(
-						"'%s' cannot be converted to AssertAction. Whole assert action string: '%s'.", part,
-						assertActionsString));
+				logger.error("'{}' cannot be converted to AssertAction. Whole assert action string: '{}'.", part,
+						assertActionsString);
 			} else if (actions.contains(parsedAction)) {
-				logger.error(String.format(
-						"In assert action string there is '%s' specified multiple times. Whole assert action string: '%s'.",
-						parsedAction, assertActionsString));
+				logger.error(
+						"In assert action string there is '{}' specified multiple times. Whole assert action string: '{}'.",
+						parsedAction, assertActionsString);
 			} else {
 				actions.add(parsedAction);
 			}

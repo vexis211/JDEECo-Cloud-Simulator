@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
@@ -18,7 +19,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.WorkerStatusUpdate;
 
 public class WorkerManagerImpl implements WorkerManager {
 
-	private final Logger logger = Logger.getLogger(WorkerManagerImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(WorkerManagerImpl.class);
 
 	private final HashMap<String, WorkerInstance> runningWorkersById = new HashMap<>();
 	private final HashMap<String, WorkerInstance> stoppedWorkersById = new HashMap<>();

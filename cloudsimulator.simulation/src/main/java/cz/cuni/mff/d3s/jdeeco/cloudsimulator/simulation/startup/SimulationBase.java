@@ -2,7 +2,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup;
 
 import java.io.File;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
@@ -10,7 +11,7 @@ import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.asserts.Assert;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.asserts.AssertHandler;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.SimulationEndSpecificationType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationExitReason;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SimulationEndSettings;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.statistics.Statistics;
@@ -23,21 +24,33 @@ import cz.cuni.mff.d3s.jdeeco.publishing.DefaultKnowledgePublisher;
 
 public abstract class SimulationBase {
 
-	private static Logger logger = Logger.getLogger(SimulationBase.class);
+	private static Logger logger = LoggerFactory.getLogger(SimulationBase.class);
 
 	private ClassPathXmlApplicationContext context;
+	private SimulationController simulationController;
 	private StatisticsManager statisticsManager;
 	private SimulationRunConfiguration runConfiguration;
 
 	public void start() {
 
-		// application context
-		logger.info("Creating application context...");
-		this.context = new ClassPathXmlApplicationContext("configuration/application-context.xml");
+		SimulationExitReason exitReason;
 
-		configure();
-		run();
-		finish();
+		try {
+			// application context
+			logger.info("Creating application context...");
+			this.context = new ClassPathXmlApplicationContext("configuration/application-context.xml");
+
+			configure();
+			exitReason = run();
+		} catch (Exception e) {
+			logger.error("Fatal error occurred.", e);
+			exitReason = SimulationExitReason.ExceptionOccured;
+		} finally {
+			finish();
+		}
+
+		 // TODO try to inform worker about exit value another way, this is not OK
+		System.exit(exitReason.getExitValue());
 	}
 
 	private void configure() {
@@ -54,40 +67,17 @@ public abstract class SimulationBase {
 
 		// run configuration
 		this.runConfiguration = (SimulationRunConfiguration) context.getBean("simulationRunConfiguration");
+		
+		// simulation controller
+		this.simulationController = (SimulationController) context.getBean("simulationController");
 	}
 
-	private void run() {
+	private SimulationExitReason run() throws Exception {
 		DEECoSimulation simulation = configureSimulation(runConfiguration.getProfileId());
 
 		SimulationEndSettings endSettings = runConfiguration.getEndSettings();
-
-		logger.info("Starting simulation...");
-		if (endSettings.getType() == SimulationEndSpecificationType.SimulationTime) {
-			// stop on simulation time is solved inside simulation environment
-			simulation.start(endSettings.getTime());
-		} else {
-
-			java.util.concurrent.ExecutorService executor = java.util.concurrent.Executors.newSingleThreadExecutor();
-
-			try {
-				Runnable runnable = () -> simulation.start(Long.MAX_VALUE);
-				java.util.concurrent.Future<?> future = executor.submit(runnable);
-
-				// this will wait but only for specified time
-				future.get(endSettings.getTime(), java.util.concurrent.TimeUnit.MILLISECONDS);
-			} catch (final InterruptedException e) {
-				// The thread was interrupted during sleep, wait or join
-				logger.error("Error occurred while simulating.", e);
-			} catch (final java.util.concurrent.TimeoutException e) {
-				// Took too long!
-				logger.info("Simulation stopped - time limit exceeded.");
-			} catch (final java.util.concurrent.ExecutionException e) {
-				// An exception from within the Runnable task
-				logger.error("Error occurred while simulating.", e);
-			} finally {
-				executor.shutdown();
-			}
-		}
+		
+		return simulationController.start(simulation, endSettings);
 	}
 
 	private void finish() {

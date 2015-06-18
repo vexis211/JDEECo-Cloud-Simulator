@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationExitReason;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationId;
 
@@ -9,13 +10,17 @@ public class SimulationStatusUpdateImpl extends WorkerUpdateImpl implements Simu
 
 	private final SimulationId simulationId;
 	private final SimulationStatus simulationStatus;
+	private final SimulationExitReason exitReason;
 	private final String error;
 
-	public SimulationStatusUpdateImpl(String workerId, SimulationId simulationId, SimulationStatus simulationStatus) {
+
+	public SimulationStatusUpdateImpl(String workerId, SimulationId simulationId, SimulationStatus simulationStatus,
+			SimulationExitReason exitReason) {
 		super(workerId);
 
 		this.simulationId = simulationId;
 		this.simulationStatus = simulationStatus;
+		this.exitReason = exitReason;
 		this.error = null;
 	}
 
@@ -24,6 +29,7 @@ public class SimulationStatusUpdateImpl extends WorkerUpdateImpl implements Simu
 
 		this.simulationId = simulationId;
 		this.simulationStatus = SimulationStatus.ErrorOccured;
+		this.exitReason = SimulationExitReason.ExceptionOccured;
 		this.error = error;
 	}
 
@@ -35,6 +41,11 @@ public class SimulationStatusUpdateImpl extends WorkerUpdateImpl implements Simu
 	@Override
 	public SimulationStatus getSimulationStatus() {
 		return simulationStatus;
+	}
+
+	@Override
+	public SimulationExitReason getExitReason() {
+		return exitReason;
 	}
 
 	@Override

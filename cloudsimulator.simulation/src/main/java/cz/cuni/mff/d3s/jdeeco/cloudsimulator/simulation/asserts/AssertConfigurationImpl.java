@@ -10,8 +10,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.AssertAction;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.AssertGroupSetting;
@@ -23,7 +23,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SettingsProfile
 
 public class AssertConfigurationImpl implements AssertConfiguration {
 
-	private static final Logger logger = LogManager.getLogger(AssertConfigurationImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(AssertConfigurationImpl.class);
 
 	private final HashMap<String, EnumSet<AssertAction>> exactDefinitions = new HashMap<String, EnumSet<AssertAction>>();
 	private EnumSet<AssertAction> defaultAssertActions;

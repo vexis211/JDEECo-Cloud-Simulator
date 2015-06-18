@@ -2,7 +2,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup;
 
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SimulationEndSettings;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SimulationRunSettings;
@@ -11,7 +12,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SimulationRunSe
 
 public class SimulationRunConfigurationImpl implements SimulationRunConfiguration {
 
-	private static Logger logger = Logger.getLogger(SimulationRunConfigurationImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(SimulationRunConfigurationImpl.class);
 
 	private final String simulationRunProfileId;
 	private final SimulationRunSettings settings;

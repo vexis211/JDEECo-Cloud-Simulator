@@ -4,7 +4,8 @@ import java.io.UnsupportedEncodingException;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -33,7 +34,7 @@ public class RegisterController {
 	/**
 	 * Logging.
 	 */
-	private Logger logger = Logger.getLogger(RegisterController.class);
+	private Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
 	/**
 	 * Name of register page template.
@@ -89,7 +90,7 @@ public class RegisterController {
 
 		User loggedUser = UserHelper.getAuthenticatedUser();
 		if (NotLoggedHelper.isUserLoggedIn(userService)) {
-			logger.debug(String.format("Already activated user with id '%d' is trying to register.", loggedUser.getId()));
+			logger.debug("Already activated user with id '{}' is trying to register.", loggedUser.getId());
 			return NotLoggedHelper.redirectToMainModel();
 		}
 		
@@ -100,7 +101,7 @@ public class RegisterController {
 		try {
 			User user = userService.registerUser(registerForm.getEmail(), registerForm.getPassword());
 
-			logger.info(String.format("User %s has been succesfully registered.", user.getEmail()));
+			logger.info("User {} has been succesfully registered.", user.getEmail());
 		} catch (UserOperationException ex) {
 			return renderRegisterError(registerForm, result, ex.getErrorType());
 		} catch (Exception ex) {

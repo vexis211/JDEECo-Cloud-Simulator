@@ -2,6 +2,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine;
 
 import java.util.HashMap;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationExitReason;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationId;
@@ -21,6 +22,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution.SimulationExecutor
 public class SimulationManagerImpl implements SimulationManager, ExecutionListener, SimulationDataListener {
 
 	private final HashMap<SimulationId, TaskEntry> incompleteTasks = new HashMap<SimulationId, TaskEntry>();
+	private final HashMap<SimulationId, SimulationExitReason> notPublishedExitReasons = new HashMap<SimulationId, SimulationExitReason>();
 
 	private final JobManagerConnector jobManagerConnector;
 	private final SimulationDataManager simulationDataManager;
@@ -88,23 +90,32 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 	}
 
 	@Override
-	public void executionEnded(SimulationExecutor simulationExecutor) {
+	public void executionEnded(SimulationExecutor simulationExecutor, SimulationExitReason exitReason) {
 		SimulationExecutorParameters parameters = simulationExecutor.getParameters();
 
+		synchronized (notPublishedExitReasons) {
+			notPublishedExitReasons.put(parameters.getSimulationId(), exitReason);
+		}
+		
 		simulationDataManager.saveResults(parameters.getSimulationId(), parameters.getSimulationData());
 		removeExecutor(simulationExecutor);
 	}
 
 	@Override
 	public void resultsSaved(SimulationId simulationId) {
-		jobManagerConnector.sendSimulationStatusUpdate(simulationId, SimulationStatus.Completed);
+		SimulationExitReason exitReason;
+		synchronized (notPublishedExitReasons) {
+			exitReason = notPublishedExitReasons.remove(simulationId);
+		}
+				
+		jobManagerConnector.sendSimulationStatusUpdate(simulationId, SimulationStatus.Completed, exitReason);
 		jobManagerConnector.sendWorkerStatusUpdate(WorkerStatus.Started);
 	}
 
 	@Override
-	public void executionStopped(SimulationExecutor simulationExecutor) {
+	public void executionStopped(SimulationExecutor simulationExecutor, SimulationExitReason exitReason) {
 		jobManagerConnector.sendSimulationStatusUpdate(simulationExecutor.getParameters().getSimulationId(),
-				SimulationStatus.Stopped);
+				SimulationStatus.Stopped, exitReason);
 		jobManagerConnector.sendWorkerStatusUpdate(WorkerStatus.Started);
 
 		removeExecutor(simulationExecutor);

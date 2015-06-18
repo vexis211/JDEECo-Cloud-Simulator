@@ -5,12 +5,12 @@ import java.util.List;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsPersister;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsProcessor;
 
-public class StatisticsProcessorImpl<T> implements StatisticsProcessor<T> {
+public class SyncedStatisticsProcessorImpl<T> implements StatisticsProcessor<T> {
 
 	private final String statisticId;
 	private final List<StatisticsValueProcessor<T>> valueProcessors;
 
-	public StatisticsProcessorImpl(String statisticId, List<StatisticsValueProcessor<T>> valueProcessors) {
+	public SyncedStatisticsProcessorImpl(String statisticId, List<StatisticsValueProcessor<T>> valueProcessors) {
 		this.statisticId = statisticId;
 		this.valueProcessors = valueProcessors;
 	}
@@ -22,10 +22,8 @@ public class StatisticsProcessorImpl<T> implements StatisticsProcessor<T> {
 
 	@Override
 	public void process(T value) {
-		synchronized (valueProcessors) { // TODO try to improve performance
-			for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {
-				valueProcessor.process(value);
-			}
+		for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {
+			valueProcessor.process(value);
 		}
 	}
 
@@ -33,12 +31,10 @@ public class StatisticsProcessorImpl<T> implements StatisticsProcessor<T> {
 	public void persist(StatisticsPersister persister) {
 		persister.startStatistic(statisticId);
 
-		synchronized (valueProcessors) {
-			for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {
-				valueProcessor.persist(persister);
-			}
+		for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {
+			valueProcessor.persist(persister);
 		}
-
+		
 		persister.endStatistic();
 	}
 }

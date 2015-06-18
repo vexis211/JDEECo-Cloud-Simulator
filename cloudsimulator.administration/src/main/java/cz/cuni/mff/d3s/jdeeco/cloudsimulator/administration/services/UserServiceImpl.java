@@ -7,7 +7,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService, SecurityService {
 	/**
 	 * Logging.
 	 */
-	private final Logger logger = Logger.getLogger(UserServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Resource
 	private UserDao userDao;
@@ -158,7 +159,7 @@ public class UserServiceImpl implements UserService, SecurityService {
 
 		if (user == null) {
 			// User was not registered due to uknown error.
-			logger.warn(String.format("Cannot register user with email %s, due to unknown errors.", email));
+			logger.warn("Cannot register user with email {}, due to unknown errors.", email);
 			return null;
 		}
 

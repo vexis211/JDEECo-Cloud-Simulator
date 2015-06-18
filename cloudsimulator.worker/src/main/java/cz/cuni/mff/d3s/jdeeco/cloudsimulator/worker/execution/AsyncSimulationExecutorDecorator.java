@@ -3,13 +3,14 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
 
 public class AsyncSimulationExecutorDecorator implements SimulationExecutor {
 
-	private final Logger logger = Logger.getLogger(AsyncSimulationExecutorDecorator.class);
+	private final Logger logger = LoggerFactory.getLogger(AsyncSimulationExecutorDecorator.class);
 
 	private final SimulationExecutor simulationExecutor;
 	private Future<?> future;

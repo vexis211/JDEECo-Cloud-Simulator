@@ -2,8 +2,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics;
 
 import java.io.PrintStream;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StatisticsPersisterImpl<T> implements StatisticsPersister {
 
@@ -11,7 +11,7 @@ public class StatisticsPersisterImpl<T> implements StatisticsPersister {
 	private static final char KEY_VALUE_DELIMITER = '|';
 	private static final char VALUE_VALUE_DELIMITER = ',';
 	
-	private static Logger logger = LogManager.getLogger(StatisticsPersisterImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(StatisticsPersisterImpl.class);
 	
 	private final String persistFile;
 	private PrintStream output;
@@ -25,7 +25,7 @@ public class StatisticsPersisterImpl<T> implements StatisticsPersister {
 		try {
 			this.output = new PrintStream(persistFile);
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("Error occured when starting persisting statistics.", e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -35,7 +35,7 @@ public class StatisticsPersisterImpl<T> implements StatisticsPersister {
 		try {
 			this.output.close();
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("Error occured when ending persisting statistics.", e);
 			throw e;
 		}
 	}

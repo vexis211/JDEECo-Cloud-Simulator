@@ -3,7 +3,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.notlogged;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.MappingSettings;
 public class LoginController {
 
 	@SuppressWarnings("unused")
-	private Logger logger = Logger.getLogger(LoginController.class);
+	private Logger logger = LoggerFactory.getLogger(LoginController.class);
 
 	@Resource
 	private AppContext appContext;

@@ -2,13 +2,15 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution;
 
 import java.io.File;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationExitReason;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
 
 public class SimulationExecutorImpl implements SimulationExecutor {
 
-	private final Logger logger = Logger.getLogger(SimulationExecutorImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(SimulationExecutorImpl.class);
 
 	private final ExecutionListener listener;
 	private final SimulationExecutorParameters parameters;
@@ -32,7 +34,7 @@ public class SimulationExecutorImpl implements SimulationExecutor {
 	@Override
 	public void start() {
 		this.stoppedManually = false;
-		
+
 		String startupFilePath = PathEx.combine(parameters.getRunExecutionDirectory(), parameters.getStartupFile());
 		ProcessBuilder processBuilder = new ProcessBuilder(String.format("java -jar \"%s\"", startupFilePath));
 
@@ -41,20 +43,20 @@ public class SimulationExecutorImpl implements SimulationExecutor {
 		processBuilder.redirectErrorStream(true);
 		File logFile = new File(PathEx.combine(parameters.getRunLogsPath(), outputLogsFileName));
 		processBuilder.redirectOutput(logFile);
-		
-		logger.info("Starting simulation run with parameters: " + parameters);
-		logger.info("Logging from simulation run is redirected to: " + logFile);
+
+		logger.info("Starting simulation run with parameters: {}", parameters);
+		logger.info("Logging from simulation run is redirected to: {}", logFile);
 		try {
 			this.process = processBuilder.start();
-			this.process.waitFor();
+			int exitValue = this.process.waitFor();
+			SimulationExitReason exitReason = SimulationExitReason.fromInt(exitValue);
 
-			logger.info("Simulation run ended. Parameters: " + parameters);
+			logger.info("Simulation run ended. Parameters: {}", parameters);
 
 			if (stoppedManually) {
-				listener.executionStopped(this);
-			}
-			else {
-				listener.executionEnded(this);
+				listener.executionStopped(this, exitReason);
+			} else {
+				listener.executionEnded(this, exitReason);
 			}
 		} catch (Exception e) {
 			logger.error("Error occured while running simulation with parameters: " + parameters, e);
@@ -64,7 +66,7 @@ public class SimulationExecutorImpl implements SimulationExecutor {
 
 	@Override
 	public void stop() {
-		logger.info("Stopping simulation run with parameters: " + parameters);
+		logger.info("Stopping simulation run with parameters: {}", parameters);
 		stoppedManually = true;
 		this.process.destroy(); // by killing process waitFor will end
 	}

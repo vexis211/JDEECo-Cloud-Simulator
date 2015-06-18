@@ -3,7 +3,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Log4jConfigurer;
 
 public class LogInitializer {
@@ -14,7 +15,7 @@ public class LogInitializer {
 
 		// configure logger from XML configuration file
 		Log4jConfigurer.initLogging("classpath:configuration/log4j.xml");
-		Logger logger = Logger.getLogger(LogInitializer.class);
+		Logger logger = LoggerFactory.getLogger(LogInitializer.class);
 		logger.info("Initialized logging.");
 	}
 }

@@ -3,7 +3,8 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +19,7 @@ public class IndexController {
 	public static final String INDEX_VIEW = "index";
 
 	@SuppressWarnings("unused")
-	private final Logger logger = Logger.getLogger(IndexController.class);
+	private final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
 	@Resource
 	private UserService userService;

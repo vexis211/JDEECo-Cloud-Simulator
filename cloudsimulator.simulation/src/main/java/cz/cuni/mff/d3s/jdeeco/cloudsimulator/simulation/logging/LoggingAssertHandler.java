@@ -1,21 +1,21 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.logging;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.asserts.AssertHandler;
 
 public class LoggingAssertHandler implements AssertHandler {
 
-	private static Logger logger = LogManager.getLogger(LoggingAssertHandler.class);
+	private static Logger logger = LoggerFactory.getLogger(LoggingAssertHandler.class);
 
 	@Override
 	public void fail(String message, String assertionGroup) {
-		logger.info(String.format("Assert failed!!! - Group: '%s' - Message: '%s'", assertionGroup, message));
+		logger.info("Assert failed!!! - Group: '{}' - Message: '{}'", assertionGroup, message);
 	}
 
 	@Override
 	public void success(String message, String assertionGroup) {
-		logger.info(String.format("Assert succedeed - Group: '%s' - Message: '%s'", assertionGroup, message));
+		logger.info("Assert succedeed - Group: '{}' - Message: '{}'", assertionGroup, message);
 	}
 }

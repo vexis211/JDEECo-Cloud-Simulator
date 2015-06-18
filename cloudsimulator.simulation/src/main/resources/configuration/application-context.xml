@@ -13,6 +13,8 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
 
+	<aop:aspectj-autoproxy />
+
 	<!-- Import of properties -->
 	<context:property-placeholder location="classpath:properties/config.properties" />
 
@@ -75,5 +77,11 @@
 		<constructor-arg name="simulationRunSettingsProvider" ref="xmlSettingsProvider" />
 		<constructor-arg name="simulationRunProfileId" ref="${simulation.run.profileId}" />
 	</bean>
+
+	<bean id="simulationController" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup.SimulationControllerImpl"
+		scope="singleton" />
+
+	<!-- Aspects -->
+	<bean id="statisticsAspect" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.aspects.StatisticsAspect" />
 
 </beans>

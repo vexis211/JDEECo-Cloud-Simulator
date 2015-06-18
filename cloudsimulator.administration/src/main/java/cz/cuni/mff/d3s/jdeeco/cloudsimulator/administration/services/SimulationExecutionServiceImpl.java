@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationConfigurationDao;
@@ -20,7 +21,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 
 public class SimulationExecutionServiceImpl implements SimulationExecutionService {
 
-	private final Logger logger = Logger.getLogger(SimulationExecutionServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(SimulationExecutionServiceImpl.class);
 
 	@Resource
 	private SimulationConfigurationDao simulationConfigurationDao;
@@ -94,13 +95,13 @@ public class SimulationExecutionServiceImpl implements SimulationExecutionServic
 		case Started:
 			execution.setStatus(SimulationStatus.Stopped);
 			simulationExecutionDao.saveOrUpdate(execution);
-			logger.info("Stopped execution with id: " + executionId);
+			logger.info("Stopped execution with id: {}", executionId);
 			break;
 		case Completed:
-			logger.info("Tried to stop completed execution with id: " + executionId);
+			logger.info("Tried to stop completed execution with id: {}", executionId);
 			break;
 		default:
-			logger.warn(String.format("Tried to stop execution with id: '%s', status: '%s'.", executionId, execution.getStatus()));
+			logger.warn("Tried to stop execution with id: '{}', status: '{}'.", executionId, execution.getStatus());
 			break;
 		}
 

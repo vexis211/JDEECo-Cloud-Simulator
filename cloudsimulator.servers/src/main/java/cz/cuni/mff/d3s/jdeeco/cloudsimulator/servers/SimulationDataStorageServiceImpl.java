@@ -4,13 +4,14 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
 
 public class SimulationDataStorageServiceImpl implements SimulationDataStorageService {
 
-	private final Logger logger = Logger.getLogger(SimulationDataStorageServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(SimulationDataStorageServiceImpl.class);
 
 	private final String remotePackageRootDirectory;
 	private final String remoteResultsRootDirectory;

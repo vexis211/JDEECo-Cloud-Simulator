@@ -1,7 +1,7 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StatisticsProviderImpl implements StatisticsProvider {
 
@@ -9,7 +9,7 @@ public class StatisticsProviderImpl implements StatisticsProvider {
 	private static final char KEY_VALUE_DELIMITER = '|';
 	private static final char VALUE_VALUE_DELIMITER = ',';
 
-	private static Logger logger = LogManager.getLogger(StatisticsProviderImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(StatisticsProviderImpl.class);
 
 	private final String inputFile;
 
