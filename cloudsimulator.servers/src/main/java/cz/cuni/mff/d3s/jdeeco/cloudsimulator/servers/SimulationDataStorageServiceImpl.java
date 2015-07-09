@@ -31,6 +31,11 @@ public class SimulationDataStorageServiceImpl implements SimulationDataStorageSe
 
 	@Override
 	public void saveResults(String localSourcePath, SimulationId simulationId) {
+		if (!new File(localSourcePath).exists()) {
+			logger.info("Results folder {} does not exists, therefore it won't be saved.", localSourcePath);
+			return;
+		}
+		
 		String remoteTargetPath = PathEx.combine(remoteResultsRootDirectory, simulationId.getRunId());
 		try {
 			FileUtils.copyDirectory(new File(localSourcePath), new File(remoteTargetPath));
@@ -42,6 +47,11 @@ public class SimulationDataStorageServiceImpl implements SimulationDataStorageSe
 
 	@Override
 	public void saveLogs(String localSourcePath, SimulationId simulationId) {
+		if (!new File(localSourcePath).exists()) {
+			logger.info("Logs folder {} does not exists, therefore it won't be saved.", localSourcePath);
+			return;
+		}
+		
 		String remoteTargetPath = PathEx.combine(remoteLogsRootDirectory, simulationId.getRunId());
 		try {
 			FileUtils.copyDirectory(new File(localSourcePath), new File(remoteTargetPath));

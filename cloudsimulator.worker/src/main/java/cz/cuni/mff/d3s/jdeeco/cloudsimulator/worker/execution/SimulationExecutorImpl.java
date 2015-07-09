@@ -49,14 +49,26 @@ public class SimulationExecutorImpl implements SimulationExecutor {
 		try {
 			this.process = processBuilder.start();
 			int exitValue = this.process.waitFor();
+			
+			logger.info("Simulation run ended. Parameters: {}, Exit value: {}", parameters, exitValue);
+
 			SimulationExitReason exitReason = SimulationExitReason.fromInt(exitValue);
 
-			logger.info("Simulation run ended. Parameters: {}", parameters);
-
-			if (stoppedManually) {
+			if (stoppedManually) listener.executionManuallyStopped(this);
+			
+			switch (exitReason) {
+			case RunExitCalled:
+			case ExecutionExitCalled:
+			case ExceptionOccured:
 				listener.executionStopped(this, exitReason);
-			} else {
-				listener.executionEnded(this, exitReason);
+				break;
+				
+			case Finished:
+				listener.executionEnded(this);
+				break;
+
+			default:
+				throw new EnumConstantNotPresentException(SimulationExitReason.class, String.valueOf(exitValue));
 			}
 		} catch (Exception e) {
 			logger.error("Error occured while running simulation with parameters: " + parameters, e);

@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// Persists what cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results.StatisticsProviderImpl will provide.
 public class StatisticsPersisterImpl<T> implements StatisticsPersister {
 
 	private static final char END_STATISTIC_CHAR = '@';

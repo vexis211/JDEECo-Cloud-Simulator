@@ -83,6 +83,11 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 	}
 
 	@Override
+	public List<SimulationRunEntry> getCompletedRuns() {
+		return completedRuns.values().stream().collect(Collectors.toList());
+	}
+
+	@Override
 	public void startSimulationRun(SimulationRunEntry toStartEntry) {
 		if (stopped) {
 			return;
@@ -108,7 +113,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 		if (stopped) {
 			return;
 		}
-		
+
 		int simulationRunId = update.getSimulationId().getRunId();
 
 		SimulationRunEntry simulationRunEntry;
@@ -126,6 +131,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 		switch (simulationStatus) {
 		case Stopped:
 			completedRuns.put(simulationRunId, simulationRunEntry);
+			listener.runStopped(simulationRunEntry);
 			break;
 		case Completed:
 			completedRuns.put(simulationRunId, simulationRunEntry);
@@ -176,6 +182,8 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 
 		stopRuns(notStartedRuns);
 		stopRuns(startedRuns);
+
+		listener.executionStopped(this);
 	}
 
 	private void stopRuns(HashMap<Integer, SimulationRunEntry> runs) {

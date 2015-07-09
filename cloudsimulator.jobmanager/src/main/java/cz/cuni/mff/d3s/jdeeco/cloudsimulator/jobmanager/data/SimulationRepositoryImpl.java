@@ -78,6 +78,15 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 
 	@Transactional(readOnly = false)
 	@Override
+	public void markRunAsStopped(int runId) {
+		SimulationRun run = simulationRunDao.findById(runId);
+		run.setEnded(new Date());
+		run.setStatus(SimulationStatus.Stopped);
+		simulationRunDao.saveOrUpdate(run);
+	}
+
+	@Transactional(readOnly = false)
+	@Override
 	public void markExecutionAsStarted(int executionId) {
 		SimulationExecution execution = simulationExecutionDao.findById(executionId);
 		execution.setStarted(new Date());
@@ -91,6 +100,15 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 		SimulationExecution execution = simulationExecutionDao.findById(executionId);
 		execution.setEnded(new Date());
 		execution.setStatus(SimulationStatus.Completed);
+		simulationExecutionDao.saveOrUpdate(execution);
+	}
+
+	@Transactional(readOnly = false)
+	@Override
+	public void markExecutionAsStopped(int executionId) {
+		SimulationExecution execution = simulationExecutionDao.findById(executionId);
+		execution.setEnded(new Date());
+		execution.setStatus(SimulationStatus.Stopped);
 		simulationExecutionDao.saveOrUpdate(execution);
 	}
 }

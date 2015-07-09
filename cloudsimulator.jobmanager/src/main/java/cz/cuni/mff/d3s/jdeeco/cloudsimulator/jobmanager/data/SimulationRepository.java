@@ -10,8 +10,12 @@ public interface SimulationRepository {
 	List<SimulationExecution> listStoppedExecutions(Collection<Integer> executionIds);
 
 	void initializeExecution(SimulationExecution notCreatedExecution);
+	
 	void markRunAsStarted(int runId);
 	void markRunAsCompleted(int runId);
+	void markRunAsStopped(int runId);
+	
 	void markExecutionAsStarted(int executionId);
 	void markExecutionAsCompleted(int executionId);
+	void markExecutionAsStopped(int executionId);
 }

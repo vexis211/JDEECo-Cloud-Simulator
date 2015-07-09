@@ -9,5 +9,6 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.connectors.ServerConnector;
 public interface JobManagerConnector extends ServerConnector {
 	void sendSimulationStatusUpdate(SimulationId simulationId, SimulationStatus status, SimulationExitReason exitReason);
 	void sendSimulationStatusUpdate(SimulationId simulationId, Exception e);
+
 	void sendWorkerStatusUpdate(WorkerStatus status);
 }

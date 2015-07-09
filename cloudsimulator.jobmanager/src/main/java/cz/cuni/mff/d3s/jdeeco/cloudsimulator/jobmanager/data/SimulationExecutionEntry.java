@@ -14,6 +14,7 @@ public interface SimulationExecutionEntry {
 
 	int getNotStartedRunsCount();
 	List<SimulationRunEntry> getNotStartedRuns();
+	List<SimulationRunEntry> getCompletedRuns();
 
 	void startSimulationRun(SimulationRunEntry simulationRunEntry);
 	void updateRunStatus(SimulationStatusUpdate update);

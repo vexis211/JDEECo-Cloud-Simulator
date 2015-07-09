@@ -1,12 +1,15 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationExitReason;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.PackagePreparedUpdate;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.SimplePackageManager;
@@ -42,13 +45,19 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 	@Override
 	public void updateStatus(List<SimulationStatusUpdate> updates) {
 		
-		// TODO!!!!!!!!!!!!!!!!!!!!
+		Set<SimulationExecutionEntry> executionsToStop = new HashSet<SimulationExecutionEntry>();
+
 		for (SimulationStatusUpdate update : updates) {
 			int executionId = update.getSimulationId().getExecutionId();
-
+			
 			if (simulationExecutions.containsKey(executionId)) {
 				SimulationExecutionEntry executionEntry = simulationExecutions.get(executionId);
 				try {
+					if (update.getExitReason() == SimulationExitReason.ExecutionExitCalled
+							&& !executionsToStop.contains(executionEntry)) {
+						executionsToStop.add(executionEntry);
+					}
+					
 					executionEntry.updateRunStatus(update);
 				} catch (RuntimeException e) {
 					logger.error(String.format("Simulation status update failed. %s.", update.getSimulationId()), e);
@@ -56,6 +65,11 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 			} else {
 				logger.info("Update for wrong or stopped execution. {}.", update.getSimulationId());
 			}
+		}
+		
+		// stop executions
+		for (SimulationExecutionEntry executionEntry : executionsToStop) {
+			executionEntry.stop();
 		}
 	}
 
@@ -125,6 +139,11 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 	}
 
 	@Override
+	public void runStopped(SimulationRunEntry runEntry) {
+		simulationRepository.markRunAsStopped(runEntry.getId());
+	}
+
+	@Override
 	public void executionStarted(SimulationExecutionEntry executionEntry) {
 		simulationRepository.markExecutionAsStarted(executionEntry.getId());
 	}
@@ -132,5 +151,10 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 	@Override
 	public void executionCompleted(SimulationExecutionEntry executionEntry) {
 		simpleResultsAggregator.aggregateResults(executionEntry);
+	}
+
+	@Override
+	public void executionStopped(SimulationExecutionEntry executionEntry) {
+		simulationRepository.markExecutionAsStopped(executionEntry.getId());
 	}
 }

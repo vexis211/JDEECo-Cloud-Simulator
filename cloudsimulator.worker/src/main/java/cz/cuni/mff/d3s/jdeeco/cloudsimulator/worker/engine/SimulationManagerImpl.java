@@ -22,7 +22,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution.SimulationExecutor
 public class SimulationManagerImpl implements SimulationManager, ExecutionListener, SimulationDataListener {
 
 	private final HashMap<SimulationId, TaskEntry> incompleteTasks = new HashMap<SimulationId, TaskEntry>();
-	private final HashMap<SimulationId, SimulationExitReason> notPublishedExitReasons = new HashMap<SimulationId, SimulationExitReason>();
+	private final HashMap<SimulationId, SimulationStatusUpdater> finishedNotUpdatedSimulations = new HashMap<SimulationId, SimulationStatusUpdater>();
 
 	private final JobManagerConnector jobManagerConnector;
 	private final SimulationDataManager simulationDataManager;
@@ -90,43 +90,58 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 	}
 
 	@Override
-	public void executionEnded(SimulationExecutor simulationExecutor, SimulationExitReason exitReason) {
+	public void executionEnded(SimulationExecutor simulationExecutor) {
 		SimulationExecutorParameters parameters = simulationExecutor.getParameters();
+		SimulationStatusUpdater updater = new ReasonedSimulationStatusUpdater(parameters.getSimulationId(),
+				SimulationStatus.Completed, SimulationExitReason.Finished);
 
-		synchronized (notPublishedExitReasons) {
-			notPublishedExitReasons.put(parameters.getSimulationId(), exitReason);
+		saveAndUpdateManager(simulationExecutor, parameters, updater);
+	}
+
+	@Override
+	public void executionManuallyStopped(SimulationExecutor simulationExecutor) {
+		executionStopped(simulationExecutor, SimulationExitReason.RunExitCalled);
+	}
+
+	@Override
+	public void executionStopped(SimulationExecutor simulationExecutor, SimulationExitReason exitReason) {
+		SimulationExecutorParameters parameters = simulationExecutor.getParameters();
+		SimulationStatusUpdater updater = new ReasonedSimulationStatusUpdater(parameters.getSimulationId(),
+				SimulationStatus.Stopped, exitReason);
+
+		saveAndUpdateManager(simulationExecutor, parameters, updater);
+	}
+
+	@Override
+	public void exceptionOccured(SimulationExecutor simulationExecutor, Exception e) {
+		SimulationExecutorParameters parameters = simulationExecutor.getParameters();
+		SimulationStatusUpdater updater = new ExceptionSimulationStatusUpdater(parameters.getSimulationId(), e);
+
+		saveAndUpdateManager(simulationExecutor, parameters, updater);
+	}
+
+	private void saveAndUpdateManager(SimulationExecutor simulationExecutor, SimulationExecutorParameters parameters,
+			SimulationStatusUpdater updater) {
+		// add to registry
+		synchronized (finishedNotUpdatedSimulations) {
+			finishedNotUpdatedSimulations.put(parameters.getSimulationId(), updater);
 		}
-		
+
+		// save
 		simulationDataManager.saveResults(parameters.getSimulationId(), parameters.getSimulationData());
+
 		removeExecutor(simulationExecutor);
 	}
 
 	@Override
 	public void resultsSaved(SimulationId simulationId) {
-		SimulationExitReason exitReason;
-		synchronized (notPublishedExitReasons) {
-			exitReason = notPublishedExitReasons.remove(simulationId);
+		SimulationStatusUpdater simulationStatusUpdater;
+		synchronized (finishedNotUpdatedSimulations) {
+			simulationStatusUpdater = finishedNotUpdatedSimulations.remove(simulationId);
 		}
-				
-		jobManagerConnector.sendSimulationStatusUpdate(simulationId, SimulationStatus.Completed, exitReason);
+
+		simulationStatusUpdater.Update();
 		jobManagerConnector.sendWorkerStatusUpdate(WorkerStatus.Started);
-	}
-
-	@Override
-	public void executionStopped(SimulationExecutor simulationExecutor, SimulationExitReason exitReason) {
-		jobManagerConnector.sendSimulationStatusUpdate(simulationExecutor.getParameters().getSimulationId(),
-				SimulationStatus.Stopped, exitReason);
-		jobManagerConnector.sendWorkerStatusUpdate(WorkerStatus.Started);
-
-		removeExecutor(simulationExecutor);
-	}
-
-	@Override
-	public void exceptionOccured(SimulationExecutor simulationExecutor, Exception e) {
-		jobManagerConnector.sendSimulationStatusUpdate(simulationExecutor.getParameters().getSimulationId(), e);
-		jobManagerConnector.sendWorkerStatusUpdate(WorkerStatus.Started);
-
-		removeExecutor(simulationExecutor);
 	}
 
 	private void removeExecutor(SimulationExecutor simulationExecutor) {
@@ -149,4 +164,51 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 			return String.format("TaskEntry [task=%s, executor=%s]", task, executor);
 		}
 	}
+
+	private interface SimulationStatusUpdater {
+		void Update();
+	}
+
+	private abstract class SimulationStatusUpdaterBase implements SimulationStatusUpdater {
+		protected final SimulationId simulationId;
+
+		public SimulationStatusUpdaterBase(SimulationId simulationId) {
+			this.simulationId = simulationId;
+		}
+	}
+
+	private class ReasonedSimulationStatusUpdater extends SimulationStatusUpdaterBase {
+
+		private final SimulationStatus simulationStatus;
+		private final SimulationExitReason exitReason;
+
+		public ReasonedSimulationStatusUpdater(SimulationId simulationId, SimulationStatus simulationStatus,
+				SimulationExitReason exitReason) {
+			super(simulationId);
+			// TODO Auto-generated constructor stub
+			this.simulationStatus = simulationStatus;
+			this.exitReason = exitReason;
+		}
+
+		@Override
+		public void Update() {
+			jobManagerConnector.sendSimulationStatusUpdate(simulationId, simulationStatus, exitReason);
+		}
+	}
+
+	private class ExceptionSimulationStatusUpdater extends SimulationStatusUpdaterBase {
+
+		private final Exception exception;
+
+		public ExceptionSimulationStatusUpdater(SimulationId simulationId, Exception exception) {
+			super(simulationId);
+			this.exception = exception;
+		}
+
+		@Override
+		public void Update() {
+			jobManagerConnector.sendSimulationStatusUpdate(simulationId, exception);
+		}
+	}
+
 }

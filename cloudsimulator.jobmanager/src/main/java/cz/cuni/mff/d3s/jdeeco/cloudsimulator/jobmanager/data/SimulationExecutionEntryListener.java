@@ -4,7 +4,9 @@ public interface SimulationExecutionEntryListener {
 
 	void runStarted(SimulationRunEntry runEntry);
 	void runCompleted(SimulationRunEntry runEntry);
+	void runStopped(SimulationRunEntry runEntry);
 	
 	void executionStarted(SimulationExecutionEntry executionEntry);
 	void executionCompleted(SimulationExecutionEntry executionEntry);
+	void executionStopped(SimulationExecutionEntry executionEntry);
 }
