@@ -39,6 +39,11 @@ public class LoggingStatisticsHandler implements StatisticsHandler {
 	}
 
 	@Override
+	public void write(String id, long value) {
+		writeInternal(id, String.valueOf(value));
+	}
+
+	@Override
 	public void write(String id, float value) {
 		writeInternal(id, String.valueOf(value));
 	}

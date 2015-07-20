@@ -4,16 +4,16 @@ public class StatisticsProcessorFactoryProviderImpl implements StatisticsProcess
 
 	@Override
 	public <T> StatisticsProcessorFactory<T> getGeneral(Class<T> clazz) {
-		return new StatisticsProcessorGeneralFactoryImpl<T>();
+		return new StatisticsProcessorGeneralFactoryImpl<T>(clazz);
 	}
 
 	@Override
 	public <T extends Comparable<T>> StatisticsProcessorFactory<T> getForComparable(Class<T> clazz) {
-		return new StatisticsProcessorComparableFactoryImpl<T>();
+		return new StatisticsProcessorComparableFactoryImpl<T>(clazz);
 	}
 
 	@Override
 	public <T extends Number> StatisticsProcessorFactory<T> getForNumber(Class<T> clazz) {
-		return new StatisticsProcessorNumberFactoryImpl<T>();
+		return new StatisticsProcessorNumberFactoryImpl<T>(clazz);
 	}
 }

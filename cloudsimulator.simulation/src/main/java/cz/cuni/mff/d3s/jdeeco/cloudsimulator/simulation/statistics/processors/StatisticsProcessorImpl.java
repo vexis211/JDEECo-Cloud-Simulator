@@ -7,12 +7,15 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsPro
 
 public class StatisticsProcessorImpl<T> implements StatisticsProcessor<T> {
 
+	private final Class<T> genericClass;
 	private final String statisticId;
 	private final List<StatisticsValueProcessor<T>> valueProcessors;
 
-	public StatisticsProcessorImpl(String statisticId, List<StatisticsValueProcessor<T>> valueProcessors) {
+	public StatisticsProcessorImpl(String statisticId, List<StatisticsValueProcessor<T>> valueProcessors,
+			Class<T> genericClass) {
 		this.statisticId = statisticId;
 		this.valueProcessors = valueProcessors;
+		this.genericClass = genericClass;
 	}
 
 	@Override
@@ -31,7 +34,7 @@ public class StatisticsProcessorImpl<T> implements StatisticsProcessor<T> {
 
 	@Override
 	public void persist(StatisticsPersister persister) {
-		persister.startStatistic(statisticId);
+		persister.startStatistic(statisticId, genericClass);
 
 		synchronized (valueProcessors) {
 			for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {

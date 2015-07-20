@@ -65,6 +65,15 @@ public class AggregateStatisticsHandler implements StatisticsHandler {
 	}
 
 	@Override
+	public void write(String id, long value) {
+		synchronized (handlers) {
+			for (StatisticsHandler handler : handlers) {
+				handler.write(id, value);
+			}
+		}
+	}
+
+	@Override
 	public void write(String id, float value) {
 		synchronized (handlers) {
 			for (StatisticsHandler handler : handlers) {

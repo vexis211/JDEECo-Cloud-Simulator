@@ -13,8 +13,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationExitReason;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.PackagePreparedUpdate;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.SimplePackageManager;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results.ResultsAggregatedUpdate;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results.SimpleResultsAggregator;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.RunStatistics;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.StatisticsProvider;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.updates.SimulationStatusUpdate;
 
 public class SimulationManagerImpl implements SimulationManager, SimulationExecutionEntryListener {
@@ -26,15 +26,15 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 	private final SimulationRepository simulationRepository;
 	private final SimulationExecutionEntryFactory simulationExecutionEntryFactory;
 	private final SimplePackageManager simplePackageManager;
-	private final SimpleResultsAggregator simpleResultsAggregator;
+	private final StatisticsProvider statisticsProvider;
 
 	public SimulationManagerImpl(SimulationRepository simulationRepository,
 			SimulationExecutionEntryFactory simulationExecutionEntryFactory, SimplePackageManager simplePackageManager,
-			SimpleResultsAggregator simpleResultsAggregator) {
+			StatisticsProvider statisticsProvider) {
 		this.simulationRepository = simulationRepository;
 		this.simulationExecutionEntryFactory = simulationExecutionEntryFactory;
 		this.simplePackageManager = simplePackageManager;
-		this.simpleResultsAggregator = simpleResultsAggregator;
+		this.statisticsProvider = statisticsProvider;
 	}
 
 	@Override
@@ -82,16 +82,6 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 	}
 
 	@Override
-	public void updateResultsAggregated(List<ResultsAggregatedUpdate> updates) {
-		for (ResultsAggregatedUpdate update : updates) {
-			int executionId = update.getExecutionId();
-			simulationExecutions.remove(executionId);
-			// TODO save aggregated results to DB
-			simulationRepository.markExecutionAsCompleted(executionId);
-		}
-	}
-
-	@Override
 	public void refreshExecutions() {
 		refreshExecutionsInternal();
 	}
@@ -130,31 +120,35 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 
 	@Override
 	public void runStarted(SimulationRunEntry runEntry) {
-		simulationRepository.markRunAsStarted(runEntry.getId());
+		simulationRepository.startRun(runEntry.getId());
 	}
 
 	@Override
 	public void runCompleted(SimulationRunEntry runEntry) {
-		simulationRepository.markRunAsCompleted(runEntry.getId());
+		RunStatistics runStatistics = statisticsProvider.getStatistics(runEntry);		
+		simulationRepository.completeRun(runEntry.getId(), runStatistics);
 	}
 
 	@Override
 	public void runStopped(SimulationRunEntry runEntry) {
-		simulationRepository.markRunAsStopped(runEntry.getId());
+		simulationRepository.stopRun(runEntry.getId());
 	}
 
 	@Override
 	public void executionStarted(SimulationExecutionEntry executionEntry) {
-		simulationRepository.markExecutionAsStarted(executionEntry.getId());
+		simulationRepository.startExecution(executionEntry.getId());
 	}
 
 	@Override
 	public void executionCompleted(SimulationExecutionEntry executionEntry) {
-		simpleResultsAggregator.aggregateResults(executionEntry);
+		int executionId = executionEntry.getId();
+		simulationExecutions.remove(executionId);
+
+		simulationRepository.completeExecution(executionId);
 	}
 
 	@Override
 	public void executionStopped(SimulationExecutionEntry executionEntry) {
-		simulationRepository.markExecutionAsStopped(executionEntry.getId());
+		simulationRepository.stopExecution(executionEntry.getId());
 	}
 }

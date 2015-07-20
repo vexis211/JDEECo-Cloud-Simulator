@@ -4,15 +4,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.transaction.annotation.Transactional;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.StatisticsSaveMode;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationExecutionDao;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationRunDao;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRun;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.RunStatisticVisitor;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.RunStatistics;
 
 public class SimulationRepositoryImpl implements SimulationRepository {
 
@@ -60,7 +64,7 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 
 	@Transactional(readOnly = false)
 	@Override
-	public void markRunAsStarted(int runId) {
+	public void startRun(int runId) {
 		SimulationRun run = simulationRunDao.findById(runId);
 		run.setStarted(new Date());
 		run.setStatus(SimulationStatus.Started);
@@ -69,16 +73,21 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 
 	@Transactional(readOnly = false)
 	@Override
-	public void markRunAsCompleted(int runId) {
+	public void completeRun(int runId, RunStatistics runStatistics) {
+		// update run state
 		SimulationRun run = simulationRunDao.findById(runId);
 		run.setEnded(new Date());
 		run.setStatus(SimulationStatus.Completed);
 		simulationRunDao.saveOrUpdate(run);
+		
+		// save run statistics
+		RunStatisticVisitor saveVisitor = new SaveRunStatisticVisitor();
+		runStatistics.accept(saveVisitor);
 	}
 
 	@Transactional(readOnly = false)
 	@Override
-	public void markRunAsStopped(int runId) {
+	public void stopRun(int runId) {
 		SimulationRun run = simulationRunDao.findById(runId);
 		run.setEnded(new Date());
 		run.setStatus(SimulationStatus.Stopped);
@@ -87,7 +96,7 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 
 	@Transactional(readOnly = false)
 	@Override
-	public void markExecutionAsStarted(int executionId) {
+	public void startExecution(int executionId) {
 		SimulationExecution execution = simulationExecutionDao.findById(executionId);
 		execution.setStarted(new Date());
 		execution.setStatus(SimulationStatus.Started);
@@ -96,7 +105,7 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 
 	@Transactional(readOnly = false)
 	@Override
-	public void markExecutionAsCompleted(int executionId) {
+	public void completeExecution(int executionId) {
 		SimulationExecution execution = simulationExecutionDao.findById(executionId);
 		execution.setEnded(new Date());
 		execution.setStatus(SimulationStatus.Completed);
@@ -105,10 +114,20 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 
 	@Transactional(readOnly = false)
 	@Override
-	public void markExecutionAsStopped(int executionId) {
+	public void stopExecution(int executionId) {
 		SimulationExecution execution = simulationExecutionDao.findById(executionId);
 		execution.setEnded(new Date());
 		execution.setStatus(SimulationStatus.Stopped);
 		simulationExecutionDao.saveOrUpdate(execution);
+	}
+	
+	private class SaveRunStatisticVisitor implements RunStatisticVisitor {
+
+		@Override
+		public <T> void visit(Map<StatisticsSaveMode, T> aggregatedValues, T[] valuesVector) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 }

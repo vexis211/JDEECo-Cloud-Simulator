@@ -23,6 +23,10 @@ public class VoidStatisticsHandler implements StatisticsHandler {
 	}
 
 	@Override
+	public void write(String id, long value) {
+	}
+
+	@Override
 	public void write(String id, float value) {
 	}
 

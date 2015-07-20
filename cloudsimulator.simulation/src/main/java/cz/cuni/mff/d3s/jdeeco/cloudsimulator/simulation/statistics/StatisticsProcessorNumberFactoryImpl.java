@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.StatisticsSaveMode;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.processors.StatisticsAvgProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.processors.StatisticsCountProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.processors.StatisticsMaxNumberProcessor;
@@ -14,6 +15,12 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.processors.St
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.processors.StatisticsVectorProcessor;
 
 public class StatisticsProcessorNumberFactoryImpl<T extends Number> implements StatisticsProcessorFactory<T> {
+
+	private final Class<T> genericClass;
+
+	public StatisticsProcessorNumberFactoryImpl(Class<T> genericClass) {
+		this.genericClass = genericClass;
+	}
 
 	@Override
 	public StatisticsProcessor<T> create(String statisticId, EnumSet<StatisticsSaveMode> saveMode) {
@@ -45,7 +52,7 @@ public class StatisticsProcessorNumberFactoryImpl<T extends Number> implements S
 			}
 		}
 
-		return new StatisticsProcessorImpl<T>(statisticId, valueProcessors);
+		return new StatisticsProcessorImpl<T>(statisticId, valueProcessors, genericClass);
 	}
 
 }

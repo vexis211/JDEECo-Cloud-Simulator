@@ -18,6 +18,9 @@ public class Statistics {
 	public static void Write(String id, int value) {
 		Handler.write(id, value);
 	}
+	public static void Write(String id, long value) {
+		Handler.write(id, value);
+	}
 	public static void Write(String id, float value) {
 		Handler.write(id, value);
 	}

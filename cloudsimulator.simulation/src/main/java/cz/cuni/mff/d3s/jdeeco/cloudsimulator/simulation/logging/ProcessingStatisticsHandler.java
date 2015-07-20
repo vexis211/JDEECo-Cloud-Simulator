@@ -37,6 +37,11 @@ public class ProcessingStatisticsHandler implements StatisticsHandler {
 	}
 
 	@Override
+	public void write(String id, long value) {
+		statisticsManager.getNumberProcessor(id, long.class).process(value);
+	}
+
+	@Override
 	public void write(String id, float value) {
 		statisticsManager.getNumberProcessor(id, float.class).process(value);
 	}

@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.concurrent.ConcurrentHashMap;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.StatisticsSaveMode;
+
 public class StatisticsManagerImpl implements StatisticsManager {
 
 	private final ConcurrentHashMap<Class<?>, ProcessorStore<?>> processorStores = new ConcurrentHashMap<Class<?>, ProcessorStore<?>>();

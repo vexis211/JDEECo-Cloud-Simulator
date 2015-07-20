@@ -1,4 +1,4 @@
-package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics;
+package cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data;
 
 import java.util.EnumSet;
 

@@ -5,19 +5,21 @@ import java.io.PrintStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.StatisticsSaveMode;
+
 // Persists what cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results.StatisticsProviderImpl will provide.
-public class StatisticsPersisterImpl<T> implements StatisticsPersister {
+public class FileStatisticsPersisterImpl<T> implements StatisticsPersister {
 
 	private static final char END_STATISTIC_CHAR = '@';
 	private static final char KEY_VALUE_DELIMITER = '|';
 	private static final char VALUE_VALUE_DELIMITER = ',';
 	
-	private static Logger logger = LoggerFactory.getLogger(StatisticsPersisterImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(FileStatisticsPersisterImpl.class);
 	
 	private final String persistFile;
 	private PrintStream output;
 	
-	public StatisticsPersisterImpl(String persistFile) {
+	public FileStatisticsPersisterImpl(String persistFile) {
 		this.persistFile = persistFile;
 	}
 
@@ -42,8 +44,9 @@ public class StatisticsPersisterImpl<T> implements StatisticsPersister {
 	}
 	
 	@Override
-	public void startStatistic(String statisticId) {
+	public void startStatistic(String statisticId, Class<?> clazz) {
 		output.println(statisticId);
+		output.println(clazz.getName());
 	}
 
 	@Override

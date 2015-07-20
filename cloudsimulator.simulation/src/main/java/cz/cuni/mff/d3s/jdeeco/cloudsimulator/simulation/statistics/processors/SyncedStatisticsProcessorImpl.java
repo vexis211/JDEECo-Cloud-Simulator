@@ -9,10 +9,13 @@ public class SyncedStatisticsProcessorImpl<T> implements StatisticsProcessor<T> 
 
 	private final String statisticId;
 	private final List<StatisticsValueProcessor<T>> valueProcessors;
+	private final Class<T> genericClass;
 
-	public SyncedStatisticsProcessorImpl(String statisticId, List<StatisticsValueProcessor<T>> valueProcessors) {
+	public SyncedStatisticsProcessorImpl(String statisticId, List<StatisticsValueProcessor<T>> valueProcessors,
+			Class<T> genericClass) {
 		this.statisticId = statisticId;
 		this.valueProcessors = valueProcessors;
+		this.genericClass = genericClass;
 	}
 
 	@Override
@@ -29,7 +32,7 @@ public class SyncedStatisticsProcessorImpl<T> implements StatisticsProcessor<T> 
 
 	@Override
 	public void persist(StatisticsPersister persister) {
-		persister.startStatistic(statisticId);
+		persister.startStatistic(statisticId, genericClass);
 
 		for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {
 			valueProcessor.persist(persister);
