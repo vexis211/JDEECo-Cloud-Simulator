@@ -7,7 +7,6 @@ import java.util.Set;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.ExecutionEndSpecificationType;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 
-
 public class SimulationExecution implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7158964600876801749L;
@@ -20,16 +19,19 @@ public class SimulationExecution implements java.io.Serializable {
 	private Date created;
 	private Date started;
 	private Date ended;
-    private ExecutionEndSpecificationType endSpecificationType;
+	private ExecutionEndSpecificationType endSpecificationType;
 	private Date endDate;
 	private int runCount;
 	private Set<SimulationRun> simulationRuns = new HashSet<SimulationRun>(0);
+	private Set<SimulationExecutionStatistic> simulationExecutionStatistics = new HashSet<SimulationExecutionStatistic>(
+			0);
 
 	public SimulationExecution() {
 	}
 
 	public SimulationExecution(SimulationConfiguration simulationConfiguration, User creator, String description,
-			SimulationStatus status, Date created, Date ended, ExecutionEndSpecificationType endSpecificationType, Date endDate, int runCount) {
+			SimulationStatus status, Date created, Date ended, ExecutionEndSpecificationType endSpecificationType,
+			Date endDate, int runCount) {
 		this.simulationConfiguration = simulationConfiguration;
 		this.creator = creator;
 		this.description = description;
@@ -127,12 +129,20 @@ public class SimulationExecution implements java.io.Serializable {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	
+
 	public Set<SimulationRun> getSimulationRuns() {
 		return this.simulationRuns;
 	}
 
 	public void setSimulationRuns(Set<SimulationRun> simulationRuns) {
 		this.simulationRuns = simulationRuns;
+	}
+
+	public Set<SimulationExecutionStatistic> getSimulationExecutionStatistics() {
+		return this.simulationExecutionStatistics;
+	}
+
+	public void setSimulationExecutionStatistics(Set<SimulationExecutionStatistic> simulationExecutionStatistics) {
+		this.simulationExecutionStatistics = simulationExecutionStatistics;
 	}
 }

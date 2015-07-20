@@ -49,5 +49,11 @@
             </key>
             <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRun" />
         </set>
+        <set name="simulationExecutionStatistics" table="simulation_execution_statistic" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ExecutionID" not-null="true" />
+            </key>
+            <one-to-many class="SimulationExecutionStatistic" />
+        </set>
     </class>
 </hibernate-mapping>

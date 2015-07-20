@@ -7,7 +7,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.StatisticsSaveMode;
 public class RunStatisticFactoryImpl implements RunStatisticFactory {
 
 	@Override
-	public <T> RunStatistic create(String name, Map<StatisticsSaveMode, T> aggregatedValues, T[] valuesVector) {
-		return new RunStatisticImpl<T>(name, aggregatedValues, valuesVector);
+	public <T> RunStatistic create(String name, Class<T> valueClass, Map<StatisticsSaveMode, T> aggregatedValues, T[] valuesVector) {
+		return new RunStatisticImpl<T>(name, valueClass, aggregatedValues, valuesVector);
 	}
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 20, 2015 4:57:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+	<class name="SimulationRunStatistic" table="simulation_run_statistic"
+		catalog="jdeeco_simulation" optimistic-lock="version">
+		<id name="id" type="java.lang.Long">
+			<column name="ID" />
+			<generator class="identity" />
+		</id>
+		<many-to-one name="simulationExecutionStatistic" class="SimulationExecutionStatistic"
+			fetch="select">
+			<column name="ExecutionStatisticID" not-null="true" />
+		</many-to-one>
+		<many-to-one name="simulationRun" class="SimulationRun"
+			fetch="select">
+			<column name="RunID" not-null="true" />
+		</many-to-one>
+		<property name="dataType" type="byte">
+			<column name="DataType" not-null="true" />
+		</property>
+		<property name="vectorData" type="binary">
+			<column name="VectorData" />
+		</property>
+		<set name="simulationRunStatisticAggdatas" table="simulation_run_statistic_aggdata"
+			inverse="true" lazy="false" fetch="select" cascade="all">
+			<key>
+				<column name="RunStatisticID" not-null="true" />
+			</key>
+			<one-to-many class="SimulationRunStatisticAggdata" />
+		</set>
+	</class>
+</hibernate-mapping>

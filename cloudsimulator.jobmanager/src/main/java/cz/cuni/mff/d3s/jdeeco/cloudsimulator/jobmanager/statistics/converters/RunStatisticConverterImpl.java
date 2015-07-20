@@ -11,8 +11,10 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.parsers.Stati
 abstract class RunStatisticConverterImpl<T> implements RunStatisticConverter {
 
 	private final RunStatisticFactory runStatisticFactory;
+	private final Class<T> clazz;
 	
 	public RunStatisticConverterImpl(Class<T> clazz, RunStatisticFactory runStatisticFactory) {
+		this.clazz = clazz;
 		this.runStatisticFactory = runStatisticFactory;
 	}
 
@@ -34,7 +36,7 @@ abstract class RunStatisticConverterImpl<T> implements RunStatisticConverter {
 			}
 		}
 		
-		return runStatisticFactory.create(data.getName(), aggregatedValues, valuesVector);
+		return runStatisticFactory.create(data.getName(), clazz, aggregatedValues, valuesVector);
 	}
 
 	protected abstract T[] convertVector(String stringValue);

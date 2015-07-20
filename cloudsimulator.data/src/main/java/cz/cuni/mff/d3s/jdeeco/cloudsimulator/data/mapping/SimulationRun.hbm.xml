@@ -22,5 +22,11 @@
         <property name="ended" type="timestamp" insert="false">
             <column name="Ended" length="19" not-null="true" />
         </property>
+        <set name="simulationRunStatistics" table="simulation_run_statistic" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="RunID" not-null="true" />
+            </key>
+            <one-to-many class="SimulationRunStatistic" />
+        </set>
     </class>
 </hibernate-mapping>
