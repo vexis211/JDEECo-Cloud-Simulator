@@ -26,7 +26,7 @@
             <key>
                 <column name="RunID" not-null="true" />
             </key>
-            <one-to-many class="SimulationRunStatistic" />
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRunStatistic" />
         </set>
     </class>
 </hibernate-mapping>

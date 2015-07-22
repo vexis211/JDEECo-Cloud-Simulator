@@ -36,4 +36,14 @@
 	<bean id="simulationRunDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationRunDaoImpl">
 		<constructor-arg name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	
+	<bean id="simulationExecutionStatisticDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationExecutionStatisticDaoImpl">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="simulationRunStatisticDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationRunStatisticDaoImpl">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="simulationRunStatisticAggdataDao" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationRunStatisticAggdataDaoImpl">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
 </beans>

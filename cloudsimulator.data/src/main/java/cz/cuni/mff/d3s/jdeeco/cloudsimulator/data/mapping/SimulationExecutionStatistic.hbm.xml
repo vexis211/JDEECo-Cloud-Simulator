@@ -1,14 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Jul 20, 2015 4:57:14 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="SimulationExecutionStatistic" table="simulation_execution_statistic" catalog="jdeeco_simulation" optimistic-lock="version">
+    <class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecutionStatistic" table="simulation_execution_statistic" catalog="jdeeco_simulation" optimistic-lock="version">
         <id name="id" type="java.lang.Integer">
             <column name="ID" />
             <generator class="identity" />
         </id>
-        <many-to-one name="simulationExecution" class="SimulationExecution" fetch="select">
+        <many-to-one name="simulationExecution" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution" fetch="select">
             <column name="ExecutionID" not-null="true" />
         </many-to-one>
         <property name="name" type="string">
@@ -18,7 +17,7 @@
             <key>
                 <column name="ExecutionStatisticID" not-null="true" />
             </key>
-            <one-to-many class="SimulationRunStatistic" />
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRunStatistic" />
         </set>
     </class>
 </hibernate-mapping>

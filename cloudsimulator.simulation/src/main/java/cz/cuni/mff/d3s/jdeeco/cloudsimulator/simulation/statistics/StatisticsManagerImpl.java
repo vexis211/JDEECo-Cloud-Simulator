@@ -66,7 +66,7 @@ public class StatisticsManagerImpl implements StatisticsManager {
 
 	@SuppressWarnings("unchecked")
 	private <T> ProcessorStore<T> getExistingStore(Class<T> clazz) {
-		ProcessorStore<T> store = (ProcessorStore<T>) processorStores.get(clazz); // TODO can this be done better?
+		ProcessorStore<T> store = (ProcessorStore<T>) processorStores.get(clazz); // TODO improvement - can this be done better?
 		return store;
 	}
 
@@ -96,17 +96,12 @@ public class StatisticsManagerImpl implements StatisticsManager {
 		}
 
 		StatisticsProcessor<T> getOrCreateProcessor(String statisticId) {
-			StatisticsProcessor<T> processor;
-
-			if (processors.containsKey(statisticId)) {
-				processor = processors.get(statisticId);
-			} else {
+			if (!processors.containsKey(statisticId)) {
 				EnumSet<StatisticsSaveMode> statisticSaveModes = statisticsConfiguration.getSaveModes(statisticId);
-				processor = processorFactory.create(statisticId, statisticSaveModes);
-				processors.putIfAbsent(statisticId, processor);
+				processors.putIfAbsent(statisticId, processorFactory.create(statisticId, statisticSaveModes));
 			}
 
-			return processor;
+			return processors.get(statisticId);
 		}
 
 		public Collection<StatisticsProcessor<T>> getProcessors() {

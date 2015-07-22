@@ -25,7 +25,7 @@ public class StatisticsProcessorImpl<T> implements StatisticsProcessor<T> {
 
 	@Override
 	public void process(T value) {
-		synchronized (valueProcessors) { // TODO try to improve performance
+		synchronized (valueProcessors) { // TODO improvement - try to improve performance
 			for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {
 				valueProcessor.process(value);
 			}

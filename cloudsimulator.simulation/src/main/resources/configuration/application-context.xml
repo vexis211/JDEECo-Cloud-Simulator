@@ -45,7 +45,7 @@
 
 	<bean id="statisticsProcessorFactoryProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsProcessorFactoryProviderImpl" />
 
-	<bean id="statisticsPersister" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsPersisterImpl">
+	<bean id="statisticsPersister" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.FileStatisticsPersisterImpl">
 		<constructor-arg name="persistFile" value="${simulation.statistics.outputFile}" />
 	</bean>
 
@@ -58,8 +58,8 @@
 	</bean>
 
 	<bean id="assertManager" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.AssertManagerImpl" scope="singleton">
-		<constructor-arg name="assertConfiguration" ref="statisticsConfiguration" />
-		<constructor-arg name="assertProcessorFactory" ref="statisticsProcessorFactoryProvider" />
+		<constructor-arg name="assertConfiguration" ref="assertConfiguration" />
+		<constructor-arg name="assertProcessorFactory" ref="assertProcessorFactory" />
 	</bean>
 
 	<bean id="assertConfiguration" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.AssertConfigurationImpl"
@@ -68,14 +68,16 @@
 		<constructor-arg name="assertsProfileId" value="${simulation.asserts.profileId}" />
 	</bean>
 
-	<bean id="assertProcessorFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.AssertProcessorFactoryImpl" />
+	<bean id="assertProcessorFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.AssertProcessorFactoryImpl">
+		<constructor-arg name="simulationController" ref="simulationController" />
+	</bean>
 
 	<!-- Run -->
 
 	<bean id="simulationRunConfiguration" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup.SimulationRunConfigurationImpl"
 		scope="singleton">
 		<constructor-arg name="simulationRunSettingsProvider" ref="xmlSettingsProvider" />
-		<constructor-arg name="simulationRunProfileId" ref="${simulation.run.profileId}" />
+		<constructor-arg name="simulationRunProfileId" value="${simulation.run.profileId}" />
 	</bean>
 
 	<bean id="simulationController" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup.SimulationControllerImpl"

@@ -8,7 +8,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsPer
 
 public class StatisticsVectorProcessor<T> implements StatisticsValueProcessor<T> {
 
-	// TODO needs to be saved outside the memory - it can be really big!!!
+	// TODO improvement - needs to be saved outside the memory - it can be really big!!!
 	private List<T> values = new ArrayList<T>();
 	
 	@Override

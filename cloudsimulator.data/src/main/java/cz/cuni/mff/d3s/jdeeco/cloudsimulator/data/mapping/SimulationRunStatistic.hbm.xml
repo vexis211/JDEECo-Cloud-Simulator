@@ -1,19 +1,18 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Jul 20, 2015 4:57:14 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-	<class name="SimulationRunStatistic" table="simulation_run_statistic"
+	<class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRunStatistic" table="simulation_run_statistic"
 		catalog="jdeeco_simulation" optimistic-lock="version">
 		<id name="id" type="java.lang.Long">
 			<column name="ID" />
 			<generator class="identity" />
 		</id>
-		<many-to-one name="simulationExecutionStatistic" class="SimulationExecutionStatistic"
+		<many-to-one name="simulationExecutionStatistic" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecutionStatistic"
 			fetch="select">
 			<column name="ExecutionStatisticID" not-null="true" />
 		</many-to-one>
-		<many-to-one name="simulationRun" class="SimulationRun"
+		<many-to-one name="simulationRun" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRun"
 			fetch="select">
 			<column name="RunID" not-null="true" />
 		</many-to-one>
@@ -28,7 +27,7 @@
 			<key>
 				<column name="RunStatisticID" not-null="true" />
 			</key>
-			<one-to-many class="SimulationRunStatisticAggdata" />
+			<one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRunStatisticAggdata" />
 		</set>
 	</class>
 </hibernate-mapping>

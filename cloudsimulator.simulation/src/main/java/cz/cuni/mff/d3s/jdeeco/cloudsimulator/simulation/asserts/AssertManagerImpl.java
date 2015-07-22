@@ -18,16 +18,11 @@ public class AssertManagerImpl implements AssertManager {
 
 	@Override
 	public AssertProcessor getProcessor(String assertGroup) {
-		AssertProcessor processor;
-
-		if (groups2processors.containsKey(assertGroup)) {
-			processor = groups2processors.get(assertGroup);
-		} else {
+		if (!groups2processors.containsKey(assertGroup)) {
 			EnumSet<AssertAction> assertActions = assertConfiguration.getAssertActions(assertGroup);
-			processor = processorFactory.create(assertGroup, assertActions);
-			groups2processors.putIfAbsent(assertGroup, processor);
+			groups2processors.putIfAbsent(assertGroup, processorFactory.create(assertGroup, assertActions));
 		}
 
-		return processor;
+		return groups2processors.get(assertGroup);
 	}
 }

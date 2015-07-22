@@ -25,8 +25,10 @@ public class SyncedStatisticsProcessorImpl<T> implements StatisticsProcessor<T> 
 
 	@Override
 	public void process(T value) {
-		for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {
-			valueProcessor.process(value);
+		synchronized (valueProcessors) {
+			for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {
+				valueProcessor.process(value);
+			}
 		}
 	}
 
@@ -34,8 +36,10 @@ public class SyncedStatisticsProcessorImpl<T> implements StatisticsProcessor<T> 
 	public void persist(StatisticsPersister persister) {
 		persister.startStatistic(statisticId, genericClass);
 
-		for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {
-			valueProcessor.persist(persister);
+		synchronized (valueProcessors) {
+			for (StatisticsValueProcessor<T> valueProcessor : valueProcessors) {
+				valueProcessor.persist(persister);
+			}
 		}
 		
 		persister.endStatistic();

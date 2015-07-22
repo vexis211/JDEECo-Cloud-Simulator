@@ -53,7 +53,7 @@
             <key>
                 <column name="ExecutionID" not-null="true" />
             </key>
-            <one-to-many class="SimulationExecutionStatistic" />
+            <one-to-many class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecutionStatistic" />
         </set>
     </class>
 </hibernate-mapping>

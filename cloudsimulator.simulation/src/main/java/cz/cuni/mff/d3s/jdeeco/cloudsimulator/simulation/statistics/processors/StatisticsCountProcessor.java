@@ -10,6 +10,7 @@ public class StatisticsCountProcessor<T> implements StatisticsValueProcessor<T> 
 	@Override
 	public void process(T value) {
 		count++;
+//		System.out.println("Stat +1 => " + count);
 	}
 
 

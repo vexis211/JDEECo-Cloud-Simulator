@@ -27,7 +27,7 @@ public class HelloWorldSimulation extends SimulationBase {
 			/* create second deeco node */
 			DEECoNode deecoNode2 = simulation.createNode(new PositionPlugin(0, SimpleBroadcastDevice.DEFAULT_RANGE));
 			/* deploy components and ensembles */
-			deecoNode2.deployComponent(new HelloWorld("BUY"));
+			deecoNode2.deployComponent(new HelloWorld("BYE"));
 		}
 		
 		return simulation;

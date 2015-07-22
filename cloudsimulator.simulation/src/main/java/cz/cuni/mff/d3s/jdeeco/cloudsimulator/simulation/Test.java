@@ -74,9 +74,8 @@ public class Test {
 		String file = "SimulationSettings.xml";
 		try (OutputStream output = new FileOutputStream(file)) {
 			xStream.toXML(settings, output);
-			output.flush();
+			output.flush();	
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -85,7 +84,6 @@ public class Test {
 
 			System.out.println(newSettings);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

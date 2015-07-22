@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Jul 20, 2015 4:57:14 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-	<class name="SimulationRunStatisticAggdata" table="simulation_run_statistic_aggdata"
+	<class name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRunStatisticAggdata" table="simulation_run_statistic_aggdata"
 		catalog="jdeeco_simulation" optimistic-lock="version">
-		<composite-id name="id" class="SimulationRunStatisticAggdataId">
+		<composite-id name="id" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRunStatisticAggdataId">
 			<key-property name="runStatisticId" type="long">
 				<column name="RunStatisticID" />
 			</key-property>
@@ -16,7 +15,7 @@
 				</type>
 			</key-property>
 		</composite-id>
-		<many-to-one name="simulationRunStatistic" class="SimulationRunStatistic"
+		<many-to-one name="simulationRunStatistic" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRunStatistic"
 			update="false" insert="false" fetch="select">
 			<column name="RunStatisticID" not-null="true" />
 		</many-to-one>

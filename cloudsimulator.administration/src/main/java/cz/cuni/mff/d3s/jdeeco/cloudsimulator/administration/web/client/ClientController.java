@@ -45,7 +45,7 @@ public class ClientController {
 	@Resource
 	private AppContext appContext;
 
-	// TODO - security - should not be allowed!!
+	// TODO improvement - security - should not be allowed!!
 	@RequestMapping(value = MappingSettings.NEWPASSWORD, method = RequestMethod.GET)
 	public ModelAndView newPassword(HttpServletRequest request) {
 		return getDefaultModelAnView(NEWPASSWORD_VIEW);

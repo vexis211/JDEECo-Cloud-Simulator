@@ -49,7 +49,7 @@ public abstract class SimulationBase {
 			finish();
 		}
 
-		 // TODO try to inform worker about exit value another way, this is not OK
+		 // TODO improvement - try to inform worker about exit value another way, this is not OK
 		System.exit(exitReason.getExitValue());
 	}
 
@@ -93,7 +93,7 @@ public abstract class SimulationBase {
 		}
 	}
 
-	protected abstract DEECoSimulation configureSimulation(String profileId);
+	protected abstract DEECoSimulation configureSimulation(String profileId) throws Exception;
 
 	protected DEECoSimulation createSimulationWithDeeco() {
 		SimulationTimer simulationTimer = new DiscreteEventTimer(); // also "new WallTimeSchedulerNotifier()"

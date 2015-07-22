@@ -185,7 +185,6 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 		public ReasonedSimulationStatusUpdater(SimulationId simulationId, SimulationStatus simulationStatus,
 				SimulationExitReason exitReason) {
 			super(simulationId);
-			// TODO Auto-generated constructor stub
 			this.simulationStatus = simulationStatus;
 			this.exitReason = exitReason;
 		}

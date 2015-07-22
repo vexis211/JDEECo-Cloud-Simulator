@@ -64,9 +64,9 @@ public class AssertConfigurationImpl implements AssertConfiguration {
 		while (!profilesToProcess.isEmpty()) {
 			AssertSettingsProfile profile = profilesToProcess.pop();
 			if (processedProfiles.contains(profile)) {
-				String message = String
-						.format("Error occurred while processing assert settings. There is an circular dependency of imports. Profile '%s' is in this circle.",
-								profile.getId());
+				String message = String.format(
+						"Error occurred while processing assert settings. There is an circular dependency of imports. Profile '%s' is in this circle.",
+						profile.getId());
 				logger.error(message);
 				throw new RuntimeException(message);
 			}
@@ -75,18 +75,21 @@ public class AssertConfigurationImpl implements AssertConfiguration {
 			applyDefaultFromProfile(profile);
 			applyAssertsFromProfile(profile);
 
-			// we want to let later added imports to have preference between previously added imports
+			// we want to let later added imports to have preference between
+			// previously added imports
 			List<SettingsProfileImport> profileImports = profile.getProfileImports();
-			for (int i = profileImports.size() - 1; i >= 0; i--) {
-				String importProfileId = profileImports.get(i).getProfileId();
-				if (profileId2Profile.containsKey(importProfileId)) {
-					profilesToProcess.push(profileId2Profile.get(importProfileId));
-				} else {
-					String message = String
-							.format("Cannot import assert settings profile with ID: '%s'. There is no such profile. All profile IDs: '%s'.",
-									importProfileId, String.join(", ", profileId2Profile.keySet()));
-					logger.error(message);
-					throw new RuntimeException(message);
+			if (profileImports != null) {
+				for (int i = profileImports.size() - 1; i >= 0; i--) {
+					String importProfileId = profileImports.get(i).getProfileId();
+					if (profileId2Profile.containsKey(importProfileId)) {
+						profilesToProcess.push(profileId2Profile.get(importProfileId));
+					} else {
+						String message = String.format(
+								"Cannot import assert settings profile with ID: '%s'. There is no such profile. All profile IDs: '%s'.",
+								importProfileId, String.join(", ", profileId2Profile.keySet()));
+						logger.error(message);
+						throw new RuntimeException(message);
+					}
 				}
 			}
 		}
@@ -115,8 +118,8 @@ public class AssertConfigurationImpl implements AssertConfiguration {
 
 		for (AssertGroupSetting assertGroupSetting : profile.getAssertGroupSettings()) {
 			String toMatch = assertGroupSetting.getId();
-			EnumSet<AssertAction> assertActions = AssertActionsParser.parseAssertActions(assertGroupSetting
-					.getActions());
+			EnumSet<AssertAction> assertActions = AssertActionsParser
+					.parseAssertActions(assertGroupSetting.getActions());
 
 			if (!exactDefinitions.containsKey(toMatch)) {
 				exactDefinitions.put(toMatch, assertActions);
@@ -125,8 +128,8 @@ public class AssertConfigurationImpl implements AssertConfiguration {
 	}
 
 	public final EnumSet<AssertAction> getDefaultSaveModes(AssertSettingsProfile profile) {
-		DefaultAssertSetting assertDefaultSetting = profile.getDefaultAssertSettings() != null ? profile
-				.getDefaultAssertSettings() : this.settings.getDefaultSetting();
+		DefaultAssertSetting assertDefaultSetting = profile.getDefaultAssertSettings() != null
+				? profile.getDefaultAssertSettings() : this.settings.getDefaultSetting();
 		return AssertActionsParser.parseAssertActions(assertDefaultSetting.getActions());
 	}
 
