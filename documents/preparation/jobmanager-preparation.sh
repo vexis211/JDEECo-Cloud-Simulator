@@ -34,11 +34,11 @@ sudo sh -c 'echo "
 export JAVA_HOME=/opt/jdk1.8.0_40
 export JRE_HOME=/opt/jdk1.8.0_40/jre
 
-export M2_HOME=/opt/apache-maven-3.3.3
+export M3_HOME=/opt/apache-maven-3.3.3
 
 export TOMCAT_HOME=/opt/apache-tomcat-8.0.20
 
-export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin:$M2_HOME/bin:$TOMCAT_HOME/bin
+export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin:$M3_HOME/bin:$TOMCAT_HOME/bin
 
 ">>/etc/rc.d/rc.local'
 sudo chmod +x /etc/rc.d/rc.local
