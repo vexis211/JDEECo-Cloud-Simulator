@@ -63,15 +63,19 @@
 		<constructor-arg name="simulationRepository" ref="simulationRepository" />
 		<constructor-arg name="simulationExecutionEntryFactory" ref="simulationExecutionEntryFactory" />
 		<constructor-arg name="simplePackageManager" ref="simplePackageManager" />
-		<constructor-arg name="simpleResultsAggregator" ref="simpleResultsAggregator" />
+		<constructor-arg name="statisticsProvider" ref="statisticsProvider" />
 	</bean>
 
 	<bean id="simulationRepository" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.SimulationRepositoryImpl"
 		scope="singleton">
 		<constructor-arg name="simulationExecutionDao" ref="simulationExecutionDao" />
 		<constructor-arg name="simulationRunDao" ref="simulationRunDao" />
+		<constructor-arg name="simulationExecutionStatisticDao" ref="simulationExecutionStatisticDao" />
+		<constructor-arg name="simulationRunStatisticDao" ref="simulationRunStatisticDao" />
+		<constructor-arg name="type2ByteMapper" ref="type2ByteMapper" />
+		<constructor-arg name="byteArrayConverterProvider" ref="byteArrayConverterProvider" />
 	</bean>
-
+	
 	<bean id="simulationExecutionEntryFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data.SimulationExecutionEntryFactoryImpl">
 		<constructor-arg name="simulationRunEntryFactory" ref="simulationRunEntryFactory" />
 	</bean>
@@ -83,6 +87,39 @@
 		<constructor-arg name="remoteResultsRootDirectory" value="${simulation.storage.remoteRunResultsRoot}" />
 		<constructor-arg name="remoteLogsRootDirectory" value="${simulation.storage.remoteRunLogsRoot}" />
 	</bean>
+
+	<!-- Statistics -->
+	
+	<bean id="type2ByteMapper" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.statistics.Type2ByteMapperImpl" />	
+	<bean id="byteArrayConverterProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.statistics.ByteArrayConverterProviderImpl" />
+	
+	<bean id="statisticsProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.StatisticsProviderImpl" scope="singleton">		
+		<constructor-arg name="runStatisticsRoot" value="${simulation.storage.remoteRunResultsRoot}" />
+		<constructor-arg name="runStatisticsParser" ref="runStatisticsParser" />
+		<constructor-arg name="runStatisticsFactory" ref="runStatisticsFactory" />
+		<constructor-arg name="executionStatisticsFactory" ref="executionStatisticsFactory" />
+	</bean>
+
+	<bean id="runStatisticsParser" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.parsers.RunStatisticsParserImpl" scope="singleton">			
+		<constructor-arg name="statisticDataBuilderFactory" ref="statisticDataBuilderFactory" />
+		<constructor-arg name="runStatisticBuilderFactory" ref="runStatisticBuilderFactory" />
+	</bean>
+	
+	<bean id="statisticDataBuilderFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.parsers.StatisticDataBuilderFactoryImpl" />
+	
+	<bean id="runStatisticBuilderFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.parsers.RunStatisticBuilderFactoryImpl">		
+		<constructor-arg name="runStatisticConverterFactory" ref="runStatisticConverterFactory" />
+	</bean>
+	
+	<bean id="runStatisticConverterFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.converters.RunStatisticConverterFactoryImpl">		
+		<constructor-arg name="runStatisticFactory" ref="runStatisticFactory" />
+	</bean>
+	
+	<bean id="executionStatisticsFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.ExecutionStatisticsFactoryImpl" />
+	<bean id="runStatisticsFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.RunStatisticsFactoryImpl" />
+	<bean id="runStatisticFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.RunStatisticFactoryImpl" />
+
+
 
 	<!-- Packaging -->
 
@@ -201,15 +238,6 @@
 		<constructor-arg name="maximumNumberOfWorkers" value="${simulationScheduler.maximumNumberOfWorkers}" />
 		<constructor-arg name="desiredCreatedWorkerCountRatio" value="${simulationScheduler.desiredCreatedWorkerCountRatio}" />
 		<constructor-arg name="desiredRunningWorkerCountRatio" value="${simulationScheduler.desiredRunningWorkerCountRatio}" />
-	</bean>
-
-	<!-- Results -->
-	<bean id="resultsAggregator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results.ResultsAggregatorImpl">
-	</bean>
-
-	<bean id="simpleResultsAggregator" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.results.SimpleResultsAggregatorImpl">
-		<constructor-arg name="resultsAggregator" ref="resultsAggregator" />
-		<constructor-arg name="jobManagerUpdateQueue" ref="jobManagerUpdateQueue" />
 	</bean>
 
 </beans>

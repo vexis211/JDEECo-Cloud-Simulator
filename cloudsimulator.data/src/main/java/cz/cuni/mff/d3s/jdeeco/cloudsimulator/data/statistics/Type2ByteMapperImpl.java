@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.statistics;
 import java.util.HashMap;
 import java.util.Map;
 
-class Type2ByteMapperImpl implements Type2ByteMapper {
+public class Type2ByteMapperImpl implements Type2ByteMapper {
 
 	private static final Map<Class<?>, Byte> mapping = new HashMap<>();
 	private static final Map<Byte, Class<?>> reverseMapping = new HashMap<>();
