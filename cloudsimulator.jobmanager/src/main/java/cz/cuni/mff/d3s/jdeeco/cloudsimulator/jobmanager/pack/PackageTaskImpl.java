@@ -22,7 +22,12 @@ public class PackageTaskImpl implements PackageTask {
 	private String repositoryLocalPath;
 
 	private String preparingDirectory;
+
 //	private String packageLocalPath;
+
+	private String runProfile;
+	private String statisticsProfile;
+	private String assertsProfile;
 
 	public PackageTaskImpl(int executionId) {
 		this.executionId = executionId;
@@ -88,6 +93,21 @@ public class PackageTaskImpl implements PackageTask {
 		this.preparingDirectory = preparingDirectory;
 	}
 
+	@Override
+	public String getRunProfile() {
+		return runProfile;
+	}
+
+	@Override
+	public String getStatisticsProfile() {
+		return statisticsProfile;
+	}
+
+	@Override
+	public String getAssertsProfile() {
+		return assertsProfile;
+	}
+
 //	@Override
 //	public String getPackageLocalPath() {
 //		return packageLocalPath;
@@ -98,7 +118,7 @@ public class PackageTaskImpl implements PackageTask {
 //		this.packageLocalPath = packageLocalPath;
 //	}
 
-	// public only in implementation
+	// only in implementation
 	void setRepositoryType(VCSType repositoryType) {
 		this.repositoryType = repositoryType;
 	}
@@ -113,5 +133,17 @@ public class PackageTaskImpl implements PackageTask {
 
 	void setMavenGoals(String[] mavenGoals) {
 		this.mavenGoals = Collections.unmodifiableList(Arrays.asList(mavenGoals));
+	}
+
+	void setRunProfile(String runProfile) {
+		this.runProfile = runProfile;
+	}
+
+	void setStatisticsProfile(String statisticsProfile) {
+		this.statisticsProfile = statisticsProfile;
+	}
+
+	void setAssertsProfile(String assertsProfile) {
+		this.assertsProfile = assertsProfile;
 	}
 }

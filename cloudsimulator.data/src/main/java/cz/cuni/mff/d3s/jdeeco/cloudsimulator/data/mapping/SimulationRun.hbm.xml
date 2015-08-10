@@ -20,7 +20,7 @@
             <column name="Started" length="19" />
         </property>
         <property name="ended" type="timestamp" insert="false">
-            <column name="Ended" length="19" not-null="true" />
+            <column name="Ended" length="19" />
         </property>
         <set name="simulationRunStatistics" table="simulation_run_statistic" inverse="true" lazy="true" fetch="select">
             <key>

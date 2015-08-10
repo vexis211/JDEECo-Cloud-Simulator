@@ -41,6 +41,15 @@ public interface SimulationExecutionItem {
 	void setEndDateString(String endDateString);
 	
 	String getEndSpecificationDesc();
+
+	String getRunProfile();
+	void setRunProfile(String runProfile);
+
+	String getStatisticsProfile();
+	void setStatisticsProfile(String statisticsProfile);
+
+	String getAssertsProfile();
+	void setAssertsProfile(String assertsProfile);
 	
 	List<SimulationRunItem> getRuns();	
 	void addRun(SimulationRunItem run);

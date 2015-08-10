@@ -43,6 +43,16 @@
         <property name="runCount" type="int">
             <column name="RunCount" not-null="true" />
         </property>
+        <property name="runProfile" type="string">
+            <column name="RunProfile" length="255" not-null="true" />
+        </property>
+        <property name="statisticsProfile" type="string">
+            <column name="StatisticsProfile" length="255" not-null="true" />
+        </property>
+        <property name="assertsProfile" type="string">
+            <column name="AssertsProfile" length="255" not-null="true" />
+        </property>
+        
         <set name="simulationRuns" table="simulation_run" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="ExecutionID" not-null="true" />

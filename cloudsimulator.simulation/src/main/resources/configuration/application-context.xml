@@ -16,7 +16,7 @@
 	<aop:aspectj-autoproxy />
 
 	<!-- Import of properties -->
-	<context:property-placeholder location="classpath:properties/config.properties" />
+	<context:property-placeholder location="classpath:properties/config.properties, simulation-profiles.properties" />
 
 	<!-- Statistics -->
 

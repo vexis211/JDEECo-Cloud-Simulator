@@ -22,6 +22,9 @@ public class SimulationExecution implements java.io.Serializable {
 	private ExecutionEndSpecificationType endSpecificationType;
 	private Date endDate;
 	private int runCount;
+	private String runProfile;
+	private String statisticsProfile;
+	private String assertsProfile;
 	private Set<SimulationRun> simulationRuns = new HashSet<SimulationRun>(0);
 	private Set<SimulationExecutionStatistic> simulationExecutionStatistics = new HashSet<SimulationExecutionStatistic>(
 			0);
@@ -31,7 +34,7 @@ public class SimulationExecution implements java.io.Serializable {
 
 	public SimulationExecution(SimulationConfiguration simulationConfiguration, User creator, String description,
 			SimulationStatus status, Date created, Date ended, ExecutionEndSpecificationType endSpecificationType,
-			Date endDate, int runCount) {
+			Date endDate, int runCount, String runProfile, String statisticsProfile, String assertsProfile) {
 		this.simulationConfiguration = simulationConfiguration;
 		this.creator = creator;
 		this.description = description;
@@ -40,6 +43,9 @@ public class SimulationExecution implements java.io.Serializable {
 		this.endSpecificationType = endSpecificationType;
 		this.endDate = endDate;
 		this.runCount = runCount;
+		this.runProfile = runProfile;
+		this.statisticsProfile = statisticsProfile;
+		this.assertsProfile = assertsProfile;
 	}
 
 	public Integer getId() {
@@ -48,14 +54,6 @@ public class SimulationExecution implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public int getRunCount() {
-		return runCount;
-	}
-
-	public void setRunCount(int runCount) {
-		this.runCount = runCount;
 	}
 
 	public SimulationConfiguration getSimulationConfiguration() {
@@ -128,6 +126,38 @@ public class SimulationExecution implements java.io.Serializable {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public int getRunCount() {
+		return runCount;
+	}
+
+	public void setRunCount(int runCount) {
+		this.runCount = runCount;
+	}
+
+	public String getRunProfile() {
+		return runProfile;
+	}
+
+	public void setRunProfile(String runProfile) {
+		this.runProfile = runProfile;
+	}
+
+	public String getStatisticsProfile() {
+		return statisticsProfile;
+	}
+
+	public void setStatisticsProfile(String statisticsProfile) {
+		this.statisticsProfile = statisticsProfile;
+	}
+
+	public String getAssertsProfile() {
+		return assertsProfile;
+	}
+
+	public void setAssertsProfile(String assertsProfile) {
+		this.assertsProfile = assertsProfile;
 	}
 
 	public Set<SimulationRun> getSimulationRuns() {

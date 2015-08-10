@@ -44,8 +44,8 @@ public class SimulationExecutionController {
 	private SimulationExecutionValidator simulationExecutionValidator;
 
 	@Resource
-	private SimulationExecutionEditValidator simulationExecutionEditValidator; 
-	
+	private SimulationExecutionEditValidator simulationExecutionEditValidator;
+
 	@Resource
 	private NavigationPathBuilder navigationPathBuilder;
 
@@ -60,8 +60,9 @@ public class SimulationExecutionController {
 		if (execution != null) {
 			SimulationExecutionItem executionItem = getExecutionItem(execution);
 
-			ClientModelAndView modelAndView = getDefaultModelAndView(EXECUTION_VIEW).withSimulationExecution(
-					executionItem).withNavigationPath(navigationPathBuilder.buildFromSimulationExecution(executionId));
+			ClientModelAndView modelAndView = getDefaultModelAndView(EXECUTION_VIEW)
+					.withSimulationExecution(executionItem)
+					.withNavigationPath(navigationPathBuilder.buildFromSimulationExecution(executionId));
 
 			return modelAndView;
 		}
@@ -74,13 +75,12 @@ public class SimulationExecutionController {
 
 		ClientModelAndView modelAndView = getDefaultModelAndView(ADDEXECUTION_VIEW)
 				.withSimulationConfigurationId(configurationId)
-				.withCancelUri(
-						MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.CONFIGURATION_ROOT,
-								configurationId))
+				.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.CONFIGURATION_ROOT,
+						configurationId))
 				.withNavigationPath(navigationPathBuilder.buildFromSimulationConfiguration(configurationId));
-		
+
 		modelAndView.addObject("defaultEndDateString", SimulationExecutionItem.TODATE_FORMAT.format(new Date()));
-		
+
 		return modelAndView;
 	}
 
@@ -93,10 +93,9 @@ public class SimulationExecutionController {
 			FieldError er = result.getFieldError();
 
 			ModelAndView modelAndView = getDefaultModelAndView(ADDEXECUTION_VIEW)
-					.withCancelUri(
-							MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.CONFIGURATION_ROOT,
-									configurationId)).withSimulationExecution(simulationExecutionItem)
-					.withErrorMessage(er.getDefaultMessage())
+					.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(),
+							MappingSettings.CONFIGURATION_ROOT, configurationId))
+					.withSimulationExecution(simulationExecutionItem).withErrorMessage(er.getDefaultMessage())
 					.withNavigationPath(navigationPathBuilder.buildFromSimulationConfiguration(configurationId));
 
 			return modelAndView;
@@ -104,7 +103,8 @@ public class SimulationExecutionController {
 
 		simulationExecutionService.executeConfiguration(configurationId, simulationExecutionItem.getDescription(),
 				simulationExecutionItem.getRunCount(), simulationExecutionItem.getEndSpecificationType(),
-				simulationExecutionItem.getEndDate());
+				simulationExecutionItem.getEndDate(), simulationExecutionItem.getRunProfile(),
+				simulationExecutionItem.getStatisticsProfile(), simulationExecutionItem.getAssertsProfile());
 
 		return SimulationConfigurationController.RedirectToConfiguration(appContext.getSiteRoot(), configurationId);
 	}
@@ -120,9 +120,9 @@ public class SimulationExecutionController {
 
 			ModelAndView modelAndView = getDefaultModelAndView(EDITEXECUTION_VIEW)
 					.withSimulationConfigurationId(execution.getSimulationConfiguration().getId())
-					.withCancelUri(
-							MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.EXECUTION_ROOT,
-									executionId)).withSimulationExecution(executionItem)
+					.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.EXECUTION_ROOT,
+							executionId))
+					.withSimulationExecution(executionItem)
 					.withNavigationPath(navigationPathBuilder.buildFromSimulationExecution(executionId));
 
 			return modelAndView;
@@ -142,10 +142,9 @@ public class SimulationExecutionController {
 
 			ModelAndView modelAndView = getDefaultModelAndView(EDITEXECUTION_VIEW)
 					.withSimulationConfigurationId(execution.getSimulationConfiguration().getId())
-					.withCancelUri(
-							MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.EXECUTION_ROOT,
-									executionId)).withSimulationExecution(simulationExecutionItem)
-					.withErrorMessage(er.getDefaultMessage())
+					.withCancelUri(MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.EXECUTION_ROOT,
+							executionId))
+					.withSimulationExecution(simulationExecutionItem).withErrorMessage(er.getDefaultMessage())
 					.withNavigationPath(navigationPathBuilder.buildFromSimulationExecution(executionId));
 
 			return modelAndView;
@@ -156,15 +155,14 @@ public class SimulationExecutionController {
 		return RedirectToExecution(executionId);
 	}
 
-
 	@RequestMapping(value = MappingSettings.EXECUTION_STOP, method = RequestMethod.GET)
 	public ModelAndView stopExecution(HttpServletRequest request, @PathVariable int executionId) {
 
 		simulationExecutionService.stopExecution(executionId);
-		
+
 		return RedirectToExecution(executionId);
 	}
-	
+
 	private SimulationExecutionItem getExecutionItem(SimulationExecution execution) {
 		return simulationExecutionItemFactory.create(execution);
 	}
@@ -174,8 +172,8 @@ public class SimulationExecutionController {
 	}
 
 	public static ModelAndView RedirectToExecution(String siteRoot, int executionId) {
-		return new ModelAndView("redirect:"
-				+ MappingSettings.GetFullUri(siteRoot, MappingSettings.EXECUTION_ROOT, executionId));
+		return new ModelAndView(
+				"redirect:" + MappingSettings.GetFullUri(siteRoot, MappingSettings.EXECUTION_ROOT, executionId));
 	}
 
 	private ClientModelAndView getDefaultModelAndView(String viewName) {

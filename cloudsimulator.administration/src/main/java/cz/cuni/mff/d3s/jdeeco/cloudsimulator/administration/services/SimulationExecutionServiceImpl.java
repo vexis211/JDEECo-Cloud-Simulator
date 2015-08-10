@@ -31,7 +31,7 @@ public class SimulationExecutionServiceImpl implements SimulationExecutionServic
 
 	@Resource
 	private JobManagerController engineController;
-	
+
 	@Override
 	public List<SimulationExecution> listExecutions() {
 		return simulationExecutionDao.findAll();
@@ -50,7 +50,8 @@ public class SimulationExecutionServiceImpl implements SimulationExecutionServic
 	@Transactional(readOnly = false)
 	@Override
 	public SimulationExecution executeConfiguration(int configurationId, String description, Integer executionRunCount,
-			ExecutionEndSpecificationType endSpecificationType, Date endDate) {
+			ExecutionEndSpecificationType endSpecificationType, Date endDate, String runProfile,
+			String statisticsProfile, String assertsProfile) {
 
 		User currentUser = UserHelper.getAuthenticatedUser();
 		SimulationConfiguration configuration = simulationConfigurationDao.findById(configurationId);
@@ -65,13 +66,22 @@ public class SimulationExecutionServiceImpl implements SimulationExecutionServic
 		if (endSpecificationType == ExecutionEndSpecificationType.ToDate) {
 			execution.setEndDate(endDate);
 		}
+		// set profiles
+		execution.setRunProfile(runProfile);
+		execution.setStatisticsProfile(statisticsProfile);
+		execution.setAssertsProfile(assertsProfile);
 
 		execution.setStatus(SimulationStatus.Created);
 
 		simulationExecutionDao.saveOrUpdate(execution);
 
 		// notify engine
-		engineController.updateExecutions();
+		try {
+			engineController.updateExecutions();
+		}
+		catch (Exception e){
+			logger.error("Cannot update engine executions!", e);
+		}
 
 		return execution;
 	}

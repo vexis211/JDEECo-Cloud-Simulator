@@ -14,9 +14,11 @@ public class SimulationConfigurationValidator extends BaseValidator<SimulationCo
 	protected void validateInternal(SimulationConfigurationItem item, Errors errors) {
 		if (checkNotSpecified(item.getName())) {
 			addNotSpecifiedError(errors, NAME_FIELD);
-		} else if (checkNotSpecified(item.getDescription())) {
+		} 
+		if (checkNotSpecified(item.getDescription())) {
 			addNotSpecifiedError(errors, DESCRIPTION_FIELD);
-		} else if (item.getDefaultRunCount() < 1) {
+		} 
+		if (item.getDefaultRunCount() < 1) {
 			addInvalidValueError(errors, DEFAULTRUNCOUNT_FIELD, "Default run count", "at least 1");
 		}
 	}

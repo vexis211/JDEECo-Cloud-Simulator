@@ -26,6 +26,10 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 	private Date endedDate;
 	private Integer runCount;
 
+	private String runProfile;
+	private String statisticsProfile;
+	private String assertsProfile;
+
 	private List<SimulationRunItem> runs = new ArrayList<SimulationRunItem>();
 
 	public SimulationExecutionItemImpl() {
@@ -45,10 +49,15 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 		}
 
 		this.status = execution.getStatus();
-		this.statusDesc = execution.getStatus().toString(); // TODO improvement - % done
+		this.statusDesc = execution.getStatus().toString(); // TODO improvement
+															// - % done
 
 		this.startedDate = execution.getStarted();
 		this.endedDate = execution.getEnded();
+
+		this.runProfile = execution.getRunProfile();
+		this.statisticsProfile = execution.getStatisticsProfile();
+		this.assertsProfile = execution.getAssertsProfile();
 	}
 
 	@Override
@@ -162,6 +171,36 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 		default:
 			throw new RuntimeException(String.format("Value '%s' is not currently supported.", endSpecificationType));
 		}
+	}
+
+	@Override
+	public String getRunProfile() {
+		return runProfile;
+	}
+
+	@Override
+	public void setRunProfile(String runProfile) {
+		this.runProfile = runProfile;
+	}
+
+	@Override
+	public String getStatisticsProfile() {
+		return statisticsProfile;
+	}
+
+	@Override
+	public void setStatisticsProfile(String statisticsProfile) {
+		this.statisticsProfile = statisticsProfile;
+	}
+
+	@Override
+	public String getAssertsProfile() {
+		return assertsProfile;
+	}
+
+	@Override
+	public void setAssertsProfile(String assertsProfile) {
+		this.assertsProfile = assertsProfile;
 	}
 
 	@Override

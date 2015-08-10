@@ -17,6 +17,10 @@ public class PackageTaskFactoryImpl implements PackageTaskFactory {
 		packageTask.setRepositoryRemoteUrl(simulationData.getRepositoryURL());
 		packageTask.setPomDirectory(simulationData.getPomDirectory());
 		packageTask.setMavenGoals(simulationData.getMavenGoals().split(" "));
+		// profiles
+		packageTask.setRunProfile(simulationExecution.getRunProfile());
+		packageTask.setStatisticsProfile(simulationExecution.getStatisticsProfile());
+		packageTask.setAssertsProfile(simulationExecution.getAssertsProfile());
 		
 		return packageTask;
 	}

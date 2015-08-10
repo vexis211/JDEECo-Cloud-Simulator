@@ -10,12 +10,13 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.NotifyPa
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.PackageTaskProcessingListener;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.PackageTaskProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.SavePackageProcessor;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.SetProfilesProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.vcs.CodeRepositoryManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationDataStorageService;
 
-public class PackagePreparatorImpl implements PackagePreparator, PackagingExceptionHandler,
-		PackageTaskProcessingListener {
+public class PackagePreparatorImpl
+		implements PackagePreparator, PackagingExceptionHandler, PackageTaskProcessingListener {
 
 	private final HashMap<PackageTask, PackagePreparatorListener> taskRepo = new HashMap<>();
 	private final PackageTaskProcessor firstProcessor;
@@ -29,7 +30,8 @@ public class PackagePreparatorImpl implements PackagePreparator, PackagingExcept
 		CopyCompiledToPreparingDirectoryProcessor copyCompiledToPreparingDirectoryProcessor = new CopyCompiledToPreparingDirectoryProcessor(
 				preparationRootDir, executor, this);
 
-		// TODO phase2 - run script processor
+		// set profiles for simulation - run, statistics, ...
+		SetProfilesProcessor setProfilesProcessor = new SetProfilesProcessor(executor, this);
 		SavePackageProcessor savePackageProcessor = new SavePackageProcessor(executor, this,
 				simulationDataStorageService);
 		ClearPreparingDirectoryProcessor clearPreparingDirectoryProcessor = new ClearPreparingDirectoryProcessor(
@@ -38,8 +40,9 @@ public class PackagePreparatorImpl implements PackagePreparator, PackagingExcept
 				executor, this, this);
 
 		codeRepositoryProcessor.continueProcess(compileCodeProcessor)
-				.continueProcess(copyCompiledToPreparingDirectoryProcessor).continueProcess(savePackageProcessor)
-				.continueProcess(clearPreparingDirectoryProcessor).continueProcess(notifyPackageTaskCompletedProcessor);
+				.continueProcess(copyCompiledToPreparingDirectoryProcessor).continueProcess(setProfilesProcessor)
+				.continueProcess(savePackageProcessor).continueProcess(clearPreparingDirectoryProcessor)
+				.continueProcess(notifyPackageTaskCompletedProcessor);
 
 		this.firstProcessor = codeRepositoryProcessor;
 	}

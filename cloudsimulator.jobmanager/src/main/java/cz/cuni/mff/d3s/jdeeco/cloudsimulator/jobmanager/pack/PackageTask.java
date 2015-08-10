@@ -29,6 +29,10 @@ public interface PackageTask {
 	String getPreparingDirectory();
 	void setPreparingDirectory(String preparingDirectory);
 
+	String getRunProfile();
+	String getStatisticsProfile();
+	String getAssertsProfile();
+	
 //	String getPackageLocalPath();
 //	void setPackageLocalPath(String packageLocalPath);
 }

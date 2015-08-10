@@ -16,15 +16,20 @@ public class SimulationDataValidator extends BaseValidator<SimulationDataItem> {
 	protected void validateInternal(SimulationDataItem item, Errors errors) {
 		if (checkNotSpecified(item.getName())) {
 			addNotSpecifiedError(errors, NAME_FIELD);
-		} else if (checkNotSpecified(item.getDescription())) {
+		}
+		if (checkNotSpecified(item.getDescription())) {
 			addNotSpecifiedError(errors, DESCRIPTION_FIELD);
-		} else if (checkNotSpecified(item.getRepositoryUrl())) {
+		}
+		if (checkNotSpecified(item.getRepositoryUrl())) {
 			addNotSpecifiedError(errors, REPOSITORYURL_FIELD);
-		} else if (checkNotSpecified(item.getPomDirectory())) {
+		}
+		if (checkNotSpecified(item.getPomDirectory())) {
 			addNotSpecifiedError(errors, POMDIRECTORY_FIELD);
-		} else if (checkNotSpecified(item.getMavenGoals())) {
+		}
+		if (checkNotSpecified(item.getMavenGoals())) {
 			addNotSpecifiedError(errors, MAVENGOALS_FIELD);
-		} else if (checkNotSpecified(item.getStartupFile())) {
+		}
+		if (checkNotSpecified(item.getStartupFile())) {
 			addNotSpecifiedError(errors, STARTUPFILE_FIELD);
 		}
 	}
