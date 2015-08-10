@@ -4,14 +4,14 @@
 #queue-div {
 	margin: 10px;
 
-	.queue-title {
+	.queue-title-div {
 		margin: 5px 5px 3px 5px;
 		font-size: 20px;
 		font-weight: bold;
 	}
 		
-	.execution-list-header{
-		margin: 20px 5px 1px 5px;
+	.execution-list-header-div {
+		margin: 20px 5px 5px 5px;
 		font-size: 16px;
 		font-weight: bold;
 	}
@@ -26,7 +26,7 @@
 			text-align: center;					
 		}
 		
-		.execution-list-item-div {
+		.execution-list-row-div() {
 			table {
 				padding: 3px;
 				width: 100%;
@@ -70,6 +70,18 @@
 			.startstop-execution-td {
 				.action-tds;
 			}
+		}
+		
+		.executions-list-item-header-div {
+			.execution-list-row-div;
+			
+			th {
+				text-align: left;
+			}
+		}
+		
+		.execution-list-item-div {
+			.execution-list-row-div;
 		}
 	}
 }

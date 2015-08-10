@@ -19,7 +19,9 @@
 	<!-- Import of properties -->
 	<context:property-placeholder
 		location="
-		classpath:properties/jms.properties,
+		classpath:properties/jms-common.properties,
+		classpath:properties/jms-specific.properties,
+		classpath:properties/jms-specific.properties,
 		classpath:properties/config.properties,
 		classpath:properties/build.properties" />
 

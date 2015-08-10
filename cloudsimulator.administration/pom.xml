@@ -81,11 +81,11 @@
 								<echo file="src/main/resources/properties/build.properties">build.buildTimestamp=${timestamp}${line.separator}</echo>
 								<!-- <echo file="src/main/resources/properties/build.properties" append="true">build.revision=${changeSet}</echo> -->
 
-								<copy todir="target/classes">
-									<fileset dir="src/main/resources">
-										<include name="build.properties" />
-									</fileset>
-								</copy>
+								<!-- Copy build number -->
+								<copy file="src/main/resources/properties/build.properties" todir="${project.build.directory}/classes/properties" />
+
+								<!-- Copy OpenStack credentials -->
+								<copy file="${basedir}/../../jdeeco-simulator-openstack-credentials.properties" tofile="${project.build.directory}/classes/properties/openstack-credentials.properties" />
 							</target>
 						</configuration>
 						<goals>
@@ -278,7 +278,12 @@
 			<artifactId>joda-time</artifactId>
 			<version>${joda-time.version}</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
+			<version>2.1.5</version>
+		</dependency>
 	</dependencies>
 
 </project>

@@ -17,7 +17,7 @@
 		http://activemq.apache.org/schema/core/activemq-core-5.10.0.xsd">
 
 	<!-- Import of properties -->
-	<context:property-placeholder location="classpath:properties/jms.properties" />
+	<context:property-placeholder location="classpath:properties/jms-common.properties, classpath:properties/jms-specific.properties" />
 
 	<!-- JMS -->
 

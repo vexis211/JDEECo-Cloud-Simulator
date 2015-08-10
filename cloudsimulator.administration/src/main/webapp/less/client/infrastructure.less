@@ -1,2 +1,59 @@
 @import "../common/globalVars.less";
 @import "../elements/contentRightHeader.less";
+
+#infrastructure-div {
+	margin: 10px;
+	
+	.workers-list-header-div {
+		margin: 20px 5px 5px 5px;
+		font-size: 16px;
+		font-weight: bold;
+	}
+	
+	.workers-list-div {
+
+		@import "../elements/commonItemStyles.less";
+		
+		.worker-date-td() {
+			.tds;
+			width: 170px;
+			text-align: center;					
+		}
+		
+		.worker-list-row-div() {
+			table {
+				padding: 3px;
+				width: 100%;
+				border-bottom: 1px solid @control-color;
+			}
+
+			.worker-name-td {
+				.tds ();
+			}
+
+			.worker-power-state-td {
+				.tds;	
+				width: 140px;		
+			}
+		
+			.worker-created-td {
+				.worker-date-td;		
+			}
+			
+			.worker-launched-td {
+				.worker-date-td;		
+			}
+		}
+				
+		.workers-list-item-header-div {
+			.worker-list-row-div;
+			
+			th {
+				text-align: left;
+			}
+		}
+		.worker-list-item-div {
+			.worker-list-row-div;
+		}
+	}
+}

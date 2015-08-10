@@ -26,9 +26,9 @@ import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.storage.block.Volume;
 import org.openstack4j.model.storage.object.SwiftContainer;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerIdGenerator;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackConnector;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackConnectorImpl;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.workers.WorkersCommon;
 
 public class OpenStackInfrastructureInitializer {
 
@@ -214,7 +214,7 @@ public class OpenStackInfrastructureInitializer {
 	private void cleanWorkers(OSClient os, Tenant tenant) {
 		List<? extends Server> serverList = os.compute().servers().list();
 		Stream<? extends Server> workers = serverList.stream().filter(
-				x -> x.getName().startsWith(WorkerIdGenerator.ID_PREFIX));
+				x -> x.getName().startsWith(WorkersCommon.ID_PREFIX));
 		workers.forEach(worker -> removeWorker(os, tenant, worker));
 	}
 

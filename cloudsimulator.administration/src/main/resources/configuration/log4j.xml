@@ -47,6 +47,11 @@
 		<level value="warn" />
 		<appender-ref ref="console" />
 	</logger>
+		
+	<logger additivity="false" name="org.apache.activemq">
+		<level value="info" />
+		<appender-ref ref="console" />
+	</logger>
 	
 	<!-- Root Logger -->
 	<root>

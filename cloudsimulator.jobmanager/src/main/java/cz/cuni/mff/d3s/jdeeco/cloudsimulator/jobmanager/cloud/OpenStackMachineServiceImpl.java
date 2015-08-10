@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.openstack4j.model.compute.Action;
 import org.openstack4j.model.compute.Server;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.workers.WorkerIdGenerator;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackConnector;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.workers.WorkersCommon;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.cloud.OpenStackComponent;
 
 public class OpenStackMachineServiceImpl extends OpenStackComponent implements OpenStackMachineService {
@@ -40,7 +40,7 @@ public class OpenStackMachineServiceImpl extends OpenStackComponent implements O
 
 	private void updateFromCloud() {
 		getClient().compute().servers().list().stream().filter(x -> !machinesById.containsKey(x.getId()))
-				.filter(x -> x.getName().startsWith(WorkerIdGenerator.ID_PREFIX))
+				.filter(x -> x.getName().startsWith(WorkersCommon.ID_PREFIX))
 				.forEach(x -> addMachine(x, x.getName()));
 	}
 

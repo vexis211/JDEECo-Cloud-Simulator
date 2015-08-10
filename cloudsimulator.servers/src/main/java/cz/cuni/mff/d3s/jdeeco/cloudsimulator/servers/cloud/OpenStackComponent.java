@@ -13,11 +13,15 @@ public class OpenStackComponent {
 		this.openStackConnector = openStackConnector;
 	}
 
+	protected OSClient getNewClient() {
+		return openStackConnector.connect();
+	}
+
 	protected OSClient getClient() {
 		if (client == null) {
 			synchronized (locker) {
 				if (client == null) {
-					this.client = openStackConnector.connect(); // TODO check - is it OK to connect in every component?
+					this.client = getNewClient(); // TODO check - is it OK to connect in every component?
 				}
 			}
 		}

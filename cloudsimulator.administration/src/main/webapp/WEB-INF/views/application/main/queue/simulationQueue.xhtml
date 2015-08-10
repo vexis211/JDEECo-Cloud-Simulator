@@ -21,10 +21,35 @@
 	
 	<ui:define name="MiddleContent">				
 		<div id="queue-div">
-			<div class="queue-title">Simulation Queue:</div>
+			<div class="queue-title-div">Simulation Queue:</div>
 		
-			<div class="execution-list-header">Executions:</div>
-			<ui:include src="/WEB-INF/views/elements/items/simulationExecutionListItems.xhtml" />
+			<div class="execution-list-header-div">Executions:</div>
+						
+			<div class="configuration-executions-div">
+			
+				<div class="executions-list-item-header-div">
+					<table>
+						<tr>
+							<th class="execution-id-td">ID</th>
+			
+							<th class="execution-created-td">Created</th>
+			
+							<th class="execution-status-td">Status</th>
+							<th class="execution-runcount-td">Run count</th>
+							<th class="execution-endspecification-td">End specification</th>
+			
+							<th class="execution-started-td">Started</th>
+							<th class="execution-ended-td">Ended</th>
+			
+							<th class="startstop-execution-td"></th>
+						</tr>
+					</table>
+				</div>
+			
+				<c:forEach var="execution" items="#{executions}">
+					<ui:include src="/WEB-INF/views/elements/items/simulationExecutionListItem.xhtml" />
+				</c:forEach>			
+			</div>
 		</div>
 		
 		<!-- Dialogs -->

@@ -43,6 +43,9 @@ export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin:$M3_HOME/bin:$TOMCAT_HOME/bin
 ">>/etc/rc.d/rc.local'
 sudo chmod +x /etc/rc.d/rc.local
 
+# allow ActiveMQ broker
+sudo iptables -A INPUT -p tcp -s 10.50.0.0/16 --dport 47322 -j ACCEPT
+
 cd ~
 mkdir jobmanager
 

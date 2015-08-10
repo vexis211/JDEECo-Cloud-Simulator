@@ -12,14 +12,40 @@
 		<!-- Stylesheets -->
 		<link rel="stylesheet/less" type="text/css" href="#{SiteStyles}/client/infrastructure.less?version=#{AppVersion}" />
 	</ui:define>
-	
+
 	<ui:define name="NavigationBarContent">
-		<div id="content-right-header-div">
-		</div>
+		<div id="content-right-header-div"></div>
 	</ui:define>
+
+	<ui:define name="MiddleContent">
+		<div id="infrastructure-div">
+			<div class="workers-list-header-div">Workers:</div>
+
+			<c:if test="#{workers != null}">
+				<div class="workers-list-div">
+					
+					<div class="workers-list-item-header-div">
+						<table>
+							<tr>
+								<th class="worker-name-td">Name</th>
+								<th class="worker-power-state-td">Power state</th>
+		
+								<th class="worker-created-td">Created at</th>
+								<th class="worker-launched-td">Launched at</th>
+							</tr>
+						</table>
+					</div>
 	
-	<ui:define name="MiddleContent">				
-		TODO implement
+					<c:forEach var="worker" items="#{workers}">
+						<ui:include src="/WEB-INF/views/elements/items/workerDataListItem.xhtml" />
+					</c:forEach>
+				</div>
+			</c:if>
+			<c:if test="#{workers == null}">
+				<div><h:outputText value="Cannot load workers" /></div>
+				<div><h:outputText value="#{errorMsg}" /></div>
+			</c:if>
+		</div>
 	</ui:define>
 
 	<!-- Specific scripts. -->
