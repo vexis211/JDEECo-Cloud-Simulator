@@ -22,11 +22,6 @@
 		</layout>
 	</appender>
 
-
-
-	<!-- <RollingFile name="RollingFile" fileName="${log-path}/myexample.log" 
-		filePattern="${log-path}/myexample-%d{yyyy-MM-dd}-%i.log" > <PatternLayout> 
-		<pattern>%d{dd/MMM/yyyy HH:mm:ss,SSS}- %c{1}: %m%n</pattern> </PatternLayout> -->
 	<!-- Application Loggers -->
 	<logger additivity="false" name="cz.cuni.mff">
 		<level value="all" />

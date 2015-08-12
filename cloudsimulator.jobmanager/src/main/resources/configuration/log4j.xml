@@ -11,52 +11,72 @@
 		</layout>
 	</appender>
 
+	<appender name="file" class="org.apache.log4j.RollingFileAppender">
+		<param name="append" value="true" />
+		<param name="maxFileSize" value="5MB" />
+		<param name="maxBackupIndex" value="20" />
+		<!-- For Tomcat -->
+		<param name="file" value="logs/jobmanager.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+		</layout>
+	</appender>
+
 	<!-- Application Loggers -->
 	<logger additivity="false" name="cz.cuni.mff">
 		<level value="all" />
 		<appender-ref ref="console" />
+		<appender-ref ref="file" />
 	</logger>
 
 	<!-- 3rdparty Loggers -->
 	<logger additivity="false" name="org.hibernate.SQL">
 		<level value="info" />
 		<appender-ref ref="console" />
+		<appender-ref ref="file" />
 	</logger>
 	
 	<logger additivity="false" name="org.hibernate">
 		<level value="warn" />
 		<appender-ref ref="console" />
+		<appender-ref ref="file" />
 	</logger>
 	
 	<logger additivity="false" name="net.sf.ehcache">
 		<level value="warn" />
 		<appender-ref ref="console" />
+		<appender-ref ref="file" />
 	</logger>
 	
 	<logger additivity="false" name="org.springframework">
 		<level value="warn" />
 		<appender-ref ref="console" />
+		<appender-ref ref="file" />
 	</logger>
 
 	<logger additivity="false" name="org.springframework.security">
 		<level value="warn" />
 		<appender-ref ref="console" />
+		<appender-ref ref="file" />
 	</logger>
 
 	<logger additivity="false" name="org.springframework.web">
 		<level value="warn" />
 		<appender-ref ref="console" />
+		<appender-ref ref="file" />
 	</logger>
 	
 	<logger additivity="false" name="org.apache.activemq">
 		<level value="info" />
 		<appender-ref ref="console" />
+		<appender-ref ref="file" />
 	</logger>
 
 	<!-- Root Logger -->
 	<root>
 		<priority value="all" />
 		<appender-ref ref="console" />
+		<appender-ref ref="file" />
 	</root>
 
 </log4j:configuration>
