@@ -17,7 +17,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.SimulationId;
 
 public class SimulationDataManagerImpl implements SimulationDataManager {
 
-	private final Logger logger = LoggerFactory.getLogger(SimulationDataManagerImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(SimulationDataManagerImpl.class);
 
 	private final List<Future<?>> runningFutures = new ArrayList<>();
 
@@ -53,10 +53,13 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 
 	@Override
 	public void prepareData(SimulationId simulationId, String startupFile) {
+		logger.info("Starting future for data preparation for simulation. Simulation ID: '{}', Startup file: '{}'.", simulationId, startupFile);
+		
 		startFuture(() -> prepareDataCore(simulationId, startupFile));
 	}
 
 	private void prepareDataCore(SimulationId simulationId, String startupFile) {
+		logger.info("Preparing data for simulation. Simulation ID: '{}', Startup file: '{}'.", simulationId, startupFile);
 
 		String runExecutionPath = PathEx.combine(localExecutionsRoot, simulationId.getRunId());
 		String runLocalResultsPath = PathEx.combine(runExecutionPath, resultsDirectoryName);
@@ -67,8 +70,11 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 
 		try {
 			String packageDir = simulationDataRepository.getPackagePath(simulationId);
-			FileUtils.copyDirectory(new File(packageDir), new File(runExecutionPath));
 
+			logger.info("Preparing data for simulation. Copying from '{}' to run dir '{}'.", packageDir, runExecutionPath);			
+			FileUtils.copyDirectory(new File(packageDir), new File(runExecutionPath));
+			logger.info("Preparing data for simulation. Copied data from '{}' to run dir '{}'.", packageDir, runExecutionPath);
+			
 			listener.dataPrepared(simulationId, preparedData);
 		} catch (IOException e) {
 			logger.error(
@@ -79,11 +85,16 @@ public class SimulationDataManagerImpl implements SimulationDataManager {
 
 	@Override
 	public void saveResults(SimulationId simulationId, SimulationData data) {
+		logger.info("Starting future for save of results. Simulation ID: '{}', data: '{}'", simulationId, data);
+		
 		startFuture(() -> saveResultsCore(simulationId, data));
 	}
 
 	private void saveResultsCore(SimulationId simulationId, SimulationData data) {
+		logger.info("Saving results. Simulation ID: '{}', data: '{}'", simulationId, data);		
 		simulationDataRepository.saveResults(data, simulationId);
+		logger.info("Results saved. Simulation ID: '{}', data: '{}'", simulationId, data);
+		
 		listener.resultsSaved(simulationId);
 	}
 

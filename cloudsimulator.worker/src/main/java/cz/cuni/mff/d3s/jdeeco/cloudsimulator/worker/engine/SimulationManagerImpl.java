@@ -2,6 +2,9 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationExitReason;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.WorkerStatus;
@@ -20,6 +23,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution.SimulationExecutor
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.execution.SimulationExecutorParametersImpl;
 
 public class SimulationManagerImpl implements SimulationManager, ExecutionListener, SimulationDataListener {
+
+	private static final Logger logger = LoggerFactory.getLogger(SimulationManagerImpl.class);
 
 	private final HashMap<SimulationId, TaskEntry> incompleteTasks = new HashMap<SimulationId, TaskEntry>();
 	private final HashMap<SimulationId, SimulationStatusUpdater> finishedNotUpdatedSimulations = new HashMap<SimulationId, SimulationStatusUpdater>();
@@ -40,7 +45,8 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 
 	@Override
 	public void runSimulation(RunSimulationTask task) {
-
+		logger.info("Running simulation: {}", task);
+		
 		// add to registry
 		synchronized (incompleteTasks) {
 			incompleteTasks.put(task.getSimulationId(), new TaskEntry(task));
@@ -52,7 +58,8 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 
 	@Override
 	public void dataPrepared(SimulationId simulationId, SimulationData data) {
-
+		logger.info("Data prepared. Simulation ID: '{}', data: '{}'.", simulationId, data);
+		
 		SimulationExecutorParameters parameters = new SimulationExecutorParametersImpl(simulationId, data);
 		SimulationExecutor executor = simulationExecutorFactory.create(this, parameters);
 		boolean shouldStart = false;
@@ -73,6 +80,7 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 
 	@Override
 	public void stopSimulation(StopSimulationTask task) {
+		logger.info("Stoping simulation: {}", task);
 		SimulationExecutor simulationExecutor = null;
 
 		// remove from registry
@@ -91,6 +99,8 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 
 	@Override
 	public void executionEnded(SimulationExecutor simulationExecutor) {
+		logger.info("Execution ended: '{}'.", simulationExecutor.getParameters());
+		
 		SimulationExecutorParameters parameters = simulationExecutor.getParameters();
 		SimulationStatusUpdater updater = new ReasonedSimulationStatusUpdater(parameters.getSimulationId(),
 				SimulationStatus.Completed, SimulationExitReason.Finished);
@@ -100,11 +110,15 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 
 	@Override
 	public void executionManuallyStopped(SimulationExecutor simulationExecutor) {
+		logger.info("Execution manually stopped: '{}'.", simulationExecutor.getParameters());
+		
 		executionStopped(simulationExecutor, SimulationExitReason.RunExitCalled);
 	}
 
 	@Override
 	public void executionStopped(SimulationExecutor simulationExecutor, SimulationExitReason exitReason) {
+		logger.info("Execution stopped. Reason '{}', parameters '{}'.", exitReason, simulationExecutor.getParameters());
+		
 		SimulationExecutorParameters parameters = simulationExecutor.getParameters();
 		SimulationStatusUpdater updater = new ReasonedSimulationStatusUpdater(parameters.getSimulationId(),
 				SimulationStatus.Stopped, exitReason);
@@ -114,6 +128,8 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 
 	@Override
 	public void exceptionOccured(SimulationExecutor simulationExecutor, Exception e) {
+		logger.error(String.format("Exception occurred. Parameters '%s'.", simulationExecutor.getParameters()), e);
+		
 		SimulationExecutorParameters parameters = simulationExecutor.getParameters();
 		SimulationStatusUpdater updater = new ExceptionSimulationStatusUpdater(parameters.getSimulationId(), e);
 
@@ -122,6 +138,8 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 
 	private void saveAndUpdateManager(SimulationExecutor simulationExecutor, SimulationExecutorParameters parameters,
 			SimulationStatusUpdater updater) {
+		logger.info("Saving. Parameters '{}'.", simulationExecutor.getParameters());
+		
 		// add to registry
 		synchronized (finishedNotUpdatedSimulations) {
 			finishedNotUpdatedSimulations.put(parameters.getSimulationId(), updater);
@@ -135,6 +153,8 @@ public class SimulationManagerImpl implements SimulationManager, ExecutionListen
 
 	@Override
 	public void resultsSaved(SimulationId simulationId) {
+		logger.info("Results saved for simulation with ID '{}'.", simulationId);
+		
 		SimulationStatusUpdater simulationStatusUpdater;
 		synchronized (finishedNotUpdatedSimulations) {
 			simulationStatusUpdater = finishedNotUpdatedSimulations.remove(simulationId);

@@ -10,7 +10,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.servers.FutureExecutor;
 
 public class AsyncSimulationExecutorDecorator implements SimulationExecutor {
 
-	private final Logger logger = LoggerFactory.getLogger(AsyncSimulationExecutorDecorator.class);
+	private static final Logger logger = LoggerFactory.getLogger(AsyncSimulationExecutorDecorator.class);
 
 	private final SimulationExecutor simulationExecutor;
 	private Future<?> future;
@@ -31,14 +31,19 @@ public class AsyncSimulationExecutorDecorator implements SimulationExecutor {
 	public void start() {
 		if (future != null) return;
 
+		logger.debug("Starting future.");
+		
 		Runnable startInternalRunnable = () -> this.simulationExecutor.start();
 		this.future = this.futureExecutor.executeWithFuture(startInternalRunnable);
 	}
 
 	@Override
 	public void stop() {
+
+		logger.debug("Stopping simulation executor.");
 		simulationExecutor.stop();
 		try {
+			logger.debug("Waiting for future to end.");
 			future.get(); // wait for end
 		} catch (ExecutionException | InterruptedException e) {
 			logger.error("Error occured while stopping simulation with parameters: " + getParameters(), e);

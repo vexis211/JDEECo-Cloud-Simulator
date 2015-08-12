@@ -10,7 +10,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
 
 public class SimulationExecutorImpl implements SimulationExecutor {
 
-	private final Logger logger = LoggerFactory.getLogger(SimulationExecutorImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(SimulationExecutorImpl.class);
 
 	private final ExecutionListener listener;
 	private final SimulationExecutorParameters parameters;
@@ -35,8 +35,11 @@ public class SimulationExecutorImpl implements SimulationExecutor {
 	public void start() {
 		this.stoppedManually = false;
 
+		logger.info("Starting simulation run with parameters: '{}'.", parameters);
+
 		String startupFilePath = PathEx.combine(parameters.getRunExecutionDirectory(), parameters.getStartupFile());
-		ProcessBuilder processBuilder = new ProcessBuilder(String.format("java -jar \"%s\"", startupFilePath));
+		String command = String.format("java -jar \"%s\"", startupFilePath);
+		ProcessBuilder processBuilder = new ProcessBuilder(command);
 
 		processBuilder.directory(new File(parameters.getRunExecutionDirectory()));
 
@@ -44,25 +47,29 @@ public class SimulationExecutorImpl implements SimulationExecutor {
 		File logFile = new File(PathEx.combine(parameters.getRunLogsPath(), outputLogsFileName));
 		processBuilder.redirectOutput(logFile);
 
-		logger.info("Starting simulation run with parameters: {}", parameters);
 		logger.info("Logging from simulation run is redirected to: {}", logFile);
+		logger.info("Starting new process: '{}'.", command);
+
 		try {
 			this.process = processBuilder.start();
-			int exitValue = this.process.waitFor();
 			
+			logger.info("Waiting for process to end: '{}'.", command);
+			int exitValue = this.process.waitFor();
+
 			logger.info("Simulation run ended. Parameters: {}, Exit value: {}", parameters, exitValue);
 
 			SimulationExitReason exitReason = SimulationExitReason.fromInt(exitValue);
 
-			if (stoppedManually) listener.executionManuallyStopped(this);
-			
+			if (stoppedManually)
+				listener.executionManuallyStopped(this);
+
 			switch (exitReason) {
 			case RunExitCalled:
 			case ExecutionExitCalled:
 			case ExceptionOccured:
 				listener.executionStopped(this, exitReason);
 				break;
-				
+
 			case Finished:
 				listener.executionEnded(this);
 				break;

@@ -15,7 +15,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.connectors.JobManagerConnect
 
 public class WorkerEngineImpl implements WorkerEngine {
 
-	private final Logger logger = LoggerFactory.getLogger(WorkerEngineImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(WorkerEngineImpl.class);
 
 	private final SimulationManager simulationManager;
 
@@ -36,19 +36,24 @@ public class WorkerEngineImpl implements WorkerEngine {
 	@Override
 	public void start() {
 
-		logger.info("Initializing worker...");
+		logger.info("Starting worker...");
 
 		jobManagerConnector.connect();
 		jobManagerConnector.sendWorkerStatusUpdate(WorkerStatus.Started);
 
+		logger.info("Starting to listen to messages.");
+		
 		while (!stopped) {
 			List<WorkerTask> tasks = getNewTasks();
 			processTasks(tasks);
 		}
+
+		logger.info("Stopping to listen to messages and ending.");
 	}
 
 	@Override
 	public void stop() {
+		logger.info("Stopping worker... All messages which were received till this time will be processed and then worker stops.");
 		stopped = true;
 	}
 
@@ -58,7 +63,7 @@ public class WorkerEngineImpl implements WorkerEngine {
 			tasks = workerTaskQueue.takeAll(receiveMessageQueueTimeout.getNumberOUnits(),
 					receiveMessageQueueTimeout.getUnit());
 		} catch (InterruptedException e) {
-			logger.info("Error occured while getting new tasks.", e);
+			logger.error("Error occured while getting new tasks.", e);
 			tasks = new ArrayList<WorkerTask>();
 		}
 		return tasks;
@@ -69,11 +74,14 @@ public class WorkerEngineImpl implements WorkerEngine {
 			return;
 		}
 
+		logger.info("Processing tasks...");
 		tasks.forEach(x -> processTask(x));
 	}
 
 	private void processTask(WorkerTask task) {
 
+		logger.info("Processing task '{}'", task);
+		
 		if (task instanceof RunSimulationTask) {
 			simulationManager.runSimulation((RunSimulationTask) task);
 		} else if (task instanceof StopSimulationTask) {

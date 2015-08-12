@@ -16,4 +16,9 @@ public class StopSimulationTaskImpl extends WorkerTaskImpl implements StopSimula
 	public SimulationId getSimulationId() {
 		return simulationId;
 	}
+
+	@Override
+	public String toString() {
+		return "StopSimulationTaskImpl [simulationId=" + simulationId + "]";
+	}
 }

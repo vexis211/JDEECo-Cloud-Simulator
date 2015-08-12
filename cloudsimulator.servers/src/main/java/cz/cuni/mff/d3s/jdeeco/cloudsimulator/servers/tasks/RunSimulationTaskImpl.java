@@ -23,4 +23,9 @@ public class RunSimulationTaskImpl extends WorkerTaskImpl implements RunSimulati
 	public String getStartupFile() {
 		return startupFile;
 	}
+
+	@Override
+	public String toString() {
+		return "RunSimulationTaskImpl [simulationId=" + simulationId + ", startupFile=" + startupFile + "]";
+	}
 }

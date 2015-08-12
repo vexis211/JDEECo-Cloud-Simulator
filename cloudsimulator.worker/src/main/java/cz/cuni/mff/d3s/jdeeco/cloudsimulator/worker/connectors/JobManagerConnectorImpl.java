@@ -24,7 +24,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.worker.engine.WorkerTaskQueue;
 
 public class JobManagerConnectorImpl extends ServerConnectorImpl implements JobManagerConnector {
 
-	private final Logger logger = LoggerFactory.getLogger(JobManagerConnectorImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(JobManagerConnectorImpl.class);
 
 	private final WorkerTaskQueue workerTaskQueue;
 	private final String outgoingQueue;
@@ -53,25 +53,30 @@ public class JobManagerConnectorImpl extends ServerConnectorImpl implements JobM
 	@Override
 	public void sendSimulationStatusUpdate(SimulationId simulationId, SimulationStatus status,
 			SimulationExitReason exitReason) {
+		logger.info("Sending simulation status update. Simulation ID: '{}', status: '{}', exit reason: '{}'.",
+				simulationId, status, exitReason);
+
 		SimulationStatusUpdate update = new SimulationStatusUpdateImpl(workerId, simulationId, status, exitReason);
 		sendUpdate(update);
 	}
 
 	@Override
 	public void sendSimulationStatusUpdate(SimulationId simulationId, Exception e) {
+		logger.info("Sending simulation status update. Simulation ID: '{}', exception: '{}'.", simulationId, e);
+
 		SimulationStatusUpdate update = new SimulationStatusUpdateImpl(workerId, simulationId, e.getMessage());
 		sendUpdate(update);
 	}
 
 	@Override
 	public void sendWorkerStatusUpdate(WorkerStatus status) {
+		logger.info("Sending worker status update. Status: '{}'.", status);
+
 		WorkerStatusUpdate update = new WorkerStatusUpdateImpl(workerId, status);
 		sendUpdate(update);
 	}
 
 	private void sendUpdate(JobManagerUpdate update) {
-		logger.info("Sending update to job manager {}. Update: {}.", workerId, update);
-
 		sendMessage(outgoingQueue, update);
 	}
 }
