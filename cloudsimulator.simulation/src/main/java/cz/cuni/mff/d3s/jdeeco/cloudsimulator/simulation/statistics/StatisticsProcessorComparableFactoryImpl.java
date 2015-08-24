@@ -29,6 +29,8 @@ public class StatisticsProcessorComparableFactoryImpl<T extends Comparable<T>>
 	@Override
 	public StatisticsProcessor<T> create(String statisticId, EnumSet<StatisticsSaveMode> saveMode) {
 
+		logger.debug("Creating new statistics processor for comparables with ID '{}' and save mode '{}'.", statisticId, saveMode);
+		
 		List<StatisticsValueProcessor<T>> valueProcessors = new ArrayList<StatisticsValueProcessor<T>>();
 
 		for (StatisticsSaveMode mode : saveMode) {

@@ -27,6 +27,8 @@ public class SimulationRunConfigurationImpl implements SimulationRunConfiguratio
 	}
 
 	private final void initializeSettings() {
+		logger.info("Initializing run configuration settings...");
+		
 		Optional<SimulationRunSettingsProfile> profileOptional = this.settings.getProfiles().stream()
 				.filter(x -> x.getId().equals(this.simulationRunProfileId)).findAny();
 

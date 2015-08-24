@@ -1,7 +1,12 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class XmlSettingsProviderImpl implements SimulationSettingsProvider, AssertsSettingsProvider,
 		StatisticsSettingsProvider, SimulationRunSettingsProvider {
+
+	private static Logger logger = LoggerFactory.getLogger(XmlSettingsProviderImpl.class);
 
 	private final String settingsFileName;
 	private SimulationSettings simulationSettings;
@@ -12,36 +17,37 @@ public class XmlSettingsProviderImpl implements SimulationSettingsProvider, Asse
 
 	@Override
 	public SimulationSettings getSimulationSettings() {
-		LoadSimulationSettings();
+		logger.debug("Getting simulation settings...");
 
+		if (simulationSettings == null) {
+			logger.info("Loading simulation settings from file: '{}'...", settingsFileName);
+			
+			SettingsLoader settingsLoader = new SettingsLoader();
+			simulationSettings = settingsLoader.load(settingsFileName);
+
+			logger.info("Simulation settings successfully loaded from file: '{}'.", settingsFileName);
+		}
 		return simulationSettings;
 	}
 
 	@Override
 	public AssertsSettings getAssertsSettings() {
-		LoadSimulationSettings();
+		logger.debug("Getting simulation assert settings...");
 		
-		return simulationSettings.getAssertsSettings();
+		return getSimulationSettings().getAssertsSettings();
 	}
 
 	@Override
 	public StatisticsSettings getStatisticsSettings() {
-		LoadSimulationSettings();
+		logger.debug("Getting simulation statistic settings...");
 
-		return simulationSettings.getStatisticsSettings();
+		return getSimulationSettings().getStatisticsSettings();
 	}
 
 	@Override
 	public SimulationRunSettings getSimulationRunSettings() {
-		LoadSimulationSettings();
+		logger.debug("Getting simulation run settings...");
 		
-		return simulationSettings.getSimulationRunSettings();
-	}
-
-	private void LoadSimulationSettings() {
-		if (simulationSettings == null) {
-			SettingsLoader settingsLoader = new SettingsLoader();
-			simulationSettings = settingsLoader.load(settingsFileName);
-		}
+		return getSimulationSettings().getSimulationRunSettings();
 	}
 }

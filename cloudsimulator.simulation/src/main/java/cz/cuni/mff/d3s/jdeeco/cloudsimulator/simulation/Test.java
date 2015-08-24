@@ -29,7 +29,6 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.StatisticsSetti
 
 public class Test {
 	public static void main(String[] args) throws IOException {
-
 		testXml();
 	}
 
@@ -74,7 +73,7 @@ public class Test {
 		String file = "SimulationSettings.xml";
 		try (OutputStream output = new FileOutputStream(file)) {
 			xStream.toXML(settings, output);
-			output.flush();	
+			output.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

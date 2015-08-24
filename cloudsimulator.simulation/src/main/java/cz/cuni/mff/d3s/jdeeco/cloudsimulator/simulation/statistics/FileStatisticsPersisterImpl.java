@@ -26,6 +26,7 @@ public class FileStatisticsPersisterImpl<T> implements StatisticsPersister {
 	@Override
 	public void start() {
 		try {
+			logger.info("Opening file for persisting statistics. File name: '{}'.", persistFile);
 			this.output = new PrintStream(persistFile);
 		} catch (Exception e) {
 			logger.error("Error occured when starting persisting statistics.", e);
@@ -36,6 +37,7 @@ public class FileStatisticsPersisterImpl<T> implements StatisticsPersister {
 	@Override
 	public void end() {
 		try {
+			logger.info("Closing file for persisting statistics. File name: '{}'.", persistFile);
 			this.output.close();
 		} catch (Exception e) {
 			logger.error("Error occured when ending persisting statistics.", e);
@@ -45,17 +47,23 @@ public class FileStatisticsPersisterImpl<T> implements StatisticsPersister {
 	
 	@Override
 	public void startStatistic(String statisticId, Class<?> clazz) {
+		logger.trace("Starting persistance of statistic with name '{}' and type '{}'.", statisticId, clazz);
+		
 		output.println(statisticId);
 		output.println(clazz.getName());
 	}
 
 	@Override
 	public void endStatistic() {
+		logger.trace("Ending persistance of last opened statistic.");
+		
 		output.println(END_STATISTIC_CHAR);
 	}
 
 	@Override
 	public void addScalarValue(StatisticsSaveMode mode, Object value) {
+		logger.trace("Persisting statistic value. Mode: '{}', value: '{}'.", mode, value);
+		
 		output.print(mode);
 		output.print(KEY_VALUE_DELIMITER);
 		output.print(value);
@@ -63,19 +71,25 @@ public class FileStatisticsPersisterImpl<T> implements StatisticsPersister {
 	}
 
 	@Override
-	public void startVector(StatisticsSaveMode mode) {
-		output.print(mode);
+	public void startVector() {
+		logger.trace("Starting persistance of statistic vector.");
+		
+		output.print(StatisticsSaveMode.Vector);
 		output.print(KEY_VALUE_DELIMITER);
 	}
 
 	@Override
 	public void addVectorValue(Object value) {
+		logger.trace("Statistic vector value: '{}'.", value);
+		
 		output.print(value);
 		output.print(VALUE_VALUE_DELIMITER);
 	}
 
 	@Override
 	public void endVector() {
+		logger.trace("Ending persistance of statistic vector.");
+		
 		output.println();
 	}
 }

@@ -70,6 +70,8 @@ public class SimulationControllerImpl implements SimulationController {
 			executor.shutdown();
 		}
 		
+		logger.info("Ending simulation...");
+		
 		return this.exitReason;
 	}
 

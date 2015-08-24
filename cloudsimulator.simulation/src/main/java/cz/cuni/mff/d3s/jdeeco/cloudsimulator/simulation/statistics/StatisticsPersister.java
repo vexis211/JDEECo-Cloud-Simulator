@@ -11,7 +11,7 @@ public interface StatisticsPersister {
 
 	void addScalarValue(StatisticsSaveMode mode, Object value);
 
-	void startVector(StatisticsSaveMode mode);
+	void startVector();
 	void addVectorValue(Object value);
 	void endVector();
 }

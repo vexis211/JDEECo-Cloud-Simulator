@@ -39,6 +39,8 @@ public class AssertConfigurationImpl implements AssertConfiguration {
 	}
 
 	private final void initializeSettings() {
+		logger.info("Initializing assert configuration settings...");
+		
 		Optional<AssertSettingsProfile> profileOptional = this.settings.getProfiles().stream()
 				.filter(x -> x.getId().equals(this.assertsProfileId)).findAny();
 
@@ -49,6 +51,8 @@ public class AssertConfigurationImpl implements AssertConfiguration {
 			logger.error(message);
 			throw new RuntimeException(message);
 		}
+
+		logger.info("Assert configuration settings initialized.");
 	}
 
 	private final void initializeSettingsProfile(AssertSettingsProfile selectedProfile) {

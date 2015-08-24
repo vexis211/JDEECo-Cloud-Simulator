@@ -25,6 +25,8 @@ public class StatisticsProcessorGeneralFactoryImpl<T> implements StatisticsProce
 	@Override
 	public StatisticsProcessor<T> create(String statisticId, EnumSet<StatisticsSaveMode> saveMode) {
 
+		logger.debug("Creating new statistics processor for general objects with ID '{}' and save mode '{}'.", statisticId, saveMode);
+		
 		List<StatisticsValueProcessor<T>> valueProcessors = new ArrayList<StatisticsValueProcessor<T>>();
 
 		for (StatisticsSaveMode mode : saveMode) {

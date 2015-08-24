@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions;
 
 import java.text.Normalizer;
+import java.util.EnumSet;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -152,6 +153,21 @@ public abstract class StringEx {
 			text[i] = characters.charAt(rng.nextInt(characters.length()));
 		}
 		return new String(text);
+	}
+
+	public static <T> String join(String separator, Iterable<T> iterable) {
+		StringBuilder builder = new StringBuilder();
+		
+		boolean firstItemWritten = false;
+		for (T item : iterable) {
+			if (firstItemWritten) {
+				builder.append(separator);
+				firstItemWritten = true;
+			}
+			builder.append(item);
+		}
+		
+		return builder.toString();
 	}
 
 }

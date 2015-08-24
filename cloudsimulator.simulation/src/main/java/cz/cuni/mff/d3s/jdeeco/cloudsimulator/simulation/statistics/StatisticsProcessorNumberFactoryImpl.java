@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.StatisticsSaveMode;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.processors.StatisticsAvgProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.processors.StatisticsCountProcessor;
@@ -16,6 +19,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.processors.St
 
 public class StatisticsProcessorNumberFactoryImpl<T extends Number> implements StatisticsProcessorFactory<T> {
 
+	private static Logger logger = LoggerFactory.getLogger(StatisticsProcessorNumberFactoryImpl.class);
+	
 	private final Class<T> genericClass;
 
 	public StatisticsProcessorNumberFactoryImpl(Class<T> genericClass) {
@@ -25,6 +30,8 @@ public class StatisticsProcessorNumberFactoryImpl<T extends Number> implements S
 	@Override
 	public StatisticsProcessor<T> create(String statisticId, EnumSet<StatisticsSaveMode> saveMode) {
 
+		logger.debug("Creating new statistics processor for numbers with ID '{}' and save mode '{}'.", statisticId, saveMode);
+		
 		List<StatisticsValueProcessor<T>> valueProcessors = new ArrayList<StatisticsValueProcessor<T>>();
 
 		for (StatisticsSaveMode mode : saveMode) {

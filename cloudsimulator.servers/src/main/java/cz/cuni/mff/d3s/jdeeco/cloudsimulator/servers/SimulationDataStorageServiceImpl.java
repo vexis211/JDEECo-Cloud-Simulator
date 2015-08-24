@@ -11,7 +11,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.PathEx;
 
 public class SimulationDataStorageServiceImpl implements SimulationDataStorageService {
 
-	private final Logger logger = LoggerFactory.getLogger(SimulationDataStorageServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(SimulationDataStorageServiceImpl.class);
 
 	private final String remotePackageRootDirectory;
 	private final String remoteResultsRootDirectory;
@@ -26,17 +26,19 @@ public class SimulationDataStorageServiceImpl implements SimulationDataStorageSe
 
 	@Override
 	public String getPackagePath(int executionId) {
-		return PathEx.combine(remotePackageRootDirectory, executionId);
+		String packagePath = PathEx.combine(remotePackageRootDirectory, executionId);
+		return packagePath;
 	}
 
 	@Override
 	public void saveResults(String localSourcePath, SimulationId simulationId) {
 		if (!new File(localSourcePath).exists()) {
-			logger.info("Results folder {} does not exists, therefore it won't be saved.", localSourcePath);
+			logger.warn("Results folder {} does not exists, therefore it won't be saved.", localSourcePath);
 			return;
 		}
 		
 		String remoteTargetPath = PathEx.combine(remoteResultsRootDirectory, simulationId.getRunId());
+		logger.info("Saving results into remote storage. From '{}' to '{}'.", localSourcePath, remoteTargetPath);
 		try {
 			FileUtils.copyDirectory(new File(localSourcePath), new File(remoteTargetPath));
 		} catch (IOException e) {
@@ -53,6 +55,7 @@ public class SimulationDataStorageServiceImpl implements SimulationDataStorageSe
 		}
 		
 		String remoteTargetPath = PathEx.combine(remoteLogsRootDirectory, simulationId.getRunId());
+		logger.info("Saving logs into remote storage. From '{}' to '{}'.", localSourcePath, remoteTargetPath);
 		try {
 			FileUtils.copyDirectory(new File(localSourcePath), new File(remoteTargetPath));
 		} catch (IOException e) {

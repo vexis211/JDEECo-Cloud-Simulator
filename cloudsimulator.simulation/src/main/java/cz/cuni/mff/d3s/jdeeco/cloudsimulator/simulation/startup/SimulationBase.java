@@ -54,29 +54,38 @@ public abstract class SimulationBase {
 	}
 
 	private void configure() {
+		logger.info("Configuring simulation evironment...");
+		
 		// directory for statistics, ...
+		logger.info("Creating results directory...");
 		File resultsDir = new File("results"); // TODO improvement - from settings
 		resultsDir.mkdirs();
 
 		// configure statistics
+		logger.info("Setting statistics handler...");
 		Statistics.Handler = (StatisticsHandler) context.getBean("statisticsHandler");
 		this.statisticsManager = (StatisticsManager) context.getBean("statisticsManager");
 
 		// configure asserts
+		logger.info("Settings asserts handler...");
 		Assert.Handler = (AssertHandler) context.getBean("assertHandler");
 
 		// run configuration
+		logger.info("Setting run configuration...");
 		this.runConfiguration = (SimulationRunConfiguration) context.getBean("simulationRunConfiguration");
 		
 		// simulation controller
+		logger.info("Setting simulation controller...");
 		this.simulationController = (SimulationController) context.getBean("simulationController");
 	}
 
 	private SimulationExitReason run() throws Exception {
+		logger.info("Configuring simulation parameters (nodes, ...)...");
 		DEECoSimulation simulation = configureSimulation(runConfiguration.getProfileId());
 
 		SimulationEndSettings endSettings = runConfiguration.getEndSettings();
-		
+
+		logger.info("Starting simulation with nd settings: '{}'.", endSettings);
 		return simulationController.start(simulation, endSettings);
 	}
 
@@ -96,6 +105,8 @@ public abstract class SimulationBase {
 	protected abstract DEECoSimulation configureSimulation(String profileId) throws Exception;
 
 	protected DEECoSimulation createSimulationWithDeeco() {
+		logger.info("Creating simple simulation...");
+		
 		SimulationTimer simulationTimer = new DiscreteEventTimer(); // also "new WallTimeSchedulerNotifier()"
 
 		DEECoSimulation simulation = new DEECoSimulation(simulationTimer);
@@ -108,6 +119,8 @@ public abstract class SimulationBase {
 	}
 
 	protected DEECoSimulation createSimulationWithOmnet() {
+		logger.info("Creating simulation with OMNET...");
+		
 		OMNeTSimulation omnet = new OMNeTSimulation();
 
 		// Create main application container
@@ -121,6 +134,7 @@ public abstract class SimulationBase {
 	}
 
 	// protected DEECoSimulation createSimulationWithMatsim() {
+	// logger.info("Creating simulation with MatSim...");
 	// MATSimSimulation matSim = new MATSimSimulation("input/config.xml");
 	//
 	// // Create main application container
@@ -139,6 +153,7 @@ public abstract class SimulationBase {
 	// }
 
 	// protected DEECoSimulation createSimulationWithMatsimOmnet() {
+	// logger.info("Creating simulation with OMNET and MatSim...");
 	//
 	// // Create joint OMNeT-MATSim simulation plug-in
 	// OMNeTMATSimSimulation omnetmatsim = new OMNeTMATSimSimulation("input/config.xml");

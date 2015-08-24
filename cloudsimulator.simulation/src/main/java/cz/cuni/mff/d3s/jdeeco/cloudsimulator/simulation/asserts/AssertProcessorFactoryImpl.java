@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationExitReason;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.StringEx;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.processors.AggregateAssertProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.processors.FailExitAssertProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.processors.LogAssertProcessor;
@@ -16,7 +17,6 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup.SimulationContro
 
 public class AssertProcessorFactoryImpl implements AssertProcessorFactory {
 
-	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(AssertProcessorFactoryImpl.class);
 
 	private final SimulationController simulationController;
@@ -27,6 +27,9 @@ public class AssertProcessorFactoryImpl implements AssertProcessorFactory {
 
 	@Override
 	public AssertProcessor create(String assertGroup, EnumSet<AssertAction> assertActions) {
+
+		logger.debug("Creating assert processor for group '{}' with actions '{}',", assertGroup,
+				StringEx.join(", ", assertActions));
 
 		List<AssertProcessor> processors = new ArrayList<AssertProcessor>();
 
