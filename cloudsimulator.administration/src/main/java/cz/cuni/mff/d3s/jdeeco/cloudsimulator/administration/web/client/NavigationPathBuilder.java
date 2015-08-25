@@ -8,4 +8,5 @@ public interface NavigationPathBuilder {
 	NavigationPath buildFromSimulationConfiguration(int configurationId);
 	NavigationPath buildFromSimulationData(int dataId);
 	NavigationPath buildFromSimulationExecution(int executionId);
+	NavigationPath buildFromSimulationResult(int executionId);
 }

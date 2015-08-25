@@ -48,6 +48,9 @@ public class MappingSettings {
 	public static final String EXECUTION_STOP = EXECUTION + "/stop";
 	public static final String EXECUTION_EDIT = EXECUTION + "/edit";
 
+	public static final String RESULTS_ROOT = MAIN + "/results";
+	public static final String RESULT_SHOW = RESULTS_ROOT + "/{executionId}";
+
 
 	public static final String INFRASTRUCTURE = MAIN + "/infrastructure";
 	public static final String SIMULATIONQUEUE = MAIN + "/simulationqueue";

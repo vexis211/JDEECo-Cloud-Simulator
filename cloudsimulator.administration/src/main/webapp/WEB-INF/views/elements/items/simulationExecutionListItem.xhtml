@@ -49,6 +49,9 @@
 					<c:if test="#{execution.status == 'Created' or execution.status == 'Started'}">
 						<a href="#{ExecutionPath}/#{execution.id}/stop">stop</a>
 					</c:if>
+					<c:if test="#{execution.status == 'Completed'}">
+						<a href="#{ResultsPath}/#{execution.id}">Show result</a>
+					</c:if>
 				</td>
 			</tr>
 		</table>

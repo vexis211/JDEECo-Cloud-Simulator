@@ -81,4 +81,12 @@ public class NavigationPathBuilderImpl implements NavigationPathBuilder {
 		navigationPath.addStep(new NavigationPathStepImpl(dateFormat.format(execution.getCreated()), url));
 		return navigationPath;
 	}
+
+	@Override
+	public NavigationPath buildFromSimulationResult(int executionId) {
+		NavigationPath navigationPath = buildFromSimulationExecution(executionId);
+		String url = MappingSettings.GetFullUri(appContext.getSiteRoot(), MappingSettings.RESULTS_ROOT, executionId);
+		navigationPath.addStep(new NavigationPathStepImpl("Result", url));
+		return navigationPath;
+	}
 }
