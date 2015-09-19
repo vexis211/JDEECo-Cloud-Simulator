@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.variables.SimulationExecutionVariableDefinitions;
 
 public class PackageManagerImpl implements PackageManager, PackagePreparatorListener {
 
@@ -36,6 +37,7 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 	@Override
 	public void preparePackage(SimulationExecution execution, PackageManagerListener listener) {
 		Integer executionId = execution.getId();
+		SimulationExecutionVariableDefinitions variablesDefinition = null;
 
 		boolean notifyPrepared = false;
 
@@ -43,6 +45,7 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 			if (entries.containsKey(executionId)) {
 				PackageManagerEntry entry = entries.get(executionId);
 				if (entry.isPrepared) {
+					variablesDefinition = entry.variablesDefinition;
 					notifyPrepared = true;
 				} else {
 					entry.listeners.add(listener);
@@ -60,7 +63,7 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 		}
 
 		if (notifyPrepared) {
-			listener.packagePrepared(execution.getId());
+			listener.packagePrepared(execution.getId(), variablesDefinition);
 		}
 	}
 
@@ -75,11 +78,13 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 			listeners = new ArrayList<>(entry.listeners);
 			entry.listeners.clear();
 			execution = entry.execution;
+			
+			entry.variablesDefinition = packageTask.getVariableDefinitions();
 			entry.isPrepared = true;
 		}
 
 		logger.info("Package for execution id: {} is prepared.", executionId);
-		listeners.forEach(x -> x.packagePrepared(execution.getId()));
+		listeners.forEach(x -> x.packagePrepared(execution.getId(), packageTask.getVariableDefinitions()));
 	}
 
 	@Override
@@ -91,6 +96,7 @@ public class PackageManagerImpl implements PackageManager, PackagePreparatorList
 		private final List<PackageManagerListener> listeners = new ArrayList<>();
 		private final SimulationExecution execution;
 		private boolean isPrepared = false;
+		private SimulationExecutionVariableDefinitions variablesDefinition;
 
 		public PackageManagerEntry(SimulationExecution execution) {
 			this.execution = execution;

@@ -10,6 +10,6 @@ public interface SimulationConfigurationService {
 
 	SimulationConfiguration getConfigurationById(int configurationId);
 	
-	SimulationConfiguration createConfiguration(int projectId, int dataId, String name, String description, int defaultRunCount);
-	void editConfiguration(int configurationId, String name, String description, int defaultRunCount);
+	SimulationConfiguration createConfiguration(int projectId, int dataId, String name, String description, int defaultRunMultiplicator);
+	void editConfiguration(int configurationId, String name, String description, int defaultRunMultiplicator);
 }

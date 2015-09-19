@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class
+		name="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRunVariable"
+		table="simulation_run_variable" catalog="jdeeco_simulation"
+		optimistic-lock="version">
+		<composite-id name="id" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRunVariableId">
+			<key-property name="runId" type="int">
+				<column name="RunID" />
+			</key-property>
+			<key-property name="executionVariableId" type="int">
+				<column name="ExecutionVariableID" />
+			</key-property>
+		</composite-id>
+		<many-to-one name="simulationExecutionVariable"
+			class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecutionVariable"
+			update="false" insert="false" fetch="select">
+			<column name="ExecutionVariableID" not-null="true" />
+		</many-to-one>
+		<many-to-one name="simulationRun"
+			class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRun"
+			update="false" insert="false" fetch="select">
+			<column name="RunID" not-null="true" />
+		</many-to-one>
+		<property name="data" type="binary">
+			<column name="Data" not-null="true" />
+		</property>
+	</class>
+</hibernate-mapping>

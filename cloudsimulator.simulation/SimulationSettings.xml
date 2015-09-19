@@ -3,6 +3,10 @@
     <SimulationRunProfiles>
       <SimulationRunProfile Id="default">
         <SimulationEnd Type="RealTime" Time="600000"/>
+        <SimulationVariables>
+          <ListVariable Name="ListVar1" List="1,5,9"/>
+          <RangeVariable Name="RangeVar1" Start="7" End="15" Step="2"/>
+        </SimulationVariables>
       </SimulationRunProfile>
     </SimulationRunProfiles>
   </SimulationRuns>

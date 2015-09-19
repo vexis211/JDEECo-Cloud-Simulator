@@ -1,7 +1,6 @@
 package cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions;
 
 import java.text.Normalizer;
-import java.util.EnumSet;
 import java.util.Random;
 import java.util.regex.Pattern;
 

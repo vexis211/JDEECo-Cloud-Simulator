@@ -140,6 +140,7 @@
 		<constructor-arg name="codeRepositoryManager" ref="codeRepositoryManager" />
 		<constructor-arg name="simulationDataStorageService" ref="simulationDataStorageService" />
 		<constructor-arg name="preparationRootDir" value="${packaging.storage.localPreparationRoot}" />
+		<constructor-arg name="simulationSettingsRelativePath" value="${simulation.simulationSettingsRelativePath}"/>
 	</bean>
 
 	<bean id="packageTaskFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.PackageTaskFactoryImpl" />

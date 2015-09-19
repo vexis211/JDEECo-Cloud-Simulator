@@ -15,10 +15,6 @@
 	</parent>
 
 
-	<properties>
-		<xstream.version>1.4.8</xstream.version>
-	</properties>
-
 	<!-- <repositories> <repository> <id>ProjectLibraries</id> <name>Repository in project's lib subdirectory</name> <layout>default</layout> 
 		<url>file:///${project.basedir}/lib</url> </repository> </repositories> -->
 
@@ -74,13 +70,6 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 			<version>${aspectj.version}</version>
-		</dependency>
-
-		<!-- XStream - XML -->
-		<dependency>
-			<groupId>com.thoughtworks.xstream</groupId>
-			<artifactId>xstream</artifactId>
-			<version>${xstream.version}</version>
 		</dependency>
 
 		<!-- JDEECo -->

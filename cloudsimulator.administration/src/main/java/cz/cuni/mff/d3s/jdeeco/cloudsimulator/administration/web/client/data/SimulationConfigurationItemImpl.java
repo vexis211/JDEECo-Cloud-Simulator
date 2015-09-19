@@ -14,7 +14,7 @@ public class SimulationConfigurationItemImpl implements SimulationConfigurationI
 
 	private String name;
 	private String description;
-	private int defaultRunCount;
+	private int defaultRunMultiplicator;
 	
 	private final List<SimulationExecutionItem> executions = new ArrayList<>();
 	private int dataId;
@@ -31,7 +31,7 @@ public class SimulationConfigurationItemImpl implements SimulationConfigurationI
 		
 		this.name = configuration.getName();
 		this.description = configuration.getDescription();
-		this.defaultRunCount = configuration.getDefaultRunCount();
+		this.defaultRunMultiplicator = configuration.getDefaultRunMultiplicator();
 		this.dataItem = dataItem;
 		this.lastExecution = lastExecution;
 	}
@@ -78,13 +78,13 @@ public class SimulationConfigurationItemImpl implements SimulationConfigurationI
 	}
 
 	@Override
-	public int getDefaultRunCount() {
-		return defaultRunCount;
+	public int getDefaultRunMultiplicator() {
+		return defaultRunMultiplicator;
 	}
 
 	@Override
-	public void setDefaultRunCount(int defaultRunCount) {
-		this.defaultRunCount = defaultRunCount;
+	public void setDefaultRunMultiplicator(int defaultRunMultiplicator) {
+		this.defaultRunMultiplicator = defaultRunMultiplicator;
 	}
 
 	@Override

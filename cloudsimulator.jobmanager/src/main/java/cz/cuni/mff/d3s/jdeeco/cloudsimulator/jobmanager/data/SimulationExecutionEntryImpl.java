@@ -2,6 +2,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.data;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
@@ -21,27 +22,32 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 	private final SimulationExecution data;
 	private final SimulationExecutionEntryListener listener;
 	private final JobStatistics<Integer> executionStatistics;
+	private final SimulationRunEntryFactory simulationRunEntryFactory;
 
 	private final ExecutionDeadlineSettings deadlineSettings;
 
 	private final String startupFile;
-	
+
 	private boolean isPackagePrepared = false;
 	private boolean repeatedlyThrowsError = false;
 	private boolean started = false;
 	private boolean stopped = false;
-
+	
 	public SimulationExecutionEntryImpl(SimulationExecution data, SimulationExecutionEntryListener listener,
 			JobStatistics<Integer> executionStatistics, SimulationRunEntryFactory simulationRunEntryFactory) {
 		this.data = data;
 		this.listener = listener;
 		this.executionStatistics = executionStatistics;
+		this.simulationRunEntryFactory = simulationRunEntryFactory;
 
 		this.startupFile = data.getSimulationConfiguration().getSimulationData().getStartupFile();
 		this.deadlineSettings = new ExecutionDeadlineSettings(data.getEndSpecificationType(),
 				data.getEndDate() != null ? new DateTime(data.getEndDate()) : null);
+	}
 
-		for (SimulationRun simulationRun : data.getSimulationRuns()) {
+	@Override
+	public void loadRuns(Set<SimulationRun> simulationRuns) {
+		for (SimulationRun simulationRun : simulationRuns) {
 			SimulationRunEntry newEntry = simulationRunEntryFactory.create(simulationRun, this);
 			notStartedRuns.put(simulationRun.getId(), newEntry);
 		}
@@ -63,7 +69,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 			return SimulationStatus.Stopped;
 		} else if (repeatedlyThrowsError) {
 			return SimulationStatus.ErrorOccured;
-		} else if (startedRuns.isEmpty() && completedRuns.isEmpty()) {
+		} else if (!isPackagePrepared || (startedRuns.isEmpty() && completedRuns.isEmpty())) {
 			return SimulationStatus.Created;
 		} else if (!startedRuns.isEmpty() || notStartedRuns.isEmpty()) {
 			return SimulationStatus.Started;
@@ -102,7 +108,7 @@ public class SimulationExecutionEntryImpl implements SimulationExecutionEntry {
 		notStartedRuns.remove(entryId);
 		toStartEntry.setStatus(SimulationStatus.Started);
 		startedRuns.put(entryId, toStartEntry);
-		
+
 		// notify run started
 		executionStatistics.jobStarted(entryId);
 		listener.runStarted(toStartEntry);

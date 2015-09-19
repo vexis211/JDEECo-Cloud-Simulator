@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.security.UserHelper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.ViewParameters;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.NavigationPath;
@@ -13,6 +12,8 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.Proj
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.SimulationConfigurationItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.SimulationDataItem;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.SimulationExecutionItem;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.SimulationExecutionStatisticItem;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.User;
 
 public class ClientModelAndView extends ModelAndView {
 
@@ -82,5 +83,9 @@ public class ClientModelAndView extends ModelAndView {
 
 	public ClientModelAndView withSimulationExecutionId(int simulationExecutionId) {
 		return this.addObject(ViewParameters.SIMULATION_EXECUTION_ID, simulationExecutionId);
+	}
+	
+	public ClientModelAndView withSimulationExecutionStatistics(List<SimulationExecutionStatisticItem> simulationExecutionStatisticItems) {
+		return this.addObject(ViewParameters.EXECUTION_STATISTICS, simulationExecutionStatisticItems);
 	}
 }

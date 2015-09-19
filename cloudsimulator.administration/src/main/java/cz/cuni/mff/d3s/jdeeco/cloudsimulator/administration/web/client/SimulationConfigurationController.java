@@ -106,7 +106,7 @@ public class SimulationConfigurationController {
 
 		simulationConfigurationService.createConfiguration(projectId, simulationConfigurationItem.getDataId(),
 				simulationConfigurationItem.getName(), simulationConfigurationItem.getDescription(),
-				simulationConfigurationItem.getDefaultRunCount());
+				simulationConfigurationItem.getDefaultRunMultiplicator());
 
 		return ProjectController.RedirectToProject(appContext.getSiteRoot(), projectId);
 	}
@@ -155,7 +155,7 @@ public class SimulationConfigurationController {
 		}
 
 		simulationConfigurationService.editConfiguration(configurationId, simulationConfigurationItem.getName(),
-				simulationConfigurationItem.getDescription(), simulationConfigurationItem.getDefaultRunCount());
+				simulationConfigurationItem.getDescription(), simulationConfigurationItem.getDefaultRunMultiplicator());
 
 		return RedirectToConfiguration(configurationId);
 	}

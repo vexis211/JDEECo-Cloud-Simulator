@@ -31,6 +31,8 @@
 		<log4j.version>1.2.17</log4j.version>
 		<slf4j.version>1.7.7</slf4j.version>
 
+		<xstream.version>1.4.8</xstream.version>
+
 		<eclipse-emf.version>2.9.0-v20130528-0742</eclipse-emf.version>
 
 		<!-- plugin versions -->
@@ -130,6 +132,12 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 
+		<!-- XStream - XML -->
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>${xstream.version}</version>
+		</dependency>
 	</dependencies>
 
 	<distributionManagement>

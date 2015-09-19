@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts;
 import java.util.EnumSet;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.AssertAction;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.AssertAction;
 
 public class AssertManagerImpl implements AssertManager {
 

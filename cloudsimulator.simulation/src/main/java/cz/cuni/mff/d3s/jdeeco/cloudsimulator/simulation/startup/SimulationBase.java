@@ -12,7 +12,7 @@ import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.asserts.Assert;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.asserts.AssertHandler;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationExitReason;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SimulationEndSettings;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.settings.SimulationEndSettings;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.statistics.StatisticsManager;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.statistics.Statistics;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.statistics.StatisticsHandler;

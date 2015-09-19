@@ -3,6 +3,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack;
 import java.util.List;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.variables.SimulationExecutionVariableDefinitions;
 
 public interface PackageTask {
 	int getExecutionId();
@@ -32,6 +33,9 @@ public interface PackageTask {
 	String getRunProfile();
 	String getStatisticsProfile();
 	String getAssertsProfile();
+
+	SimulationExecutionVariableDefinitions getVariableDefinitions();
+	void setVariableDefinitions(SimulationExecutionVariableDefinitions variableDefinitions);
 	
 //	String getPackageLocalPath();
 //	void setPackageLocalPath(String packageLocalPath);

@@ -6,6 +6,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.ClearPre
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.CodeRepositoryProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.CompileCodeProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.CopyCompiledToPreparingDirectoryProcessor;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.FetchVariableDefinitionsProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.NotifyPackageTaskCompletedProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.PackageTaskProcessingListener;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack.processors.PackageTaskProcessor;
@@ -22,7 +23,7 @@ public class PackagePreparatorImpl
 	private final PackageTaskProcessor firstProcessor;
 
 	public PackagePreparatorImpl(FutureExecutor executor, CodeRepositoryManager codeRepositoryManager,
-			SimulationDataStorageService simulationDataStorageService, String preparationRootDir) {
+			SimulationDataStorageService simulationDataStorageService, String preparationRootDir, String simulationSettingsRelativePath) {
 
 		CodeRepositoryProcessor codeRepositoryProcessor = new CodeRepositoryProcessor(executor, this,
 				codeRepositoryManager);
@@ -32,6 +33,8 @@ public class PackagePreparatorImpl
 
 		// set profiles for simulation - run, statistics, ...
 		SetProfilesProcessor setProfilesProcessor = new SetProfilesProcessor(executor, this);
+		FetchVariableDefinitionsProcessor fetchVariableDefinitionsProcessor = new FetchVariableDefinitionsProcessor(
+				executor, this, simulationSettingsRelativePath);
 		SavePackageProcessor savePackageProcessor = new SavePackageProcessor(executor, this,
 				simulationDataStorageService);
 		ClearPreparingDirectoryProcessor clearPreparingDirectoryProcessor = new ClearPreparingDirectoryProcessor(
@@ -41,8 +44,8 @@ public class PackagePreparatorImpl
 
 		codeRepositoryProcessor.continueProcess(compileCodeProcessor)
 				.continueProcess(copyCompiledToPreparingDirectoryProcessor).continueProcess(setProfilesProcessor)
-				.continueProcess(savePackageProcessor).continueProcess(clearPreparingDirectoryProcessor)
-				.continueProcess(notifyPackageTaskCompletedProcessor);
+				.continueProcess(fetchVariableDefinitionsProcessor).continueProcess(savePackageProcessor)
+				.continueProcess(clearPreparingDirectoryProcessor).continueProcess(notifyPackageTaskCompletedProcessor);
 
 		this.firstProcessor = codeRepositoryProcessor;
 	}

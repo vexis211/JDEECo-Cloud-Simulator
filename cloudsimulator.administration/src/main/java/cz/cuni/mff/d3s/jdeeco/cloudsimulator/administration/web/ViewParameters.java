@@ -20,6 +20,8 @@ public class ViewParameters {
 	public static final String SIMULATION_EXECUTIONS = "executions";
 	public static final String SIMULATION_EXECUTION_ID = "executionId";
 
+	public static final String EXECUTION_STATISTICS = "executionStatistics";
+	
 	/**
 	 * Where to go after form is canceled.
 	 */

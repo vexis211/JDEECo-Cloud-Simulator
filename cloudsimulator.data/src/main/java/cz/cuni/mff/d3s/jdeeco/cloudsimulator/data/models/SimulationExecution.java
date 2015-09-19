@@ -21,7 +21,7 @@ public class SimulationExecution implements java.io.Serializable {
 	private Date ended;
 	private ExecutionEndSpecificationType endSpecificationType;
 	private Date endDate;
-	private int runCount;
+	private int runMultiplicator;
 	private String runProfile;
 	private String statisticsProfile;
 	private String assertsProfile;
@@ -34,7 +34,7 @@ public class SimulationExecution implements java.io.Serializable {
 
 	public SimulationExecution(SimulationConfiguration simulationConfiguration, User creator, String description,
 			SimulationStatus status, Date created, Date ended, ExecutionEndSpecificationType endSpecificationType,
-			Date endDate, int runCount, String runProfile, String statisticsProfile, String assertsProfile) {
+			Date endDate, int runMultiplicator, String runProfile, String statisticsProfile, String assertsProfile) {
 		this.simulationConfiguration = simulationConfiguration;
 		this.creator = creator;
 		this.description = description;
@@ -42,7 +42,7 @@ public class SimulationExecution implements java.io.Serializable {
 		this.created = created;
 		this.endSpecificationType = endSpecificationType;
 		this.endDate = endDate;
-		this.runCount = runCount;
+		this.runMultiplicator = runMultiplicator;
 		this.runProfile = runProfile;
 		this.statisticsProfile = statisticsProfile;
 		this.assertsProfile = assertsProfile;
@@ -128,12 +128,12 @@ public class SimulationExecution implements java.io.Serializable {
 		this.endDate = endDate;
 	}
 
-	public int getRunCount() {
-		return runCount;
+	public int getRunMultiplicator() {
+		return runMultiplicator;
 	}
 
-	public void setRunCount(int runCount) {
-		this.runCount = runCount;
+	public void setRunMultiplicator(int runMultiplicator) {
+		this.runMultiplicator = runMultiplicator;
 	}
 
 	public String getRunProfile() {

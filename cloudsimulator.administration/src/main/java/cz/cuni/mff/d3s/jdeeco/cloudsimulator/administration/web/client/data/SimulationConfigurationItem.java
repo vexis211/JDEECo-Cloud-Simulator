@@ -20,8 +20,8 @@ public interface SimulationConfigurationItem {
 	String getDescription();
 	void setDescription(String description);
 
-	int getDefaultRunCount();
-	void setDefaultRunCount(int defaultRunCount);
+	int getDefaultRunMultiplicator();
+	void setDefaultRunMultiplicator(int defaultRunMultiplicator);
 
 	SimulationDataItem getData();
 

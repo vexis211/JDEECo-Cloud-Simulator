@@ -111,7 +111,7 @@ public class JobManagerEngineImpl implements JobManagerEngine {
 		List<SimulationStatusUpdate> simulationStatusUpdates = takeUpdates(updates, SimulationStatusUpdate.class);
 		simulationManager.updateStatus(simulationStatusUpdates);
 		List<PackagePreparedUpdate> packagePreparedUpdates = takeUpdates(updates, PackagePreparedUpdate.class);
-		simulationManager.updatePackageNames(packagePreparedUpdates);
+		simulationManager.updatePackagePrepared(packagePreparedUpdates);
 
 		// commands
 		// are there any other updates?

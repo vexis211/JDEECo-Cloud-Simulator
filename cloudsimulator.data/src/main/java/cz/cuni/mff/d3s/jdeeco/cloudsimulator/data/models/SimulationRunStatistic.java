@@ -13,7 +13,6 @@ public class SimulationRunStatistic implements java.io.Serializable {
 	private Long id;
 	private SimulationExecutionStatistic simulationExecutionStatistic;
 	private SimulationRun simulationRun;
-	private byte dataType;
 	private byte[] vectorData;
 	private Set<SimulationRunStatisticAggdata> simulationRunStatisticAggdatas = new HashSet<SimulationRunStatisticAggdata>(
 			0);
@@ -22,18 +21,16 @@ public class SimulationRunStatistic implements java.io.Serializable {
 	}
 
 	public SimulationRunStatistic(SimulationExecutionStatistic simulationExecutionStatistic,
-			SimulationRun simulationRun, byte dataType) {
+			SimulationRun simulationRun) {
 		this.simulationExecutionStatistic = simulationExecutionStatistic;
 		this.simulationRun = simulationRun;
-		this.dataType = dataType;
 	}
 
 	public SimulationRunStatistic(SimulationExecutionStatistic simulationExecutionStatistic,
-			SimulationRun simulationRun, byte dataType, byte[] vectorData,
+			SimulationRun simulationRun, byte[] vectorData,
 			Set<SimulationRunStatisticAggdata> simulationRunStatisticAggdatas) {
 		this.simulationExecutionStatistic = simulationExecutionStatistic;
 		this.simulationRun = simulationRun;
-		this.dataType = dataType;
 		this.vectorData = vectorData;
 		this.simulationRunStatisticAggdatas = simulationRunStatisticAggdatas;
 	}
@@ -62,14 +59,6 @@ public class SimulationRunStatistic implements java.io.Serializable {
 		this.simulationRun = simulationRun;
 	}
 
-	public byte getDataType() {
-		return this.dataType;
-	}
-
-	public void setDataType(byte dataType) {
-		this.dataType = dataType;
-	}
-
 	public byte[] getVectorData() {
 		return this.vectorData;
 	}
@@ -85,5 +74,4 @@ public class SimulationRunStatistic implements java.io.Serializable {
 	public void setSimulationRunStatisticAggdatas(Set<SimulationRunStatisticAggdata> simulationRunStatisticAggdatas) {
 		this.simulationRunStatisticAggdatas = simulationRunStatisticAggdatas;
 	}
-
 }

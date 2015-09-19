@@ -23,6 +23,10 @@
 	<ui:define name="MiddleContent">				
 		<div id="result-div">
 			TODO
+						
+			<c:forEach var="executionStatistic" items="#{executionStatistics}">
+				<h:outputText value="#{executionStatistic.name}" />
+			</c:forEach>	
 		</div>
 	
 		<!-- Dialogs -->

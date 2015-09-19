@@ -12,7 +12,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.extensions.StringEx;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.processors.AggregateAssertProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.processors.FailExitAssertProcessor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.asserts.processors.LogAssertProcessor;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.AssertAction;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.AssertAction;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.startup.SimulationController;
 
 public class AssertProcessorFactoryImpl implements AssertProcessorFactory {

@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationExitReason;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.SimulationEndSpecificationType;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SimulationEndSettings;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.settings.SimulationEndSettings;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationEndSpecificationType;
 
 public class SimulationControllerImpl implements SimulationController {
 

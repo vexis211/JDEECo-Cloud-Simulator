@@ -12,7 +12,7 @@ public interface SimulationExecutionService {
 
 	SimulationExecution getExecutionById(int executionId);
 
-	SimulationExecution executeConfiguration(int configurationId, String description, Integer executionRunCount,
+	SimulationExecution executeConfiguration(int configurationId, String description, Integer executionRunMultiplicator,
 			ExecutionEndSpecificationType endSpecificationType, Date endDate, String runProfile,
 			String statisticsProfile, String assertsProfile);
 	

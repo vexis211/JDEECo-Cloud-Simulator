@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.VCSType;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.variables.SimulationExecutionVariableDefinitions;
 
 public class PackageTaskImpl implements PackageTask {
 
@@ -23,11 +24,13 @@ public class PackageTaskImpl implements PackageTask {
 
 	private String preparingDirectory;
 
-//	private String packageLocalPath;
+	// private String packageLocalPath;
 
 	private String runProfile;
 	private String statisticsProfile;
 	private String assertsProfile;
+
+	private SimulationExecutionVariableDefinitions variableDefinitions;
 
 	public PackageTaskImpl(int executionId) {
 		this.executionId = executionId;
@@ -108,15 +111,25 @@ public class PackageTaskImpl implements PackageTask {
 		return assertsProfile;
 	}
 
-//	@Override
-//	public String getPackageLocalPath() {
-//		return packageLocalPath;
-//	}
-//
-//	@Override
-//	public void setPackageLocalPath(String packageLocalPath) {
-//		this.packageLocalPath = packageLocalPath;
-//	}
+	@Override
+	public SimulationExecutionVariableDefinitions getVariableDefinitions() {
+		return variableDefinitions;
+	}
+
+	@Override
+	public void setVariableDefinitions(SimulationExecutionVariableDefinitions variableDefinitions) {
+		this.variableDefinitions = variableDefinitions;
+	}
+
+	// @Override
+	// public String getPackageLocalPath() {
+	// return packageLocalPath;
+	// }
+	//
+	// @Override
+	// public void setPackageLocalPath(String packageLocalPath) {
+	// this.packageLocalPath = packageLocalPath;
+	// }
 
 	// only in implementation
 	void setRepositoryType(VCSType repositoryType) {

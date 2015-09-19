@@ -43,13 +43,13 @@ public class SimulationConfigurationServiceImpl implements SimulationConfigurati
 
 	@Transactional(readOnly = false)
 	@Override
-	public SimulationConfiguration createConfiguration(int projectId, int dataId, String name, String description, int defaultRunCount) {
+	public SimulationConfiguration createConfiguration(int projectId, int dataId, String name, String description, int defaultRunMultiplicator) {
 
 		User currentUser = UserHelper.getAuthenticatedUser();
 		Project project = projectDao.findById(projectId);		
 		SimulationData data = simulationDataDao.findById(dataId);
 		
-		SimulationConfiguration configuration = new SimulationConfiguration(project, currentUser, data, name, description, defaultRunCount);
+		SimulationConfiguration configuration = new SimulationConfiguration(project, currentUser, data, name, description, defaultRunMultiplicator);
 		
 		simulationConfigurationDao.saveOrUpdate(configuration);
 		
@@ -58,12 +58,12 @@ public class SimulationConfigurationServiceImpl implements SimulationConfigurati
 
 	@Transactional(readOnly = false)
 	@Override
-	public void editConfiguration(int configurationId, String name, String description, int defaultRunCount) {
+	public void editConfiguration(int configurationId, String name, String description, int defaultRunMultiplicator) {
 
 		SimulationConfiguration configuration = simulationConfigurationDao.findById(configurationId);
 		configuration.setName(name);
 		configuration.setDescription(description);
-		configuration.setDefaultRunCount(defaultRunCount);
+		configuration.setDefaultRunMultiplicator(defaultRunMultiplicator);
 		
 		simulationConfigurationDao.saveOrUpdate(configuration);
 	}

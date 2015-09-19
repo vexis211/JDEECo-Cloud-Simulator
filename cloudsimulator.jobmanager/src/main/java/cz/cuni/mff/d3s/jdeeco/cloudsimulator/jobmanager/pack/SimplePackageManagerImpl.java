@@ -2,6 +2,7 @@ package cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.pack;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.engine.JobManagerUpdateQueue;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.variables.SimulationExecutionVariableDefinitions;
 
 public class SimplePackageManagerImpl implements SimplePackageManager, PackageManagerListener {
 
@@ -24,7 +25,7 @@ public class SimplePackageManagerImpl implements SimplePackageManager, PackageMa
 	}
 
 	@Override
-	public void packagePrepared(int executionId) {
-		jobManagerUpdateQueue.add(new PackagePreparedUpdateImpl(executionId));
+	public void packagePrepared(int executionId, SimulationExecutionVariableDefinitions variablesDefinition) {
+		jobManagerUpdateQueue.add(new PackagePreparedUpdateImpl(executionId, variablesDefinition));
 	}
 }

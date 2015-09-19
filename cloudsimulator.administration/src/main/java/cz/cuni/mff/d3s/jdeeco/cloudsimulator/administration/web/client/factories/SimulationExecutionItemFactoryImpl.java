@@ -11,5 +11,4 @@ public class SimulationExecutionItemFactoryImpl implements SimulationExecutionIt
 		SimulationExecutionItem newExecutionItem = new SimulationExecutionItemImpl(execution);
 		return newExecutionItem;
 	}
-
 }

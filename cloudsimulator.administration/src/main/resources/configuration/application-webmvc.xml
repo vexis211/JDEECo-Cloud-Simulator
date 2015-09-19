@@ -95,6 +95,11 @@
 	<bean id="configurationItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories.SimulationConfigurationItemFactoryImpl" />
 	<bean id="dataItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories.SimulationDataItemFactoryImpl" />
 	<bean id="executionItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories.SimulationExecutionItemFactoryImpl" />
+	<bean id="runItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories.SimulationRunItemFactoryImpl" />
+	
+	<bean id="runStatisticAggDataItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories.SimulationRunStatisticAggDataItemFactoryImpl" />
+	<bean id="runStatisticItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories.SimulationRunStatisticItemFactoryImpl" />
+	<bean id="executionStatisticItemFactory" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.factories.SimulationExecutionStatisticItemFactoryImpl" />
 	
 	<bean id="navigationPathBuilder" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.NavigationPathBuilderImpl" />
 	

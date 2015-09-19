@@ -49,7 +49,7 @@ public class SimulationExecutionServiceImpl implements SimulationExecutionServic
 
 	@Transactional(readOnly = false)
 	@Override
-	public SimulationExecution executeConfiguration(int configurationId, String description, Integer executionRunCount,
+	public SimulationExecution executeConfiguration(int configurationId, String description, Integer executionRunMultiplicator,
 			ExecutionEndSpecificationType endSpecificationType, Date endDate, String runProfile,
 			String statisticsProfile, String assertsProfile) {
 
@@ -60,7 +60,7 @@ public class SimulationExecutionServiceImpl implements SimulationExecutionServic
 		execution.setCreator(currentUser);
 		execution.setSimulationConfiguration(configuration);
 		execution.setDescription(description);
-		execution.setRunCount(executionRunCount != null ? executionRunCount : configuration.getDefaultRunCount());
+		execution.setRunMultiplicator(executionRunMultiplicator != null ? executionRunMultiplicator : configuration.getDefaultRunMultiplicator());
 		// end specification
 		execution.setEndSpecificationType(endSpecificationType);
 		if (endSpecificationType == ExecutionEndSpecificationType.ToDate) {

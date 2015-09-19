@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.AssertAction;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.AssertGroupSetting;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.AssertSettingsProfile;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.AssertsSettings;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.settings.AssertGroupSetting;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.settings.AssertSettingsProfile;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.settings.AssertsSettings;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.AssertsSettingsProvider;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.DefaultAssertSetting;
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.settings.SettingsProfileImport;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.settings.DefaultAssertSetting;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.settings.SettingsProfileImport;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.AssertAction;
 
 public class AssertConfigurationImpl implements AssertConfiguration {
 

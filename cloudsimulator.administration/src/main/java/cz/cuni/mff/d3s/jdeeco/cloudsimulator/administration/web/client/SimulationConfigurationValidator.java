@@ -7,7 +7,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.Simu
 /** Validator used for new project */
 public class SimulationConfigurationValidator extends BaseValidator<SimulationConfigurationItem> {
 
-	public static final String DEFAULTRUNCOUNT_FIELD = "defaultRunCount";
+	public static final String DEFAULTRUNMULTIPLICATOR_FIELD = "defaultRunMultiplicator";
 	
 	
 	@Override
@@ -18,8 +18,8 @@ public class SimulationConfigurationValidator extends BaseValidator<SimulationCo
 		if (checkNotSpecified(item.getDescription())) {
 			addNotSpecifiedError(errors, DESCRIPTION_FIELD);
 		} 
-		if (item.getDefaultRunCount() < 1) {
-			addInvalidValueError(errors, DEFAULTRUNCOUNT_FIELD, "Default run count", "at least 1");
+		if (item.getDefaultRunMultiplicator() < 1) {
+			addInvalidValueError(errors, DEFAULTRUNMULTIPLICATOR_FIELD, "Default run multiplicator", "at least 1");
 		}
 	}
 }

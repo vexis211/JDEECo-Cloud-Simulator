@@ -13,20 +13,23 @@ public class SimulationExecutionStatistic implements java.io.Serializable {
 	private Integer id;
 	private SimulationExecution simulationExecution;
 	private String name;
+	private byte dataType;
 	private Set<SimulationRunStatistic> simulationRunStatistics = new HashSet<SimulationRunStatistic>(0);
 
 	public SimulationExecutionStatistic() {
 	}
 
-	public SimulationExecutionStatistic(SimulationExecution simulationExecution, String name) {
+	public SimulationExecutionStatistic(SimulationExecution simulationExecution, String name, byte dataType) {
 		this.simulationExecution = simulationExecution;
 		this.name = name;
+		this.dataType = dataType;
 	}
 
-	public SimulationExecutionStatistic(SimulationExecution simulationExecution, String name,
+	public SimulationExecutionStatistic(SimulationExecution simulationExecution, String name, byte dataType,
 			Set<SimulationRunStatistic> simulationRunStatistics) {
 		this.simulationExecution = simulationExecution;
 		this.name = name;
+		this.dataType = dataType;
 		this.simulationRunStatistics = simulationRunStatistics;
 	}
 
@@ -54,6 +57,14 @@ public class SimulationExecutionStatistic implements java.io.Serializable {
 		this.name = name;
 	}
 
+	public byte getDataType() {
+		return this.dataType;
+	}
+
+	public void setDataType(byte dataType) {
+		this.dataType = dataType;
+	}
+
 	public Set<SimulationRunStatistic> getSimulationRunStatistics() {
 		return this.simulationRunStatistics;
 	}
@@ -61,5 +72,4 @@ public class SimulationExecutionStatistic implements java.io.Serializable {
 	public void setSimulationRunStatistics(Set<SimulationRunStatistic> simulationRunStatistics) {
 		this.simulationRunStatistics = simulationRunStatistics;
 	}
-
 }

@@ -44,12 +44,12 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 
 	@Override
 	public void updateStatus(List<SimulationStatusUpdate> updates) {
-		
+
 		Set<SimulationExecutionEntry> executionsToStop = new HashSet<SimulationExecutionEntry>();
 
 		for (SimulationStatusUpdate update : updates) {
 			int executionId = update.getSimulationId().getExecutionId();
-			
+
 			if (simulationExecutions.containsKey(executionId)) {
 				SimulationExecutionEntry executionEntry = simulationExecutions.get(executionId);
 				try {
@@ -57,7 +57,7 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 							&& !executionsToStop.contains(executionEntry)) {
 						executionsToStop.add(executionEntry);
 					}
-					
+
 					executionEntry.updateRunStatus(update);
 				} catch (RuntimeException e) {
 					logger.error(String.format("Simulation status update failed. %s.", update.getSimulationId()), e);
@@ -66,7 +66,7 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 				logger.info("Update for wrong or stopped execution. {}.", update.getSimulationId());
 			}
 		}
-		
+
 		// stop executions
 		for (SimulationExecutionEntry executionEntry : executionsToStop) {
 			executionEntry.stop();
@@ -74,9 +74,13 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 	}
 
 	@Override
-	public void updatePackageNames(List<PackagePreparedUpdate> updates) {
+	public void updatePackagePrepared(List<PackagePreparedUpdate> updates) {
 		for (PackagePreparedUpdate update : updates) {
+			SimulationExecution executionData = simulationRepository.initializeExecution(update.getExecutionId(),
+					update.getVariablesDefinitions());
+
 			SimulationExecutionEntry simulationExecutionEntry = simulationExecutions.get(update.getExecutionId());
+			simulationExecutionEntry.loadRuns(executionData.getSimulationRuns());
 			simulationExecutionEntry.setIsPackagePrepared();
 		}
 	}
@@ -105,12 +109,13 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 				.filter(x -> !simulationExecutions.containsKey(x.getId())).collect(Collectors.toList());
 
 		for (SimulationExecution notCreatedExecution : notCreatedExecutions) {
-			simulationRepository.initializeExecution(notCreatedExecution);
 			SimulationExecutionEntry newExecutionEntry = simulationExecutionEntryFactory.create(notCreatedExecution,
 					this);
 			simulationExecutions.put(newExecutionEntry.getId(), newExecutionEntry);
 
 			if (simplePackageManager.isPackagePrepared(notCreatedExecution)) {
+				// if package is prepared, there is no reason to create runs -
+				// it must be already done
 				newExecutionEntry.setIsPackagePrepared();
 			} else {
 				simplePackageManager.preparePackage(notCreatedExecution);
@@ -125,7 +130,7 @@ public class SimulationManagerImpl implements SimulationManager, SimulationExecu
 
 	@Override
 	public void runCompleted(SimulationRunEntry runEntry) {
-		RunStatistics runStatistics = statisticsProvider.getStatistics(runEntry);		
+		RunStatistics runStatistics = statisticsProvider.getStatistics(runEntry);
 		simulationRepository.completeRun(runEntry.getId(), runStatistics);
 	}
 

@@ -28,8 +28,8 @@ public interface SimulationExecutionItem {
 	Date getStartedDate();	
 	Date getEndedDate();
 
-	Integer getRunCount();
-	void setRunCount(Integer runCount);
+	Integer getRunMultiplicator();
+	void setRunMultiplicator(Integer runMultiplicator);
 
 	ExecutionEndSpecificationType getEndSpecificationType();
 	void setEndSpecificationType(ExecutionEndSpecificationType endSpecificationType);

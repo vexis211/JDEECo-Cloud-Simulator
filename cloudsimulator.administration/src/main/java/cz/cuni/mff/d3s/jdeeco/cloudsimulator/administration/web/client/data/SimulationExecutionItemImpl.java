@@ -24,7 +24,7 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 	private String statusDesc;
 	private Date startedDate;
 	private Date endedDate;
-	private Integer runCount;
+	private Integer runMultiplicator;
 
 	private String runProfile;
 	private String statisticsProfile;
@@ -41,7 +41,7 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 		this.creator = execution.getCreator().getEmail();
 
 		this.description = execution.getDescription();
-		this.runCount = execution.getRunCount();
+		this.runMultiplicator = execution.getRunMultiplicator();
 		this.endSpecificationType = execution.getEndSpecificationType();
 		this.endDate = execution.getEndDate();
 		if (this.endDate != null) {
@@ -111,13 +111,13 @@ public class SimulationExecutionItemImpl implements SimulationExecutionItem {
 	}
 
 	@Override
-	public Integer getRunCount() {
-		return runCount;
+	public Integer getRunMultiplicator() {
+		return runMultiplicator;
 	}
 
 	@Override
-	public void setRunCount(Integer runCount) {
-		this.runCount = runCount;
+	public void setRunMultiplicator(Integer runMultiplicator) {
+		this.runMultiplicator = runMultiplicator;
 	}
 
 	@Override

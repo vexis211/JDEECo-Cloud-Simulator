@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.cuni.mff.d3s.jdeeco.cloudsimulator.simulation.data.AssertAction;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.AssertAction;
 
 public class AssertActionsParser {
 

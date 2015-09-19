@@ -102,7 +102,7 @@ public class SimulationExecutionController {
 		}
 
 		simulationExecutionService.executeConfiguration(configurationId, simulationExecutionItem.getDescription(),
-				simulationExecutionItem.getRunCount(), simulationExecutionItem.getEndSpecificationType(),
+				simulationExecutionItem.getRunMultiplicator(), simulationExecutionItem.getEndSpecificationType(),
 				simulationExecutionItem.getEndDate(), simulationExecutionItem.getRunProfile(),
 				simulationExecutionItem.getStatisticsProfile(), simulationExecutionItem.getAssertsProfile());
 

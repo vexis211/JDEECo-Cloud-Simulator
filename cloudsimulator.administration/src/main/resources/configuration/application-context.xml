@@ -62,6 +62,11 @@
 		<constructor-arg name="password" value="${openStack.connect.password}" />
 	</bean>		
 	
+	
+	<bean id="type2ByteMapper" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.statistics.Type2ByteMapperImpl" />	
+	<bean id="byteArrayConverterProvider" class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.statistics.ByteArrayConverterProviderImpl" />
+	
+	
 	<!-- Services -->
 	<bean id="userService"
 		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.UserServiceImpl"
@@ -83,6 +88,9 @@
 
 	<bean id="simulationExecutionService"
 		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.SimulationExecutionServiceImpl"
+		scope="singleton" />
+	<bean id="simulationResultService"
+		class="cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.services.SimulationResultServiceImpl"
 		scope="singleton" />
 
 	<!-- Scan for all of Spring components such as Spring Service -->

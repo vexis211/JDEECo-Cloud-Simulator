@@ -16,9 +16,6 @@
 			fetch="select">
 			<column name="RunID" not-null="true" />
 		</many-to-one>
-		<property name="dataType" type="byte">
-			<column name="DataType" not-null="true" />
-		</property>
 		<property name="vectorData" type="binary">
 			<column name="VectorData" />
 		</property>

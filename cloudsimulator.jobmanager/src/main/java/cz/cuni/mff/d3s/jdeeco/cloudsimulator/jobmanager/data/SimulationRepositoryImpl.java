@@ -13,10 +13,13 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.SimulationStatus;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.common.data.StatisticsSaveMode;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationExecutionDao;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationExecutionStatisticDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationExecutionVariableDao;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationRunDao;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationRunStatisticDao;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.daos.SimulationRunVariableDao;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecutionStatistic;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecutionVariable;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRun;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRunStatistic;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationRunStatisticAggdata;
@@ -26,6 +29,9 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.statistics.Type2ByteMapper;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.RunStatistic;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.RunStatisticVisitor;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.RunStatistics;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.variables.SimulationExecutionVariableDefinition;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.variables.SimulationExecutionVariableDefinitions;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.variables.SimulationRunVariables;
 
 public class SimulationRepositoryImpl implements SimulationRepository {
 
@@ -33,17 +39,23 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 	private final SimulationRunDao simulationRunDao;
 	private final SimulationExecutionStatisticDao simulationExecutionStatisticDao;
 	private final SimulationRunStatisticDao simulationRunStatisticDao;
+	private final SimulationExecutionVariableDao simulationExecutionVariableDao;
+	private final SimulationRunVariableDao simulationRunVariableDao;
 	private final Type2ByteMapper type2ByteMapper;
 	private final ByteArrayConverterProvider byteArrayConverterProvider;
 
 	public SimulationRepositoryImpl(SimulationExecutionDao simulationExecutionDao, SimulationRunDao simulationRunDao,
 			SimulationExecutionStatisticDao simulationExecutionStatisticDao,
-			SimulationRunStatisticDao simulationRunStatisticDao, Type2ByteMapper type2ByteMapper,
+			SimulationRunStatisticDao simulationRunStatisticDao,
+			SimulationExecutionVariableDao simulationExecutionVariableDao,
+			SimulationRunVariableDao simulationRunVariableDao, Type2ByteMapper type2ByteMapper,
 			ByteArrayConverterProvider byteArrayConverterProvider) {
 		this.simulationExecutionDao = simulationExecutionDao;
 		this.simulationRunDao = simulationRunDao;
 		this.simulationExecutionStatisticDao = simulationExecutionStatisticDao;
 		this.simulationRunStatisticDao = simulationRunStatisticDao;
+		this.simulationExecutionVariableDao = simulationExecutionVariableDao;
+		this.simulationRunVariableDao = simulationRunVariableDao;
 		this.type2ByteMapper = type2ByteMapper;
 		this.byteArrayConverterProvider = byteArrayConverterProvider;
 	}
@@ -65,21 +77,43 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 
 	@Transactional(readOnly = false)
 	@Override
-	public void initializeExecution(SimulationExecution execution) {
+	public SimulationExecution initializeExecution(int executionId, SimulationExecutionVariableDefinitions variableDefinitions) {
+		SimulationExecution execution = simulationExecutionDao.findById(executionId);
 		Set<SimulationRun> simulationRuns = execution.getSimulationRuns();
-		int toAddCount = execution.getRunCount() - simulationRuns.size();
+		int runMultiplicator = execution.getRunMultiplicator();
 
-		if (toAddCount > 0) {
-			// TODO improvement - do much better
-			for (int i = 0; i < toAddCount; i++) {
-				SimulationRun newRun = new SimulationRun(execution);
+		// add execution variables
+		for (SimulationExecutionVariableDefinition variableDefinition : variableDefinitions.getDefinitions()) {
+			SimulationExecutionVariable executionVariable = new SimulationExecutionVariable();
+			executionVariable.setSimulationExecution(execution);
+			executionVariable.setName(variableDefinition.getName());
+			executionVariable.setDataType(variableDefinition.getDataType());
+
+			simulationExecutionVariableDao.saveOrUpdate(executionVariable);
+		}
+
+		// add possible runs
+		for (SimulationRunVariables simulationRunVariables : variableDefinitions.getPossibleRunCombinations()) {
+			// TODO improvement - do much better - does not need to be saved
+			// after each add
+			for (int i = 0; i < runMultiplicator; i++) {
+				SimulationRun newRun = createSimulationRun(execution, simulationRunVariables);
 				simulationRuns.add(newRun);
 				simulationRunDao.saveOrUpdate(newRun);
 			}
-
-			execution.setSimulationRuns(simulationRuns);
-			simulationExecutionDao.saveOrUpdate(execution);
 		}
+
+		execution.setSimulationRuns(simulationRuns);
+		simulationExecutionDao.saveOrUpdate(execution);
+		
+		return execution;
+	}
+
+	private SimulationRun createSimulationRun(SimulationExecution execution,
+			SimulationRunVariables simulationRunVariables) {
+		
+		// TODO add variables
+		return new SimulationRun(execution);
 	}
 
 	@Transactional(readOnly = false)
@@ -112,16 +146,16 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 		SimulationExecutionStatistic executionStatistic = simulationExecutionStatisticDao.find(execution.getId(),
 				statistic.getName());
 		if (executionStatistic == null) {
-			executionStatistic = new SimulationExecutionStatistic(execution, statistic.getName());
+			byte typeAsByte = type2ByteMapper.convert(statistic.getValueClass());
+			executionStatistic = new SimulationExecutionStatistic(execution, statistic.getName(), typeAsByte);
 			simulationExecutionStatisticDao.saveOrUpdate(executionStatistic);
 		}
 
-		SimulationRunStatistic runStatistic = new SimulationRunStatistic(executionStatistic, run,
-				type2ByteMapper.convert(statistic.getValueClass()));
+		SimulationRunStatistic runStatistic = new SimulationRunStatistic(executionStatistic, run);
 
 		RunStatisticVisitor addValuesVisitor = new AddValuesRunStatisticVisitor(runStatistic);
 		statistic.accept(addValuesVisitor);
-		
+
 		simulationRunStatisticDao.saveOrUpdate(runStatistic);
 	}
 
@@ -172,16 +206,19 @@ public class SimulationRepositoryImpl implements SimulationRepository {
 		@Override
 		public <T> void visit(Class<T> valueClass, Map<StatisticsSaveMode, T> aggregatedValues, T[] valuesVector) {
 			ByteArrayConverter<T> converter = byteArrayConverterProvider.get(valueClass);
-			
+
 			if (valuesVector != null) {
 				statisticData.setVectorData(converter.convertVector(valuesVector));
 			}
-			
+
 			if (aggregatedValues != null) {
 				for (Map.Entry<StatisticsSaveMode, T> entry : aggregatedValues.entrySet()) {
 					byte[] data = converter.convertScalar(entry.getValue());
-					SimulationRunStatisticAggdata aggdata = new SimulationRunStatisticAggdata(statisticData, entry.getKey(), data);
+					SimulationRunStatisticAggdata aggdata = new SimulationRunStatisticAggdata(statisticData,
+							entry.getKey(), data);
 					statisticData.getSimulationRunStatisticAggdatas().add(aggdata);
+
+					// TODO is this also saved?
 				}
 			}
 		}

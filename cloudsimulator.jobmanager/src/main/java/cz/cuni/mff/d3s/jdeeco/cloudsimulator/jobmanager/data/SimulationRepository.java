@@ -5,12 +5,13 @@ import java.util.List;
 
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.data.models.SimulationExecution;
 import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.statistics.RunStatistics;
+import cz.cuni.mff.d3s.jdeeco.cloudsimulator.jobmanager.variables.SimulationExecutionVariableDefinitions;
 
 public interface SimulationRepository {
 	List<SimulationExecution> listNotCompletedExecutions();
 	List<SimulationExecution> listStoppedExecutions(Collection<Integer> executionIds);
 
-	void initializeExecution(SimulationExecution notCreatedExecution);
+	SimulationExecution initializeExecution(int executionId, SimulationExecutionVariableDefinitions variablesDefinitions);
 	
 	void startRun(int runId);
 	void completeRun(int runId, RunStatistics runStatistics);

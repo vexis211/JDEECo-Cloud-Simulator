@@ -40,8 +40,8 @@
         <property name="endDate" type="timestamp">
             <column name="EndDate" length="19" />
         </property>
-        <property name="runCount" type="int">
-            <column name="RunCount" not-null="true" />
+        <property name="runMultiplicator" type="int">
+            <column name="RunMultiplicator" not-null="true" />
         </property>
         <property name="runProfile" type="string">
             <column name="RunProfile" length="255" not-null="true" />

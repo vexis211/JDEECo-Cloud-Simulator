@@ -10,6 +10,6 @@ public interface SimulationManager {
 	List<SimulationExecutionEntry> listExecutions();
 		
 	void updateStatus(List<SimulationStatusUpdate> updates);
-	void updatePackageNames(List<PackagePreparedUpdate> updates);
+	void updatePackagePrepared(List<PackagePreparedUpdate> updates);
 	void refreshExecutions();
 }

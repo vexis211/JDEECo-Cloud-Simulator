@@ -13,6 +13,9 @@
         <property name="name" type="string">
             <column name="Name" not-null="true" />
         </property>
+		<property name="dataType" type="byte">
+			<column name="DataType" not-null="true" />
+		</property>
         <set name="simulationRunStatistics" table="simulation_run_statistic" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="ExecutionStatisticID" not-null="true" />

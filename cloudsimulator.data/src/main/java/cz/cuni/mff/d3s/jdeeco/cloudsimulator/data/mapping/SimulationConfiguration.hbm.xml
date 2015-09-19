@@ -25,8 +25,8 @@
         <property name="created" type="timestamp" insert="false">
             <column name="Created" length="19" not-null="true" />
         </property>
-        <property name="defaultRunCount" type="int">
-            <column name="DefaultRunCount" not-null="true" />
+        <property name="defaultRunMultiplicator" type="int">
+            <column name="DefaultRunMultiplicator" not-null="true" />
         </property>
         <set name="simulationExecutions" table="simulation_execution" inverse="true" lazy="true" fetch="select">
             <key>

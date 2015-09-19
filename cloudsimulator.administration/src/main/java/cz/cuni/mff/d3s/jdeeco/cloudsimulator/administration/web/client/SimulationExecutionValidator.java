@@ -9,7 +9,7 @@ import cz.cuni.mff.d3s.jdeeco.cloudsimulator.administration.web.client.data.Simu
 /** Validator used for new project */
 public class SimulationExecutionValidator extends BaseValidator<SimulationExecutionItem> {
 
-	public static final String RUNCOUNT_FIELD = "runCount";
+	public static final String RUNMULTIPLICATOR_FIELD = "runMultiplicator";
 	public static final String ENDSPECTYPE_FIELD = "endSpecificationType";
 	public static final String ENDDATE_FIELD = "endDate";
 	public static final String RUNPROFILE_FIELD = "runProfile";
@@ -21,8 +21,8 @@ public class SimulationExecutionValidator extends BaseValidator<SimulationExecut
 		if (checkNotSpecified(item.getDescription())) {
 			addNotSpecifiedError(errors, DESCRIPTION_FIELD);
 		}
-		if (item.getRunCount() != null && item.getRunCount() < 1) {
-			addInvalidValueError(errors, RUNCOUNT_FIELD, "Specific run count", "at least 1");
+		if (item.getRunMultiplicator() != null && item.getRunMultiplicator() < 1) {
+			addInvalidValueError(errors, RUNMULTIPLICATOR_FIELD, "Specific run multiplicator", "at least 1");
 		}
 		if (item.getEndSpecificationType() == null) {
 			addNotSpecifiedError(errors, ENDSPECTYPE_FIELD, "End type");
