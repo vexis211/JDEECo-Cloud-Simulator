@@ -29,61 +29,20 @@ yum -y install openvswitch
 systemctl enable openvswitch.service
 systemctl start openvswitch.service
 
-ovs-vsctl add-br br-priv
-ovs-vsctl add-port br-priv em1
-ovs-vsctl add-port br-priv dmz-priv-patch-b tag=90 -- set Interface dmz-priv-patch-b type=patch options:peer=dmz-priv-patch-a
-
-ovs-vsctl add-br br-em2
-ovs-vsctl add-port br-em2 em2
-ovs-vsctl add-port br-em2 kdss-patch-a tag=372 -- set Interface kdss-patch-a type=patch options:peer=kdss-patch-b
-ovs-vsctl add-port br-em2 dmz-patch-a tag=350 -- set Interface dmz-patch-a type=patch options:peer=dmz-patch-b
-
-ovs-vsctl add-br br-kdss
-ovs-vsctl add-port br-kdss kdss-patch-b -- set Interface kdss-patch-b type=patch options:peer=kdss-patch-a
-
+# em1 - interface I am connected to
 ovs-vsctl add-br br-dmz
-ovs-vsctl add-port br-dmz dmz-patch-b -- set Interface dmz-patch-b type=patch options:peer=dmz-patch-a
+ovs-vsctl add-port br-dmz em1
 ovs-vsctl add-port br-dmz dmz-priv-patch-a -- set Interface dmz-priv-patch-a type=patch options:peer=dmz-priv-patch-b
 
-ovs-vsctl add-br br-kdss-nat
+# em2 - private interface
+ovs-vsctl add-br br-priv
+ovs-vsctl add-port br-priv em2
+ovs-vsctl add-port br-priv dmz-priv-patch-b -- set Interface dmz-priv-patch-b type=patch options:peer=dmz-priv-patch-a
+
 ovs-vsctl add-br br-dmz-nat
 
-echo '<?xml version="1.0" encoding="utf-8"?>
-<direct>
-  <rule ipv="ipv4" table="nat" chain="POSTROUTING_direct" priority="0"> -o br-dmz -s 10.250.0.0/16 -j MASQUERADE </rule>
-  <rule ipv="ipv4" table="nat" chain="POSTROUTING_direct" priority="0"> -o br-dmz -s 10.251.0.0/16 -j MASQUERADE </rule>
-  <rule ipv="ipv4" table="nat" chain="POSTROUTING_direct" priority="0"> -o br-kdss -s 10.251.0.0/16 -j MASQUERADE </rule>'  > /etc/firewalld/direct.xml
-for ((i=2; i<=30; i++)); do
-  i0=`printf "%03d" $i`
-  echo '  <rule ipv="ipv4" table="nat" chain="PREROUTING_direct" priority="0"> -i br-dmz -p tcp --dport 10'$i0' -j DNAT --to-destination 10.250.0.'$i':22 </rule>' >> /etc/firewalld/direct.xml
-  echo '  <rule ipv="ipv4" table="nat" chain="PREROUTING_direct" priority="0"> -i br-kdss -p tcp --dport 10'$i0' -j DNAT --to-destination 10.251.0.'$i':22 </rule>' >> /etc/firewalld/direct.xml
-done
-echo '</direct>' >> /etc/firewalld/direct.xml
 
-echo '127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
-::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-
-10.108.0.1	controller.priv
-10.108.0.2	compute-1.priv
-10.108.0.3	compute-2.priv
-10.108.0.20	switch.priv
-
-195.113.20.175	openstack.d3s.mff.cuni.cz openstack
-' > /etc/hosts
-
-echo 'NAME=br-kdss
-DEVICE=br-kdss
-ONBOOT=yes
-TYPE=Ethernet
-MACADDR=BC:30:5B:37:D8:01
-BOOTPROTO=static
-HOTPLUG=no
-NM_CONTROLLED=no
-ZONE=work
-IPADDR=10.10.16.68
-NETMASK=255.255.255.0
-DNS1=10.10.16.1
-' > /etc/sysconfig/network-scripts/ifcfg-br-kdss
+# /etc/sysconfig/network-scripts
 
 echo 'NAME=br-dmz
 DEVICE=br-dmz
@@ -94,16 +53,11 @@ BOOTPROTO=static
 HOTPLUG=no
 NM_CONTROLLED=no
 ZONE=dmz
-IPADDR=195.113.20.175
+IPADDR=195.113.20.159
 NETMASK=255.255.255.0
 GATEWAY=195.113.20.1
 DNS1=195.113.20.71
 DNS2=195.113.20.77
-IPV6ADDR="2001:718:1e03:801::af"
-IPV6_DEFAULTGW="2001:718:1e03:801::1"
-IPV6INIT="yes"
-IPV6_AUTOCONF="yes"
-IPV6_DEFROUTE="yes"
 ' > /etc/sysconfig/network-scripts/ifcfg-br-dmz
 
 echo 'NAME=br-priv
@@ -119,18 +73,6 @@ IPADDR=10.108.0.1
 NETMASK=255.255.0.0
 ' > /etc/sysconfig/network-scripts/ifcfg-br-priv
 
-echo 'NAME=br-kdss-nat
-DEVICE=br-kdss-nat
-ONBOOT=yes
-TYPE=Ethernet
-BOOTPROTO=static
-HOTPLUG=no
-NM_CONTROLLED=no
-ZONE=trusted
-IPADDR=10.251.0.1
-NETMASK=255.255.0.0
-' > /etc/sysconfig/network-scripts/ifcfg-br-kdss-nat
-
 echo 'NAME=br-dmz-nat
 DEVICE=br-dmz-nat
 ONBOOT=yes
@@ -143,6 +85,35 @@ IPADDR=10.250.0.1
 NETMASK=255.255.0.0
 ' > /etc/sysconfig/network-scripts/ifcfg-br-dmz-nat
 
+
+# DNS mapping
+echo '127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+10.108.0.1	controller.priv
+10.108.0.2	compute-1.priv
+10.108.0.3	compute-2.priv
+10.108.0.20	switch.priv
+
+195.113.20.159	argon.d3s.mff.cuni.cz argon
+' > /etc/hosts
+
+
+# to reenable connection to server through ssh
+ifconfig em1 0.0.0.0
+ifup br-dmz
+
+
+# firewall
+# allow ssh to machines from outside
+echo '<?xml version="1.0" encoding="utf-8"?>
+<direct>
+  <rule ipv="ipv4" table="nat" chain="POSTROUTING_direct" priority="0"> -o br-dmz -s 10.250.0.0/16 -j MASQUERADE </rule>'  > /etc/firewalld/direct.xml
+for ((i=2; i<=30; i++)); do
+  i0=`printf "%03d" $i`
+  echo '  <rule ipv="ipv4" table="nat" chain="PREROUTING_direct" priority="0"> -i br-dmz -p tcp --dport 10'$i0' -j DNAT --to-destination 10.250.0.'$i':22 </rule>' >> /etc/firewalld/direct.xml
+done
+echo '</direct>' >> /etc/firewalld/direct.xml
 
 firewall-cmd --zone=dmz --remove-service=ssh --permanent
 firewall-cmd --reload
@@ -191,7 +162,7 @@ host compute-2.priv {
 	fixed-address 10.108.0.3;
 }
  
-' > /etc//dhcp/dhcpd.conf 
+' > /etc/dhcp/dhcpd.conf 
 
 systemctl enable dhcpd.service
 systemctl start dhcpd.service
