@@ -1,0 +1,1312 @@
+# ========================================================================================================================
+# Controller
+# ========================================================================================================================
+
+# RHEL basics
+# ------------------------------------------------------------------------------------------------------------------------
+# subscription-manager register
+# .... enable repositories: rhel-7-server-extras-rpms, rhel-7-server-optional-rpms
+
+subscription-manager register
+subscription-manager repos --enable=rhel-7-server-extras-rpms
+subscription-manager repos --enable=rhel-7-server-optional-rpms
+	
+yum -y install http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+yum -y install http://rdo.fedorapeople.org/openstack-juno/rdo-release-juno.rpm
+
+# Password generation
+# ------------------------------------------------------------------------------------------------------------------------
+
+for i in PWD_ROOT_MYSQL PWD_RABBIT_GUEST PWD_KEYSTONE_ADMIN_TOKEN PWD_KEYSTONE_MYSQL PWD_KEYSTONE_BURES PWD_GLANCE_MYSQL PWD_NOVA_MYSQL PWD_NEUTRON_MYSQL PWD_CINDER_MYSQL PWD_KEYSTONE_GLANCE PWD_KEYSTONE_NOVA PWD_KEYSTONE_NEUTRON PWD_KEYSTONE_CINDER PWD_KEYSTONE_CEILOMETER PWD_NEUTRON_PROXY_SECRET PWD_CEILOMETER_MONGODB PWD_CEILOMETER_METERING_SECRET; do
+	eval $i=`openssl rand -hex 24`
+	eval "echo $i=\${$i}"
+done
+
+
+# Network setup
+# ------------------------------------------------------------------------------------------------------------------------
+yum -y install openvswitch
+systemctl enable openvswitch.service
+systemctl start openvswitch.service
+
+ovs-vsctl add-br br-priv
+ovs-vsctl add-port br-priv em1
+ovs-vsctl add-port br-priv dmz-priv-patch-b tag=90 -- set Interface dmz-priv-patch-b type=patch options:peer=dmz-priv-patch-a
+
+ovs-vsctl add-br br-em2
+ovs-vsctl add-port br-em2 em2
+ovs-vsctl add-port br-em2 kdss-patch-a tag=372 -- set Interface kdss-patch-a type=patch options:peer=kdss-patch-b
+ovs-vsctl add-port br-em2 dmz-patch-a tag=350 -- set Interface dmz-patch-a type=patch options:peer=dmz-patch-b
+
+ovs-vsctl add-br br-kdss
+ovs-vsctl add-port br-kdss kdss-patch-b -- set Interface kdss-patch-b type=patch options:peer=kdss-patch-a
+
+ovs-vsctl add-br br-dmz
+ovs-vsctl add-port br-dmz dmz-patch-b -- set Interface dmz-patch-b type=patch options:peer=dmz-patch-a
+ovs-vsctl add-port br-dmz dmz-priv-patch-a -- set Interface dmz-priv-patch-a type=patch options:peer=dmz-priv-patch-b
+
+ovs-vsctl add-br br-kdss-nat
+ovs-vsctl add-br br-dmz-nat
+
+echo '<?xml version="1.0" encoding="utf-8"?>
+<direct>
+  <rule ipv="ipv4" table="nat" chain="POSTROUTING_direct" priority="0"> -o br-dmz -s 10.250.0.0/16 -j MASQUERADE </rule>
+  <rule ipv="ipv4" table="nat" chain="POSTROUTING_direct" priority="0"> -o br-dmz -s 10.251.0.0/16 -j MASQUERADE </rule>
+  <rule ipv="ipv4" table="nat" chain="POSTROUTING_direct" priority="0"> -o br-kdss -s 10.251.0.0/16 -j MASQUERADE </rule>'  > /etc/firewalld/direct.xml
+for ((i=2; i<=30; i++)); do
+  i0=`printf "%03d" $i`
+  echo '  <rule ipv="ipv4" table="nat" chain="PREROUTING_direct" priority="0"> -i br-dmz -p tcp --dport 10'$i0' -j DNAT --to-destination 10.250.0.'$i':22 </rule>' >> /etc/firewalld/direct.xml
+  echo '  <rule ipv="ipv4" table="nat" chain="PREROUTING_direct" priority="0"> -i br-kdss -p tcp --dport 10'$i0' -j DNAT --to-destination 10.251.0.'$i':22 </rule>' >> /etc/firewalld/direct.xml
+done
+echo '</direct>' >> /etc/firewalld/direct.xml
+
+echo '127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+10.108.0.1	controller.priv
+10.108.0.2	compute-1.priv
+10.108.0.3	compute-2.priv
+10.108.0.20	switch.priv
+
+195.113.20.175	openstack.d3s.mff.cuni.cz openstack
+' > /etc/hosts
+
+echo 'NAME=br-kdss
+DEVICE=br-kdss
+ONBOOT=yes
+TYPE=Ethernet
+MACADDR=BC:30:5B:37:D8:01
+BOOTPROTO=static
+HOTPLUG=no
+NM_CONTROLLED=no
+ZONE=work
+IPADDR=10.10.16.68
+NETMASK=255.255.255.0
+DNS1=10.10.16.1
+' > /etc/sysconfig/network-scripts/ifcfg-br-kdss
+
+echo 'NAME=br-dmz
+DEVICE=br-dmz
+ONBOOT=yes
+TYPE=Ethernet
+MACADDR=BC:30:5B:37:D8:01
+BOOTPROTO=static
+HOTPLUG=no
+NM_CONTROLLED=no
+ZONE=dmz
+IPADDR=195.113.20.175
+NETMASK=255.255.255.0
+GATEWAY=195.113.20.1
+DNS1=195.113.20.71
+DNS2=195.113.20.77
+IPV6ADDR="2001:718:1e03:801::af"
+IPV6_DEFAULTGW="2001:718:1e03:801::1"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+' > /etc/sysconfig/network-scripts/ifcfg-br-dmz
+
+echo 'NAME=br-priv
+DEVICE=br-priv
+ONBOOT=yes
+TYPE=Ethernet
+MACADDR=BC:30:5B:37:D7:FF
+BOOTPROTO=static
+HOTPLUG=no
+NM_CONTROLLED=no
+ZONE=trusted
+IPADDR=10.108.0.1
+NETMASK=255.255.0.0
+' > /etc/sysconfig/network-scripts/ifcfg-br-priv
+
+echo 'NAME=br-kdss-nat
+DEVICE=br-kdss-nat
+ONBOOT=yes
+TYPE=Ethernet
+BOOTPROTO=static
+HOTPLUG=no
+NM_CONTROLLED=no
+ZONE=trusted
+IPADDR=10.251.0.1
+NETMASK=255.255.0.0
+' > /etc/sysconfig/network-scripts/ifcfg-br-kdss-nat
+
+echo 'NAME=br-dmz-nat
+DEVICE=br-dmz-nat
+ONBOOT=yes
+TYPE=Ethernet
+BOOTPROTO=static
+HOTPLUG=no
+NM_CONTROLLED=no
+ZONE=trusted
+IPADDR=10.250.0.1
+NETMASK=255.255.0.0
+' > /etc/sysconfig/network-scripts/ifcfg-br-dmz-nat
+
+
+firewall-cmd --zone=dmz --remove-service=ssh --permanent
+firewall-cmd --reload
+
+
+echo '[Unit]
+Description=OpenStack Conntrack
+Before=libvirtd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sh -c "/usr/sbin/conntrack -E -o timestamp -j -b 6815744 > /var/log/neutron/conntrack.log"
+Restart=on-success
+
+[Install]
+WantedBy=multi-user.target' > /etc/systemd/system/multi-user.target.wants/openstack-conntrack.service
+
+systemctl daemon-reload 
+systemctl start openstack-conntrack.service
+
+
+# DHCPD setup
+# ------------------------------------------------------------------------------------------------------------------------
+yum -y install dhcp
+
+echo 'subnet 10.108.0.0 netmask 255.255.0.0 {
+	option subnet-mask 255.255.0.0;
+	range 10.108.1.1 10.108.1.254;
+}
+
+host switch.priv {
+	option host-name "switch.priv";
+	hardware ethernet 54:75:D0:87:79:10;
+	fixed-address 10.108.0.20;
+}
+
+host compute-1.priv {
+	option host-name "compute-1.priv";
+	hardware ethernet bc:30:5b:37:d8:40;
+	fixed-address 10.108.0.2;
+}
+ 
+host compute-2.priv {
+	option host-name "compute-2.priv";
+	hardware ethernet bc:30:5b:37:d8:33;
+	fixed-address 10.108.0.3;
+}
+ 
+' > /etc//dhcp/dhcpd.conf 
+
+systemctl enable dhcpd.service
+systemctl start dhcpd.service
+
+
+# OpenStack Prerequisities
+# ------------------------------------------------------------------------------------------------------------------------
+yum -y install ntp
+systemctl start ntpd.service
+systemctl enable ntpd.service
+
+yum -y install yum-plugin-priorities openstack-selinux
+
+yum -y install mariadb mariadb-server MySQL-python
+systemctl enable mariadb.service
+systemctl start mariadb.service
+mysql_secure_installation
+# root password: $PWD_ROOT_MYSQL
+
+yum -y install rabbitmq-server
+
+systemctl enable rabbitmq-server.service
+systemctl start rabbitmq-server.service
+rabbitmqctl change_password guest $PWD_RABBIT_GUEST
+
+yum -y install openstack-utils
+
+vi /etc/my.cnf
+# In [mysqld] section set:
+# max_connections=1000
+
+
+# Keystone setup
+# ------------------------------------------------------------------------------------------------------------------------
+mysql -u root --password=$PWD_ROOT_MYSQL -e "CREATE DATABASE keystone"
+mysql -u root --password=$PWD_ROOT_MYSQL -e "GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '$PWD_KEYSTONE_MYSQL'"
+mysql -u root --password=$PWD_ROOT_MYSQL -e "GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '$PWD_KEYSTONE_MYSQL'"
+
+yum -y install openstack-keystone python-keystoneclient
+
+openstack-config --set /etc/keystone/keystone.conf database connection mysql://keystone:$PWD_KEYSTONE_MYSQL@controller.priv/keystone
+openstack-config --set /etc/keystone/keystone.conf DEFAULT admin_token $PWD_KEYSTONE_ADMIN_TOKEN
+openstack-config --set /etc/keystone/keystone.conf DEFAULT verbose True
+openstack-config --set /etc/keystone/keystone.conf token provider keystone.token.providers.uuid.Provider
+openstack-config --set /etc/keystone/keystone.conf token driver keystone.token.persistence.backends.sql.Token
+openstack-config --set /etc/keystone/keystone.conf DEFAULT public_bind_host 10.108.0.1
+openstack-config --set /etc/keystone/keystone.conf DEFAULT admin_bind_host 10.108.0.1
+
+
+keystone-manage pki_setup --keystone-user keystone --keystone-group keystone
+chown -R keystone:keystone /etc/keystone/ssl
+chown -R keystone:keystone /var/log/keystone
+chmod -R o-rwx /etc/keystone/ssl
+
+su -s /bin/sh -c "keystone-manage db_sync" keystone
+
+systemctl start openstack-keystone.service
+systemctl enable openstack-keystone.service
+
+(crontab -l -u keystone 2>&1 | grep -q token_flush) || echo '@hourly /usr/bin/keystone-manage token_flush >/var/log/keystone/keystone-tokenflush.log 2>&1' >> /var/spool/cron/keystone
+
+export OS_SERVICE_TOKEN=$PWD_KEYSTONE_ADMIN_TOKEN
+export OS_SERVICE_ENDPOINT=http://controller.priv:35357/v2.0
+
+keystone tenant-create --name=admin --description="Admin Tenant"
+keystone user-create --name=admin --pass=$PWD_KEYSTONE_BURES --email=bures@d3s.mff.cuni.cz
+keystone role-create --name=admin
+keystone user-role-add --user=admin --tenant=admin --role=admin
+keystone role-create --name _member_
+keystone user-role-add --user=admin --role=_member_ --tenant=admin
+
+keystone tenant-create --name=service --description="Service Tenant"
+
+keystone service-create --name=keystone --type=identity --description="OpenStack Identity"
+keystone endpoint-create --service-id=$(keystone service-list | awk '/ identity / {print $2}') --publicurl=http://controller.priv:5000/v2.0 --internalurl=http://controller.priv:5000/v2.0 --adminurl=http://controller.priv:35357/v2.0
+
+echo 'export OS_USERNAME=admin
+export OS_PASSWORD=$PWD_KEYSTONE_BURES
+export OS_TENANT_NAME=admin
+export OS_AUTH_URL=http://controller.priv:35357/v2.0' > admin-openrc.sh
+
+
+# Glance setup
+# ------------------------------------------------------------------------------------------------------------------------
+
+# Create a shared NFS folder /openstack, add this to fstab and mount it once glance is installed
+# raider-2.d3s.hide.ms.mff.cuni.cz:/openstack/glance-images	/var/lib/glance/images	nfs	auto 	0 0
+
+mysql -u root --password=$PWD_ROOT_MYSQL -e "CREATE DATABASE glance"
+mysql -u root --password=$PWD_ROOT_MYSQL -e "GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY '$PWD_GLANCE_MYSQL'"
+mysql -u root --password=$PWD_ROOT_MYSQL -e "GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY '$PWD_GLANCE_MYSQL'"
+
+keystone user-create --name=glance --pass=$PWD_KEYSTONE_GLANCE
+keystone user-role-add --user=glance --tenant=service --role=admin
+
+keystone service-create --name=glance --type=image --description="OpenStack Image Service"
+keystone endpoint-create --service-id=$(keystone service-list | awk '/ image / {print $2}') --publicurl=http://controller.priv:9292 --internalurl=http://controller.priv:9292 --adminurl=http://controller.priv:9292 --region regionOne
+
+yum -y install openstack-glance python-glanceclient
+
+openstack-config --set /etc/glance/glance-api.conf database connection mysql://glance:$PWD_GLANCE_MYSQL@controller.priv/glance
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken auth_uri http://controller.priv:5000/v2.0
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken identity_uri http://controller.priv:35357
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken admin_user glance
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken admin_password $PWD_KEYSTONE_GLANCE
+openstack-config --set /etc/glance/glance-api.conf paste_deploy flavor keystone
+openstack-config --set /etc/glance/glance-api.conf glance_store default_store file
+openstack-config --set /etc/glance/glance-api.conf glance_store filesystem_store_datadir /var/lib/glance/images/
+openstack-config --set /etc/glance/glance-api.conf DEFAULT verbose True
+openstack-config --del /etc/glance/glance-api.conf keystone_authtoken auth_host
+openstack-config --del /etc/glance/glance-api.conf keystone_authtoken auth_port
+openstack-config --del /etc/glance/glance-api.conf keystone_authtoken auth_protocol
+openstack-config --set /etc/glance/glance-api.conf DEFAULT bind_host 10.108.0.1
+openstack-config --set /etc/glance/glance-api.conf DEFAULT registry_host 10.108.0.1
+
+openstack-config --set /etc/glance/glance-registry.conf database connection mysql://glance:$PWD_GLANCE_MYSQL@controller.priv/glance
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken auth_uri http://controller.priv:5000/v2.0
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken identity_uri http://controller.priv:35357
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken admin_user glance
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken admin_password $PWD_KEYSTONE_GLANCE
+openstack-config --set /etc/glance/glance-registry.conf paste_deploy flavor keystone
+openstack-config --set /etc/glance/glance-registry.conf DEFAULT verbose True
+openstack-config --del /etc/glance/glance-registry.conf keystone_authtoken auth_host
+openstack-config --del /etc/glance/glance-registry.conf keystone_authtoken auth_port
+openstack-config --del /etc/glance/glance-registry.conf keystone_authtoken auth_protocol
+openstack-config --set /etc/glance/glance-registry.conf DEFAULT bind_host 10.108.0.1
+
+su -s /bin/sh -c "glance-manage db_sync" glance
+
+systemctl start openstack-glance-api.service
+systemctl enable openstack-glance-api.service
+systemctl start openstack-glance-registry.service
+systemctl enable openstack-glance-registry.service
+
+
+# Nova setup
+# ------------------------------------------------------------------------------------------------------------------------
+
+# Create a shared NFS folder /openstack, add this to fstab and mount it once nova is installed
+# raider-2.d3s.hide.ms.mff.cuni.cz:/openstack/nova-instances	/var/lib/nova/instances	nfs	auto 	0 0
+
+mysql -u root --password=$PWD_ROOT_MYSQL -e "CREATE DATABASE nova"
+mysql -u root --password=$PWD_ROOT_MYSQL -e "GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY '$PWD_NOVA_MYSQL'"
+mysql -u root --password=$PWD_ROOT_MYSQL -e "GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY '$PWD_NOVA_MYSQL'"
+
+keystone user-create --name=nova --pass=$PWD_KEYSTONE_NOVA
+keystone user-role-add --user=nova --tenant=service --role=admin
+
+keystone service-create --name=nova --type=compute --description="OpenStack Compute"
+keystone endpoint-create --service-id=$(keystone service-list | awk '/ compute / {print $2}') --publicurl=http://controller.priv:8774/v2/%\(tenant_id\)s --internalurl=http://controller.priv:8774/v2/%\(tenant_id\)s --adminurl=http://controller.priv:8774/v2/%\(tenant_id\)s --region regionOne
+
+yum -y install openstack-nova-api openstack-nova-cert openstack-nova-conductor openstack-nova-console openstack-nova-novncproxy openstack-nova-scheduler python-novaclient
+yum -y install openstack-nova-compute sysfsutils
+
+openstack-config --set /etc/nova/nova.conf database connection mysql://nova:$PWD_NOVA_MYSQL@controller.priv/nova
+openstack-config --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
+openstack-config --set /etc/nova/nova.conf DEFAULT rabbit_host controller.priv
+openstack-config --set /etc/nova/nova.conf DEFAULT rabbit_password $PWD_RABBIT_GUEST
+openstack-config --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
+openstack-config --set /etc/nova/nova.conf keystone_authtoken auth_uri http://controller.priv:5000/v2.0
+openstack-config --set /etc/nova/nova.conf keystone_authtoken identity_uri http://controller.priv:35357
+openstack-config --set /etc/nova/nova.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/nova/nova.conf keystone_authtoken admin_user nova
+openstack-config --set /etc/nova/nova.conf keystone_authtoken admin_password $PWD_KEYSTONE_NOVA
+openstack-config --del /etc/nova/nova.conf keystone_authtoken auth_host
+openstack-config --del /etc/nova/nova.conf keystone_authtoken auth_protocol
+openstack-config --del /etc/nova/nova.conf keystone_authtoken auth_port
+openstack-config --set /etc/nova/nova.conf DEFAULT my_ip 10.108.0.1
+openstack-config --set /etc/nova/nova.conf DEFAULT host controller.priv
+openstack-config --set /etc/nova/nova.conf DEFAULT vncserver_listen 10.108.0.1
+openstack-config --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address 10.108.0.1
+openstack-config --set /etc/nova/nova.conf glance host controller.priv
+openstack-config --set /etc/nova/nova.conf DEFAULT novncproxy_base_url http://controller.priv:6080/vnc_auto.html
+openstack-config --set /etc/nova/nova.conf DEFAULT novncproxy_host 10.108.0.1
+
+openstack-config --set /etc/nova/nova.conf DEFAULT verbose True
+
+su -s /bin/sh -c "nova-manage db sync" nova
+
+setsebool -P virt_use_nfs on
+
+systemctl enable openstack-nova-api.service openstack-nova-cert.service openstack-nova-consoleauth.service openstack-nova-scheduler.service openstack-nova-conductor.service openstack-nova-novncproxy.service
+systemctl start openstack-nova-api.service openstack-nova-cert.service openstack-nova-consoleauth.service openstack-nova-scheduler.service openstack-nova-conductor.service openstack-nova-novncproxy.service
+
+systemctl enable libvirtd.service openstack-nova-compute.service
+systemctl start libvirtd.service
+systemctl start openstack-nova-compute.service
+
+
+
+# Neutron setup
+# ------------------------------------------------------------------------------------------------------------------------
+mysql -u root --password=$PWD_ROOT_MYSQL -e "CREATE DATABASE neutron"
+mysql -u root --password=$PWD_ROOT_MYSQL -e "GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY '$PWD_NEUTRON_MYSQL'"
+mysql -u root --password=$PWD_ROOT_MYSQL -e "GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY '$PWD_NEUTRON_MYSQL'"
+
+keystone user-create --name=neutron --pass=$PWD_KEYSTONE_NEUTRON
+keystone user-role-add --user=neutron --tenant=service --role=admin
+keystone service-create --name neutron --type network --description "OpenStack Networking"
+keystone endpoint-create --service-id $(keystone service-list | awk '/ network / {print $2}') --publicurl http://controller.priv:9696 --adminurl http://controller.priv:9696 --internalurl http://controller.priv:9696 --region regionOne
+
+echo 'net.ipv4.ip_forward=1
+net.ipv4.conf.all.rp_filter=0
+net.ipv4.conf.default.rp_filter=0
+net.bridge.bridge-nf-call-arptables = 0
+net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+' > /etc/sysctl.d/openstack-controller.conf 
+sysctl --system
+
+yum -y install openstack-neutron openstack-neutron-ml2 python-neutronclient which openstack-neutron-openvswitch
+
+openstack-config --set /etc/neutron/neutron.conf DEFAULT host controller.priv
+openstack-config --set /etc/neutron/neutron.conf database connection mysql://neutron:$PWD_NEUTRON_MYSQL@controller.priv/neutron
+openstack-config --set /etc/neutron/neutron.conf DEFAULT rpc_backend rabbit
+openstack-config --set /etc/neutron/neutron.conf DEFAULT rabbit_host controller.priv
+openstack-config --set /etc/neutron/neutron.conf DEFAULT rabbit_password $PWD_RABBIT_GUEST
+openstack-config --set /etc/neutron/neutron.conf DEFAULT auth_strategy keystone
+openstack-config --set /etc/neutron/neutron.conf keystone_authtoken auth_uri http://controller.priv:5000/v2.0
+openstack-config --set /etc/neutron/neutron.conf keystone_authtoken identity_uri http://controller.priv:35357
+openstack-config --set /etc/neutron/neutron.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/neutron/neutron.conf keystone_authtoken admin_user neutron
+openstack-config --set /etc/neutron/neutron.conf keystone_authtoken admin_password $PWD_KEYSTONE_NEUTRON
+openstack-config --del /etc/neutron/neutron.conf keystone_authtoken auth_host
+openstack-config --del /etc/neutron/neutron.conf keystone_authtoken auth_protocol
+openstack-config --del /etc/neutron/neutron.conf keystone_authtoken auth_port
+openstack-config --set /etc/neutron/neutron.conf DEFAULT core_plugin ml2
+openstack-config --set /etc/neutron/neutron.conf DEFAULT service_plugins router
+openstack-config --set /etc/neutron/neutron.conf DEFAULT allow_overlapping_ips True
+openstack-config --set /etc/neutron/neutron.conf DEFAULT notify_nova_on_port_status_changes True
+openstack-config --set /etc/neutron/neutron.conf DEFAULT notify_nova_on_port_data_changes True
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_url http://controller.priv:8774/v2
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_admin_auth_url http://controller.priv:35357/v2.0
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_region_name regionOne
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_admin_username nova
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_admin_tenant_id $(keystone tenant-get service | awk '/ id / {print $4}')
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_admin_password $PWD_KEYSTONE_NOVA
+openstack-config --set /etc/neutron/neutron.conf DEFAULT bind_host 10.108.0.1
+openstack-config --set /etc/neutron/neutron.conf DEFAULT verbose True
+
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers flat,vlan
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types vlan
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers openvswitch
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_security_group True
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_ipset True
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vlan network_vlan_ranges priv:100:110
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks dmz,kdss,dmz-nat,kdss-nat
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings dmz:br-dmz,kdss:br-kdss,dmz-nat:br-dmz-nat,kdss-nat:br-kdss-nat,priv:br-priv
+
+# This should not be needed, but Juno does not work without it. It simply does not create the openflow rules.
+openstack-config --set /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini ovs bridge_mappings dmz:br-dmz,kdss:br-kdss,dmz-nat:br-dmz-nat,kdss-nat:br-kdss-nat,priv:br-priv
+openstack-config --set /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini securitygroup enable_security_group True
+openstack-config --set /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini securitygroup enable_ipset True
+openstack-config --set /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+
+
+openstack-config --set /etc/neutron/l3_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.OVSInterfaceDriver
+openstack-config --set /etc/neutron/l3_agent.ini DEFAULT use_namespaces True
+openstack-config --set /etc/neutron/l3_agent.ini DEFAULT external_network_bridge 
+openstack-config --set /etc/neutron/l3_agent.ini DEFAULT verbose True
+
+openstack-config --set /etc/neutron/dhcp_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.OVSInterfaceDriver
+openstack-config --set /etc/neutron/dhcp_agent.ini DEFAULT dhcp_driver neutron.agent.linux.dhcp.Dnsmasq
+openstack-config --set /etc/neutron/dhcp_agent.ini DEFAULT use_namespaces True
+openstack-config --set /etc/neutron/dhcp_agent.ini DEFAULT verbose True
+
+openstack-config --set /etc/neutron/metadata_agent.ini DEFAULT auth_url http://controller.priv:5000/v2.0
+openstack-config --set /etc/neutron/metadata_agent.ini DEFAULT auth_region regionOne
+openstack-config --set /etc/neutron/metadata_agent.ini DEFAULT admin_tenant_name service
+openstack-config --set /etc/neutron/metadata_agent.ini DEFAULT admin_user neutron
+openstack-config --set /etc/neutron/metadata_agent.ini DEFAULT admin_password $PWD_KEYSTONE_NEUTRON
+openstack-config --set /etc/neutron/metadata_agent.ini DEFAULT nova_metadata_ip controller.priv
+openstack-config --set /etc/neutron/metadata_agent.ini DEFAULT metadata_proxy_shared_secret $PWD_NEUTRON_PROXY_SECRET
+openstack-config --set /etc/neutron/metadata_agent.ini DEFAULT verbose True
+
+openstack-config --set /etc/nova/nova.conf DEFAULT network_api_class nova.network.neutronv2.api.API
+openstack-config --set /etc/nova/nova.conf DEFAULT security_group_api neutron
+openstack-config --set /etc/nova/nova.conf DEFAULT linuxnet_interface_driver nova.network.linux_net.LinuxOVSInterfaceDriver
+openstack-config --set /etc/nova/nova.conf DEFAULT firewall_driver nova.virt.firewall.NoopFirewallDriver
+openstack-config --set /etc/nova/nova.conf neutron url http://controller.priv:9696
+openstack-config --set /etc/nova/nova.conf neutron auth_strategy keystone
+openstack-config --set /etc/nova/nova.conf neutron admin_auth_url http://controller.priv:35357/v2.0
+openstack-config --set /etc/nova/nova.conf neutron admin_tenant_name service
+openstack-config --set /etc/nova/nova.conf neutron admin_username neutron
+openstack-config --set /etc/nova/nova.conf neutron admin_password $PWD_KEYSTONE_NEUTRON
+openstack-config --set /etc/nova/nova.conf neutron service_metadata_proxy True
+openstack-config --set /etc/nova/nova.conf neutron metadata_proxy_shared_secret $PWD_NEUTRON_PROXY_SECRET
+
+ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
+su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade juno" neutron
+
+systemctl restart openstack-nova-api.service openstack-nova-scheduler.service openstack-nova-conductor.service openstack-nova-compute.service
+systemctl enable neutron-server.service
+systemctl start neutron-server.service
+
+cp /usr/lib/systemd/system/neutron-openvswitch-agent.service /usr/lib/systemd/system/neutron-openvswitch-agent.service.orig
+sed -i 's,plugins/openvswitch/ovs_neutron_plugin.ini,plugin.ini,g' /usr/lib/systemd/system/neutron-openvswitch-agent.service
+
+systemctl enable neutron-openvswitch-agent.service neutron-l3-agent.service neutron-dhcp-agent.service neutron-metadata-agent.service neutron-ovs-cleanup.service
+systemctl start neutron-openvswitch-agent.service neutron-l3-agent.service neutron-dhcp-agent.service neutron-metadata-agent.service
+
+yum -y install bind-utils
+neutron net-create dmz-net --shared --router:external True --provider:physical_network dmz --provider:network_type flat
+neutron net-create kdss-net --shared --router:external True --provider:physical_network kdss --provider:network_type flat
+neutron net-create dmz-nat-net --shared --router:external True --provider:physical_network dmz-nat --provider:network_type flat
+neutron net-create kdss-nat-net --shared --router:external True --provider:physical_network kdss-nat --provider:network_type flat
+
+neutron subnet-create --disable-dhcp $(for i in 0 1 2 3; do host openstack-$i.d3s.mff.cuni.cz | awk '{print "--allocation-pool start=" $4 ",end=" $4}'; done) --dns-nameserver 195.113.20.71 --dns-nameserver 195.113.20.77 --name dmz-subnet-ipv4 dmz-net 195.113.20.0/24
+
+# neutron subnet-create --enable-dhcp --allocation-pool start=2001:718:1e03:820:34ac:c1d0::1,end=2001:718:1e03:820:34ac:c1d0::ffff --dns-nameserver 2001:718:1e03:a01::1 --name dmz-subnet-ipv6 dmz-net 2001:718:1e03:820:34ac:c1d0::/112
+
+neutron subnet-create --enable-dhcp $(for i in 0 1 2 3 4 5 6 7 8 9; do host openstack-$i.d3s.hide.ms.mff.cuni.cz | awk '{print "--allocation-pool start=" $4 ",end=" $4}'; done) --gateway 10.10.16.1 --dns-nameserver 10.10.16.1 --name kdss-subnet kdss-net 10.10.16.0/24
+neutron subnet-create --enable-dhcp --allocation-pool start=10.250.0.2,end=10.250.0.30 --dns-nameserver 195.113.20.71 --dns-nameserver 195.113.20.77 --name dmz-nat-subnet dmz-nat-net 10.250.0.0/16
+neutron subnet-create --enable-dhcp --allocation-pool start=10.251.0.2,end=10.251.0.30 --dns-nameserver 10.10.16.1 --name kdss-nat-subnet kdss-nat-net 10.251.0.0/16
+
+
+# Dashboard setup
+# ------------------------------------------------------------------------------------------------------------------------
+yum -y install openstack-dashboard httpd mod_wsgi memcached python-memcached
+
+# Edit configuration
+vi /etc/openstack-dashboard/local_settings
+# OPENSTACK_HOST = "controller.priv"
+# ALLOWED_HOSTS = ['*']
+# CACHES = {
+#   'default': {
+#     'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#     'LOCATION': '127.0.0.1:11211',
+#   }
+# }
+# Comment out any other session storage configuration.	
+# TIME_ZONE = "Europe/Prague"
+
+vi /etc/httpd/conf/httpd.conf
+# Listen controller.priv:80
+
+setsebool -P httpd_can_network_connect on
+chown -R apache:apache /usr/share/openstack-dashboard/static
+systemctl enable httpd.service memcached.service
+systemctl start httpd.service memcached.service
+
+
+# Cinder setup (block storage)
+# ------------------------------------------------------------------------------------------------------------------------
+mysql -u root --password=$PWD_ROOT_MYSQL -e "CREATE DATABASE cinder"
+mysql -u root --password=$PWD_ROOT_MYSQL -e "GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY '$PWD_CINDER_MYSQL'"
+mysql -u root --password=$PWD_ROOT_MYSQL -e "GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY '$PWD_CINDER_MYSQL'"
+
+keystone user-create --name cinder --pass $PWD_KEYSTONE_CINDER
+keystone user-role-add --user cinder --tenant service --role admin
+keystone service-create --name cinder --type volume --description "OpenStack Block Storage"
+keystone service-create --name cinderv2 --type volumev2 --description "OpenStack Block Storage"
+keystone endpoint-create --service-id $(keystone service-list | awk '/ volume / {print $2}') --publicurl http://controller.priv:8776/v1/%\(tenant_id\)s --internalurl http://controller.priv:8776/v1/%\(tenant_id\)s --adminurl http://controller.priv:8776/v1/%\(tenant_id\)s --region regionOne
+keystone endpoint-create --service-id $(keystone service-list | awk '/ volumev2 / {print $2}') --publicurl http://controller.priv:8776/v2/%\(tenant_id\)s --internalurl http://controller.priv:8776/v2/%\(tenant_id\)s --adminurl http://controller.priv:8776/v2/%\(tenant_id\)s --region regionOne
+
+yum -y install openstack-cinder python-cinderclient python-oslo-db targetcli
+
+echo '
+raider-2.d3s.hide.ms.mff.cuni.cz:/openstack/cinder-volumes/
+' > /etc/cinder/nfsshares
+chown root:cinder /etc/cinder/nfsshares
+chmod 0640 /etc/cinder/nfsshares
+
+openstack-config --set /etc/cinder/cinder.conf DEFAULT host controller.priv
+openstack-config --set /etc/cinder/cinder.conf database connection mysql://cinder:$PWD_CINDER_MYSQL@controller.priv/cinder
+openstack-config --set /etc/cinder/cinder.conf DEFAULT rpc_backend rabbit
+openstack-config --set /etc/cinder/cinder.conf DEFAULT rabbit_host controller.priv
+openstack-config --set /etc/cinder/cinder.conf DEFAULT rabbit_password $PWD_RABBIT_GUEST
+openstack-config --set /etc/cinder/cinder.conf DEFAULT auth_strategy keystone
+openstack-config --set /etc/cinder/cinder.conf keystone_authtoken auth_uri http://controller.priv:5000/v2.0
+openstack-config --set /etc/cinder/cinder.conf keystone_authtoken identity_uri http://controller.priv:35357
+openstack-config --set /etc/cinder/cinder.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/cinder/cinder.conf keystone_authtoken admin_user cinder
+openstack-config --set /etc/cinder/cinder.conf keystone_authtoken admin_password $PWD_KEYSTONE_CINDER
+openstack-config --del /etc/cinder/cinder.conf keystone_authtoken auth_host
+openstack-config --del /etc/cinder/cinder.conf keystone_authtoken auth_protocol
+openstack-config --del /etc/cinder/cinder.conf keystone_authtoken auth_port
+openstack-config --set /etc/cinder/cinder.conf DEFAULT my_ip 10.108.0.1
+openstack-config --set /etc/cinder/cinder.conf DEFAULT glance_host controller.priv
+openstack-config --set /etc/cinder/cinder.conf DEFAULT nfs_shares_config /etc/cinder/nfsshares
+# openstack-config --set /etc/cinder/cinder.conf DEFAULT nfs_mount_options OPTIONS
+openstack-config --set /etc/cinder/cinder.conf DEFAULT volume_driver cinder.volume.drivers.nfs.NfsDriver
+openstack-config --set /etc/cinder/cinder.conf DEFAULT osapi_volume_listen 10.108.0.1
+openstack-config --set /etc/cinder/cinder.conf DEFAULT verbose True
+
+su -s /bin/sh -c "cinder-manage db sync" cinder
+
+systemctl enable openstack-cinder-api.service openstack-cinder-scheduler.service openstack-cinder-volume.service target.service
+systemctl start openstack-cinder-api.service openstack-cinder-scheduler.service openstack-cinder-volume.service target.service
+
+
+# NGINX HTTPS Proxy setup 
+# ------------------------------------------------------------------------------------------------------------------------
+yum -y install nginx
+mkdir -p /etc/nginx/ssl
+openssl rsa -in serverkey.pem -out /etc/nginx/ssl/server.key 
+cat openstack.d3s.mff.cuni.cz-1416390221.pem tcs-ca-bundle.pem > /etc/nginx/ssl/server.crt
+
+echo '
+perl_set $filtered_request_body 'sub {
+    my $r = shift;
+    my $body = $r->request_body;
+
+    $body =~ s#region=https\%3A\%2F\%2Fopenstack\.d3s\.mff\.cuni\.cz#region=http%3A%2F%2Fcontroller.priv#g;
+    $body =~ s#region=https\%3A\%2F\%2Fopenstack\.d3s\.hide\.ms\.mff\.cuni\.cz#region=http%3A%2F%2Fcontroller.priv#g;
+
+    return $body;
+}';
+
+ssl_certificate           /etc/nginx/ssl/server.crt;
+ssl_certificate_key       /etc/nginx/ssl/server.key;
+
+ssl_session_cache  builtin:1000  shared:SSL:10m;
+ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
+ssl_ciphers HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4;
+ssl_prefer_server_ciphers on;
+
+server {
+    listen openstack.d3s.mff.cuni.cz:80 default_server;
+    return 301 https://openstack.d3s.mff.cuni.cz$request_uri;
+}
+
+server {
+    listen openstack.d3s.mff.cuni.cz:443;
+    server_name openstack.d3s.mff.cuni.cz;
+    access_log            /var/log/nginx/openstack.d3s.mff.cuni.cz.443.log;
+
+    ssl on;
+
+    location = / {
+	return 301 https://$host/dashboard; 
+    }
+
+    location / {
+        proxy_set_header        Host 'controller.priv';
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+
+        proxy_pass          http://controller.priv:80;
+        proxy_read_timeout  90;
+
+        proxy_redirect http://controller.priv https://openstack.d3s.mff.cuni.cz;
+	
+	proxy_set_body $filtered_request_body;
+
+	sub_filter 'http://controller.priv' 'https://openstack.d3s.mff.cuni.cz';
+        sub_filter_last_modified on;
+        sub_filter_once off;
+    }
+}
+
+server {
+    listen openstack.d3s.mff.cuni.cz:6080;
+    server_name openstack.d3s.mff.cuni.cz;
+    access_log            /var/log/nginx/openstack.d3s.mff.cuni.cz.6080.access.log;
+
+    ssl on;
+
+    location / {
+        proxy_set_header        Host 'controller.priv';
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+
+        proxy_pass          http://10.108.0.1:$server_port;
+        proxy_read_timeout  90;
+
+        proxy_http_version 1.1;                                                                                               
+        proxy_set_header Upgrade $http_upgrade;                                                                               
+        proxy_set_header Connection "upgrade";
+    }
+}
+
+server {
+    listen openstack.d3s.mff.cuni.cz:35357;
+    listen openstack.d3s.mff.cuni.cz:8774;
+    listen openstack.d3s.mff.cuni.cz:9696;
+    listen openstack.d3s.mff.cuni.cz:8776;
+    listen openstack.d3s.mff.cuni.cz:8777;
+    listen openstack.d3s.mff.cuni.cz:9292;
+    listen openstack.d3s.mff.cuni.cz:5000;
+
+    server_name openstack.d3s.mff.cuni.cz;
+    access_log            /var/log/nginx/openstack.d3s.mff.cuni.cz.ws.access.log;
+
+    ssl on;
+
+    location / {
+        proxy_set_header        Host 'controller.priv:$server_port';
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+
+        proxy_pass          http://10.108.0.1:$server_port;
+        proxy_read_timeout  90;
+
+	sub_filter 'http://controller.priv' 'https://openstack.d3s.mff.cuni.cz';
+        sub_filter_last_modified on;
+        sub_filter_once off;
+ 	sub_filter_types application/json;
+    }
+}
+
+
+server {
+    listen openstack.d3s.hide.ms.mff.cuni.cz:80 default_server;
+    return 301 https://openstack.d3s.hide.ms.mff.cuni.cz$request_uri;
+}
+
+server {
+    listen openstack.d3s.hide.ms.mff.cuni.cz:443;
+    server_name openstack.d3s.hide.ms.mff.cuni.cz;
+    access_log            /var/log/nginx/openstack.d3s.hide.ms.mff.cuni.cz.443.log;
+
+    ssl on;
+
+    location = / {
+	return 301 https://$host/dashboard; 
+    }
+
+    location / {
+        proxy_set_header        Host 'controller.priv';
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+
+        proxy_pass          http://controller.priv:80;
+        proxy_read_timeout  90;
+
+        proxy_redirect http://controller.priv https://openstack.d3s.hide.ms.mff.cuni.cz;
+	
+	proxy_set_body $filtered_request_body;
+
+	sub_filter 'http://controller.priv' 'https://openstack.d3s.hide.ms.mff.cuni.cz';
+        sub_filter_last_modified on;
+        sub_filter_once off;
+    }
+}
+
+server {
+    listen openstack.d3s.hide.ms.mff.cuni.cz:6080;
+    server_name openstack.d3s.hide.ms.mff.cuni.cz;
+    access_log            /var/log/nginx/openstack.d3s.hide.ms.mff.cuni.cz.6080.access.log;
+
+    ssl on;
+
+    location / {
+        proxy_set_header        Host 'controller.priv';
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+
+        proxy_pass          http://10.108.0.1:$server_port;
+        proxy_read_timeout  90;
+
+        proxy_http_version 1.1;                                                                                               
+        proxy_set_header Upgrade $http_upgrade;                                                                               
+        proxy_set_header Connection "upgrade";
+    }
+}
+
+server {
+    listen openstack.d3s.hide.ms.mff.cuni.cz:35357;
+    listen openstack.d3s.hide.ms.mff.cuni.cz:8774;
+    listen openstack.d3s.hide.ms.mff.cuni.cz:9696;
+    listen openstack.d3s.hide.ms.mff.cuni.cz:8776;
+    listen openstack.d3s.hide.ms.mff.cuni.cz:8777;
+    listen openstack.d3s.hide.ms.mff.cuni.cz:9292;
+    listen openstack.d3s.hide.ms.mff.cuni.cz:5000;
+
+    server_name openstack.d3s.hide.ms.mff.cuni.cz;
+    access_log            /var/log/nginx/openstack.d3s.hide.ms.mff.cuni.cz.ws.access.log;
+
+    ssl on;
+
+    location / {
+        proxy_set_header        Host 'controller.priv:$server_port';
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+
+        proxy_pass          http://10.108.0.1:$server_port;
+        proxy_read_timeout  90;
+
+	sub_filter 'http://controller.priv' 'https://openstack.d3s.hide.ms.mff.cuni.cz';
+        sub_filter_last_modified on;
+        sub_filter_once off;
+ 	sub_filter_types application/json;
+    }
+}
+' > /etc/nginx/conf.d/openstack.conf
+
+# Comment out 'server' declaration in /etc/nginx/nginx.conf
+
+firewall-cmd --zone=dmz --add-service=https --permanent
+firewall-cmd --zone=dmz --add-service=http --permanent
+firewall-cmd --zone=dmz --add-port=6080/tcp --permanent
+firewall-cmd --zone=dmz --add-port=35357/tcp --permanent
+firewall-cmd --zone=dmz --add-port=5000/tcp --permanent
+firewall-cmd --zone=dmz --add-port=8774/tcp --permanent
+firewall-cmd --zone=dmz --add-port=8776/tcp --permanent
+firewall-cmd --zone=dmz --add-port=8777/tcp --permanent
+firewall-cmd --zone=dmz --add-port=9292/tcp --permanent
+firewall-cmd --zone=dmz --add-port=9696/tcp --permanent
+
+firewall-cmd --zone=work --add-service=https --permanent
+firewall-cmd --zone=work --add-service=http --permanent
+firewall-cmd --zone=work --add-port=6080/tcp --permanent
+firewall-cmd --zone=work --add-port=35357/tcp --permanent
+firewall-cmd --zone=work --add-port=5000/tcp --permanent
+firewall-cmd --zone=work --add-port=8774/tcp --permanent
+firewall-cmd --zone=work --add-port=8776/tcp --permanent
+firewall-cmd --zone=work --add-port=8777/tcp --permanent
+firewall-cmd --zone=work --add-port=9292/tcp --permanent
+firewall-cmd --zone=work --add-port=9696/tcp --permanent
+
+firewall-cmd --reload
+
+chcon -t unconfined_exec_t /usr/sbin/nginx
+
+systemctl enable nginx.service
+systemctl start nginx.service
+
+
+# Ceilometer setup
+# ------------------------------------------------------------------------------------------------------------------------
+
+yum -y install mongodb-server mongodb
+
+# Edit /etc/mongodb.conf and set:
+# bind_ip = 10.108.0.1
+# smallfiles = true
+
+systemctl enable mongod.service
+systemctl start mongod.service
+
+mongo --host controller.priv --eval '
+  db = db.getSiblingDB("ceilometer");
+  db.addUser({user: "ceilometer",
+  pwd: "'$PWD_CEILOMETER_MONGODB'",
+  roles: [ "readWrite", "dbAdmin" ]})'
+
+keystone user-create --name=ceilometer --pass=$PWD_KEYSTONE_CEILOMETER
+keystone user-role-add --user=ceilometer --tenant=service --role=admin
+keystone service-create --name ceilometer --type metering --description "OpenStack Telemetry"
+keystone endpoint-create --service-id $(keystone service-list | awk '/ metering / {print $2}') --publicurl http://controller.priv:8777 --internalurl http://controller.priv:8777 --adminurl http://controller.priv:8777 --region regionOne
+
+yum -y install openstack-ceilometer-api openstack-ceilometer-collector openstack-ceilometer-notification openstack-ceilometer-central openstack-ceilometer-alarm python-ceilometerclient
+
+openstack-config --set /etc/ceilometer/ceilometer.conf database connection mongodb://ceilometer:$PWD_CEILOMETER_MONGODB@controller.priv:27017/ceilometer
+openstack-config --set /etc/ceilometer/ceilometer.conf DEFAULT rpc_backend rabbit
+openstack-config --set /etc/ceilometer/ceilometer.conf DEFAULT rabbit_host controller.priv
+openstack-config --set /etc/ceilometer/ceilometer.conf DEFAULT rabbit_password $PWD_RABBIT_GUEST
+openstack-config --set /etc/ceilometer/ceilometer.conf DEFAULT auth_strategy keystone
+
+openstack-config --set /etc/ceilometer/ceilometer.conf keystone_authtoken auth_uri http://controller.priv:5000/v2.0
+openstack-config --set /etc/ceilometer/ceilometer.conf keystone_authtoken identity_uri http://controller.priv:35357
+openstack-config --set /etc/ceilometer/ceilometer.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/ceilometer/ceilometer.conf keystone_authtoken admin_user ceilometer
+openstack-config --set /etc/ceilometer/ceilometer.conf keystone_authtoken admin_password $PWD_KEYSTONE_CEILOMETER
+
+openstack-config --del /etc/ceilometer/ceilometer.conf keystone_authtoken auth_host
+openstack-config --del /etc/ceilometer/ceilometer.conf keystone_authtoken auth_protocol
+openstack-config --del /etc/ceilometer/ceilometer.conf keystone_authtoken auth_port
+
+openstack-config --set /etc/ceilometer/ceilometer.conf service_credentials os_auth_url http://controller.priv:5000/v2.0
+openstack-config --set /etc/ceilometer/ceilometer.conf service_credentials os_username ceilometer
+openstack-config --set /etc/ceilometer/ceilometer.conf service_credentials os_tenant_name service
+openstack-config --set /etc/ceilometer/ceilometer.conf service_credentials os_password $PWD_KEYSTONE_CEILOMETER
+openstack-config --set /etc/ceilometer/ceilometer.conf service_credentials os_endpoint_type internalURL
+
+openstack-config --set /etc/ceilometer/ceilometer.conf publisher metering_secret $PWD_CEILOMETER_METERING_SECRET
+
+openstack-config --set /etc/ceilometer/ceilometer.conf api host 10.108.0.1
+openstack-config --set /etc/ceilometer/ceilometer.conf DEFAULT verbose True
+
+systemctl enable openstack-ceilometer-api.service openstack-ceilometer-notification.service openstack-ceilometer-central.service openstack-ceilometer-collector.service openstack-ceilometer-alarm-evaluator.service openstack-ceilometer-alarm-notifier.service
+systemctl start openstack-ceilometer-api.service openstack-ceilometer-notification.service openstack-ceilometer-central.service openstack-ceilometer-collector.service openstack-ceilometer-alarm-evaluator.service openstack-ceilometer-alarm-notifier.service
+
+yum -y install openstack-ceilometer-compute python-ceilometerclient python-pecan
+
+openstack-config --set /etc/nova/nova.conf DEFAULT instance_usage_audit True
+openstack-config --set /etc/nova/nova.conf DEFAULT instance_usage_audit_period hour
+openstack-config --set /etc/nova/nova.conf DEFAULT notify_on_state_change vm_and_task_state
+openstack-config --set /etc/nova/nova.conf DEFAULT notification_driver nova.openstack.common.notifier.rpc_notifier
+openstack-config --set /etc/nova/nova.conf DEFAULT notification_driver ceilometer.compute.nova_notifier
+
+systemctl restart openstack-nova-compute.service
+
+systemctl enable openstack-ceilometer-compute.service
+systemctl start openstack-ceilometer-compute.service
+
+openstack-config --set /etc/glance/glance-api.conf DEFAULT notification_driver messaging
+openstack-config --set /etc/glance/glance-api.conf DEFAULT rpc_backend rabbit
+openstack-config --set /etc/glance/glance-api.conf DEFAULT rabbit_host controller.priv
+openstack-config --set /etc/glance/glance-api.conf DEFAULT rabbit_password $PWD_RABBIT_GUEST
+
+systemctl restart openstack-glance-api.service openstack-glance-registry.service
+
+
+# ========================================================================================================================
+# Compute
+# ========================================================================================================================
+
+# RHEL basics
+# ------------------------------------------------------------------------------------------------------------------------
+subscription-manager register
+.... enable repositories: rhel-7-server-extras-rpms, rhel-7-server-optional-rpms
+
+yum -y install http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
+yum -y install http://rdo.fedorapeople.org/openstack-juno/rdo-release-juno.rpm
+
+# Network setup
+# ------------------------------------------------------------------------------------------------------------------------
+yum -y install openvswitch
+systemctl enable openvswitch.service
+systemctl start openvswitch.service
+
+ovs-vsctl add-br br-priv
+ovs-vsctl add-port br-priv em1
+ovs-vsctl add-port br-priv priv-dmz-patch-a tag=90 -- set Interface priv-dmz-patch-a type=patch options:peer=priv-dmz-patch-b
+
+ovs-vsctl add-br br-kdss
+ovs-vsctl add-port br-kdss em2
+
+ovs-vsctl add-br br-dmz
+ovs-vsctl add-port br-dmz priv-dmz-patch-b -- set Interface priv-dmz-patch-b type=patch options:peer=priv-dmz-patch-a
+
+
+echo '127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1 localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+10.108.0.1 controller.priv
+10.108.0.2 compute-1.priv
+10.108.0.3 compute-2.priv
+10.108.0.20 switch.priv
+
+195.113.20.175 openstack.d3s.mff.cuni.cz openstack
+' > /etc/hosts
+
+echo 'NAME=br-priv
+DEVICE=br-priv
+ONBOOT=yes
+TYPE=Ethernet
+BOOTPROTO=dhcp
+HOTPLUG=no
+NM_CONTROLLED=no
+ZONE=trusted
+' > /etc/sysconfig/network-scripts/ifcfg-br-priv
+
+echo 'NAME=br-kdss
+DEVICE=br-kdss
+ONBOOT=yes
+TYPE=Ethernet
+BOOTPROTO=dhcp
+HOTPLUG=no
+NM_CONTROLLED=no
+ZONE=work
+' > /etc/sysconfig/network-scripts/ifcfg-br-kdss
+
+
+# OpenStack Prerequisities
+# ------------------------------------------------------------------------------------------------------------------------
+yum -y install ntp
+ntpq -c assoc
+
+yum -y install MySQL-python openstack-selinux openstack-utils yum-plugin-priorities 
+
+# Install clients (useful for testing)
+yum -y install python-keystoneclient python-glanceclient python-neutronclient python-novaclient
+
+
+# Nova setup
+# ------------------------------------------------------------------------------------------------------------------------
+
+# Add this to fstab and mount it once nova is installed
+# raider-2.d3s.hide.ms.mff.cuni.cz:/openstack/nova-instances	/var/lib/nova/instances	nfs	auto 	0 0
+
+yum -y install openstack-nova-compute sysfsutils
+
+openstack-config --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
+openstack-config --set /etc/nova/nova.conf DEFAULT rabbit_host controller.priv
+openstack-config --set /etc/nova/nova.conf DEFAULT rabbit_password $PWD_RABBIT_GUEST
+openstack-config --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
+openstack-config --set /etc/nova/nova.conf keystone_authtoken auth_uri http://controller.priv:5000/v2.0
+openstack-config --set /etc/nova/nova.conf keystone_authtoken identity_uri http://controller.priv:35357
+openstack-config --set /etc/nova/nova.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/nova/nova.conf keystone_authtoken admin_user nova
+openstack-config --set /etc/nova/nova.conf keystone_authtoken admin_password $PWD_KEYSTONE_NOVA
+openstack-config --del /etc/nova/nova.conf keystone_authtoken auth_host
+openstack-config --del /etc/nova/nova.conf keystone_authtoken auth_protocol
+openstack-config --del /etc/nova/nova.conf keystone_authtoken auth_port
+XXXX openstack-config --set /etc/nova/nova.conf DEFAULT my_ip 10.108.0.2
+XXXX openstack-config --set /etc/nova/nova.conf DEFAULT host compute-1.priv
+XXXX openstack-config --set /etc/nova/nova.conf DEFAULT vncserver_listen 10.108.0.2
+XXXX openstack-config --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address 10.108.0.2
+openstack-config --set /etc/nova/nova.conf DEFAULT novncproxy_base_url http://controller.priv:6080/vnc_auto.html
+openstack-config --set /etc/nova/nova.conf glance host controller.priv
+openstack-config --set /etc/nova/nova.conf DEFAULT osapi_compute_listen 10.108.0.1
+openstack-config --set /etc/nova/nova.conf DEFAULT ec2_listen 10.108.0.1
+openstack-config --set /etc/nova/nova.conf DEFAULT metadata_listen 10.108.0.1
+openstack-config --set /etc/nova/nova.conf DEFAULT verbose True
+
+setsebool -P virt_use_nfs on
+
+systemctl enable libvirtd.service openstack-nova-compute.service
+systemctl start libvirtd.service
+systemctl start openstack-nova-compute.service
+
+
+# Neutron setup
+# ------------------------------------------------------------------------------------------------------------------------
+echo 'net.ipv4.conf.all.rp_filter=0
+net.ipv4.conf.default.rp_filter=0
+' > /etc/sysctl.d/openstack-compute.conf 
+sysctl --system
+
+yum -y install openstack-neutron-ml2 openstack-neutron-openvswitch
+
+XXXX openstack-config --set /etc/neutron/neutron.conf DEFAULT host compute-1.priv
+openstack-config --set /etc/neutron/neutron.conf DEFAULT rpc_backend rabbit
+openstack-config --set /etc/neutron/neutron.conf DEFAULT rabbit_host controller.priv
+openstack-config --set /etc/neutron/neutron.conf DEFAULT rabbit_password $PWD_RABBIT_GUEST
+openstack-config --set /etc/neutron/neutron.conf DEFAULT auth_strategy keystone
+openstack-config --set /etc/neutron/neutron.conf keystone_authtoken auth_uri http://controller.priv:5000/v2.0
+openstack-config --set /etc/neutron/neutron.conf keystone_authtoken identity_uri http://controller.priv:35357
+openstack-config --set /etc/neutron/neutron.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/neutron/neutron.conf keystone_authtoken admin_user neutron
+openstack-config --set /etc/neutron/neutron.conf keystone_authtoken admin_password $PWD_KEYSTONE_NEUTRON
+openstack-config --del /etc/neutron/neutron.conf keystone_authtoken auth_host
+openstack-config --del /etc/neutron/neutron.conf keystone_authtoken auth_protocol
+openstack-config --del /etc/neutron/neutron.conf keystone_authtoken auth_port
+openstack-config --set /etc/neutron/neutron.conf DEFAULT core_plugin ml2
+openstack-config --set /etc/neutron/neutron.conf DEFAULT service_plugins router
+openstack-config --set /etc/neutron/neutron.conf DEFAULT allow_overlapping_ips True
+
+openstack-config --set /etc/neutron/neutron.conf DEFAULT notify_nova_on_port_status_changes True
+openstack-config --set /etc/neutron/neutron.conf DEFAULT notify_nova_on_port_data_changes True
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_url http://controller.priv:8774/v2
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_admin_auth_url http://controller.priv:35357/v2.0
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_region_name regionOne
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_admin_username nova
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_admin_tenant_id $(keystone tenant-get service | awk '/ id / {print $4}')
+openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_admin_password $PWD_KEYSTONE_NOVA
+openstack-config --set /etc/neutron/neutron.conf DEFAULT verbose True
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers flat,vlan
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types vlan
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers openvswitch
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_security_group True
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_ipset True
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vlan network_vlan_ranges priv:100:110
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks dmz,kdss
+openstack-config --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings dmz:br-dmz,kdss:br-kdss,priv:br-priv
+
+# This should not be needed, but Juno does not work without it. It simply does not create the openflow rules.
+openstack-config --set /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini ovs bridge_mappings dmz:br-dmz,kdss:br-kdss,priv:br-priv
+
+openstack-config --set /etc/nova/nova.conf DEFAULT network_api_class nova.network.neutronv2.api.API
+openstack-config --set /etc/nova/nova.conf DEFAULT security_group_api neutron
+openstack-config --set /etc/nova/nova.conf DEFAULT linuxnet_interface_driver nova.network.linux_net.LinuxOVSInterfaceDriver
+openstack-config --set /etc/nova/nova.conf DEFAULT firewall_driver nova.virt.firewall.NoopFirewallDriver
+openstack-config --set /etc/nova/nova.conf neutron url http://controller.priv:9696
+openstack-config --set /etc/nova/nova.conf neutron auth_strategy keystone
+openstack-config --set /etc/nova/nova.conf neutron admin_auth_url http://controller.priv:35357/v2.0
+openstack-config --set /etc/nova/nova.conf neutron admin_tenant_name service
+openstack-config --set /etc/nova/nova.conf neutron admin_username neutron
+openstack-config --set /etc/nova/nova.conf neutron admin_password $PWD_KEYSTONE_NEUTRON
+
+ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
+
+cp /usr/lib/systemd/system/neutron-openvswitch-agent.service /usr/lib/systemd/system/neutron-openvswitch-agent.service.orig
+sed -i 's,plugins/openvswitch/ovs_neutron_plugin.ini,plugin.ini,g' /usr/lib/systemd/system/neutron-openvswitch-agent.service
+
+systemctl restart openstack-nova-compute.service
+
+systemctl enable neutron-openvswitch-agent.service
+systemctl start neutron-openvswitch-agent.service
+
+
+# Ceilometer setup
+# ------------------------------------------------------------------------------------------------------------------------
+
+yum -y install openstack-ceilometer-compute python-ceilometerclient python-pecan
+
+openstack-config --set /etc/ceilometer/ceilometer.conf DEFAULT rpc_backend rabbit
+openstack-config --set /etc/ceilometer/ceilometer.conf DEFAULT rabbit_host controller.priv
+openstack-config --set /etc/ceilometer/ceilometer.conf DEFAULT rabbit_password $PWD_RABBIT_GUEST
+openstack-config --set /etc/ceilometer/ceilometer.conf DEFAULT auth_strategy keystone
+
+openstack-config --set /etc/ceilometer/ceilometer.conf keystone_authtoken auth_uri http://controller.priv:5000/v2.0
+openstack-config --set /etc/ceilometer/ceilometer.conf keystone_authtoken identity_uri http://controller.priv:35357
+openstack-config --set /etc/ceilometer/ceilometer.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/ceilometer/ceilometer.conf keystone_authtoken admin_user ceilometer
+openstack-config --set /etc/ceilometer/ceilometer.conf keystone_authtoken admin_password $PWD_KEYSTONE_CEILOMETER
+
+openstack-config --del /etc/ceilometer/ceilometer.conf keystone_authtoken auth_host
+openstack-config --del /etc/ceilometer/ceilometer.conf keystone_authtoken auth_protocol
+openstack-config --del /etc/ceilometer/ceilometer.conf keystone_authtoken auth_port
+
+openstack-config --set /etc/ceilometer/ceilometer.conf service_credentials os_auth_url http://controller.priv:5000/v2.0
+openstack-config --set /etc/ceilometer/ceilometer.conf service_credentials os_username ceilometer
+openstack-config --set /etc/ceilometer/ceilometer.conf service_credentials os_tenant_name service
+openstack-config --set /etc/ceilometer/ceilometer.conf service_credentials os_password $PWD_KEYSTONE_CEILOMETER
+openstack-config --set /etc/ceilometer/ceilometer.conf service_credentials os_endpoint_type internalURL
+
+openstack-config --set /etc/ceilometer/ceilometer.conf publisher metering_secret $PWD_CEILOMETER_METERING_SECRET
+
+openstack-config --set /etc/ceilometer/ceilometer.conf DEFAULT verbose True
+
+openstack-config --set /etc/nova/nova.conf DEFAULT instance_usage_audit True
+openstack-config --set /etc/nova/nova.conf DEFAULT instance_usage_audit_period hour
+openstack-config --set /etc/nova/nova.conf DEFAULT notify_on_state_change vm_and_task_state
+openstack-config --set /etc/nova/nova.conf DEFAULT notification_driver nova.openstack.common.notifier.rpc_notifier
+openstack-config --set /etc/nova/nova.conf DEFAULT notification_driver ceilometer.compute.nova_notifier
+
+systemctl restart openstack-nova-compute.service
+
+systemctl enable openstack-ceilometer-compute.service
+systemctl start openstack-ceilometer-compute.service
+
+
+# ========================================================================================================================
+# Windows Image Guide
+# ========================================================================================================================
+
+mkdir -p /tmp/win-image
+cd /tmp/win-image
+
+scp 'bures@d3s.mff.cuni.cz:/var/ftp/software/Microsoft/MSDN\ AA/Operating\ systems/Windows\ Server\ 2012\ R2/en_windows_server_2012_r2_x64_dvd_2707946.iso' osinst.iso
+wget http://alt.fedoraproject.org/pub/alt/virtio-win/latest/virtio-win-0.1-100.iso
+
+# This is because virt-install somehow cannot handle more cdroms
+mkdir virtio-win
+mkdir support
+mount -t iso9660 virtio-win-0.1-100.iso virtio-win
+cp -vr virtio-win/* support
+wget http://www.cloudbase.it/downloads/CloudbaseInitSetup_Beta_x64.msi -O support/cbisetup.msi
+mkisofs -o support.iso support
+umount virtio-win
+rmdir virtio-win
+rm -rf support
+
+echo '<network>
+	<name>ovs-br-priv</name>
+	<forward mode="bridge"/>
+	<bridge name="br-priv"/>
+	<virtualport type="openvswitch"/>
+</network>' > ovsnet.xml
+virsh net-define ovsnet.xml
+virsh net-start ovs-br-priv
+
+qemu-img create -f qcow2 win-image.qcow2 10G
+virt-install --connect qemu:///system --name win-image --ram 4096 --vcpus 2 --network network=ovs-br-priv,model=virtio --disk win-image.qcow2,device=disk,bus=virtio,size=10,format=qcow2 --cdrom osinst.iso --disk support.iso,device=cdrom --os-type windows --os-variant win2k8 --graphics vnc --noautoconsole 
+
+# For general installation procedure see http://docs.openstack.org/image-guide/content/windows-image.html
+# Connect via VNC to localhost:5900 (or find out the port by virsh vncdisplay win-image)
+# Administrator password can be 'cubswin009:)'
+# After login execute:
+# C:\pnputil -i -a E:\WIN8\AMD64\*.INF
+# e:\cbisetup.msi
+
+# If installation cannot be completed, this may be necessary for cleanup
+# virsh destroy win-image; virsh undefine win-image
+
+virsh undefine win-image
+glance image-create --name "Windows Server 2012 R2" --disk-format qcow2 --container-format bare --file win-image.qcow2
+
+
+
+
+
+
+
+
+mkdir -p /tmp/win-image
+cd /tmp/win-image
+
+scp 'bures@d3s.mff.cuni.cz:/var/ftp/software/Microsoft/MSDN\ AA/Operating\ systems/Windows\ 8.1/en_windows_8_1_enterprise_x64_dvd_2971902.iso' osinst.iso
+wget http://alt.fedoraproject.org/pub/alt/virtio-win/latest/virtio-win-0.1-100.iso
+
+echo '<network>
+	<name>ovs-br-priv</name>
+	<forward mode="bridge"/>
+	<bridge name="br-priv"/>
+	<virtualport type="openvswitch"/>
+</network>' > ovsnet.xml
+virsh net-define ovsnet.xml
+virsh net-start ovs-br-priv
+
+qemu-img create -f qcow2 win-image.qcow2 10G
+virt-install --connect qemu:///system --name win-image --ram 4096 --vcpus 2 --network network=ovs-br-priv,model=virtio --disk win-image.qcow2,device=disk,bus=virtio,size=10,format=qcow2 --cdrom osinst.iso --disk virtio-win-0.1-100.iso,device=cdrom --os-type windows --os-variant win2k8 --graphics vnc --noautoconsole 
+
+# For general installation procedure see http://docs.openstack.org/image-guide/content/windows-image.html
+# Connect via VNC to localhost:5900 (or find out the port by virsh vncdisplay win-image)
+# Administrator password can be 'cubswin009:)'
+# After login execute:
+# C:\pnputil -i -a E:\WIN8\AMD64\*.INF
+# C:\Windows\System32\Sysprep\sysprep 
+#   - select OOBE, Generalize, Shutdown
+
+# If installation cannot be completed, this may be necessary for cleanup
+# virsh destroy win-image; virsh undefine win-image
+
+virsh undefine win-image
+glance image-create --name "Windows 8.1" --disk-format qcow2 --container-format bare --file win-image.qcow2
+glance member-create <image id> <tenant id>
+
+
+
+# ========================================================================================================================
+# Security
+# ========================================================================================================================
+# Edit /etc/neutron/policy.json in the following way (replace network ids by the correct network ids):
+
+1a2,6
+>     "d3s_accessible": "",
+>     "net_dmz-nat": "field:networks:id=d3bd267d-8ac3-48d7-8617-dab024fabdab or field:subnets:network_id=d3bd267d-8ac3-48d7-8617-dab024fabdab",
+>     "student_accessible": "rule:net_dmz-nat",
+>     "role_accessible": "(role:d3s and rule:d3s_accessible) or (role:student and rule:student_accessible)",
+> 
+7,9c12,15
+<     "shared": "field:networks:shared=True",
+<     "shared_firewalls": "field:firewalls:shared=True",
+<     "external": "field:networks:router:external=True",
+---
+>     "shared": "rule:role_accessible and field:networks:shared=True", 
+>     "shared_firewalls": "rule:role_accessible and field:firewalls:shared=True", 
+>     "external": "rule:role_accessible and field:networks:router:external=True",
+> 
+
+
+# ========================================================================================================================
+# User Setup
+# ========================================================================================================================
+keystone role-create --name=student
+keystone role-create --name=d3s
+
+NAME=skalicky
+PASSWORD=`openssl rand -hex 16`
+EMAIL=hskalicky@gmail.com
+keystone tenant-create --name=$NAME --description="$NAME (student tenant)"
+keystone user-create --name=$NAME --pass=$PASSWORD --email=$EMAIL
+keystone user-role-add --user=$NAME --tenant=$NAME --role=student
+keystone user-role-add --user=$NAME --role=_member_ --tenant=$NAME
+echo 'export OS_USERNAME='$NAME'
+export OS_PASSWORD='$PASSWORD'
+export OS_TENANT_NAME='$NAME'
+export OS_AUTH_URL=https://openstack.d3s.mff.cuni.cz:8774/v2.0' > $NAME-openrc.sh
+
+
+# ========================================================================================================================
+# Notes
+# ========================================================================================================================
+To create a VM with DMZ/KDSS interface, it is necessary to add bures-dmz-nat-net as the first one and then dmz-net as the second one. 
+In this settings, forwarded ports (e.g. 10XXX) do not work once IP address is assigned from dmz-net. This is because of conflicting routes.
+--
+Cloudinit works only when the first network is internal and attached (via router) to some external network.
+--
+To get a remote desktop for Windows Server, it is necessary to activate it in the Server Manager and then activate incoming RDP firewall rules for "Public" networks.
+--
+The openvswitches have to be configured with vlans in order to avoid connecting KDSS and DMZ networks. This is taken care of automatically by neutron. It can be checked with the following commands
+ovs-vsctl show br-int
+ovs-vsctl dump-flows br-int
+ovs-vsctl show br-kdss
+ovs-vsctl dump-flows br-kdss
+...
+If the vlans are not there, it can be fixed by: openstack-service stop; ovs-vsctl del-br br-int; openstack-service start
+--
+This shows the NAT log. (Hopefuly in Kilo, the ceilometer will properly collect the events. Now the event can be at least seen in /var/log/agent-notification.log.)
+cat /var/log/neutron/conntrack.log | gawk '{ match($1, /\[([0-9]*)\.([0-9]*)\]/, mtc); sub(/^[^ \t]*/, ""); print "["strftime("%F %R:%S", mtc[1])"."mtc[2]"]"$0;}'
+--
+If there is incorrectly updated quota, it can be fixed by:
+nova quota-delete --tenant admin
+--
+Sending an encrypted password to a student:
+openssl genrsa -out private_key.pem 4096
+openssl rsa -pubout -in private_key.pem -out public_key.pem
+
+echo 5e1c595d88a5666d42a65e077477d93b > password
+openssl aes-256-cbc -in skalicky-default.pem -out skalicky-default.pem-encrypted -pass file:password
+openssl rsautl -encrypt -pubin -inkey public_key.pem -in password -out password-encrypted
+
+openssl rsautl -decrypt -inkey private_key.pem -in password-encrypted -out password
+openssl aes-256-cbc -d -in skalicky-default.pem-encrypted -out skalicky-default.pem -pass file:password
+--
+It may be needed to add 'remote-fs.target' to 'After=' clause of openstack systemd unit files.
+
+
+# ========================================================================================================================
+# Junk
+# ========================================================================================================================
+neutron port-create --fixed-ip subnet_id=dmz-subnet,ip_address=195.113.20.174 dmz-net
+nova boot "WS Devel" --flavor 757ef12b-7389-4176-a0d2-0fffdaa37244 --boot-volume 59b05092-ffb6-41d3-aaa9-bb712f16add3 --availability-zone nova:controller.priv --nic port-id=$(neutron port-list | awk '/195.113.20.174/ {print $2}')
+
+
+neutron router-create kdss-router
+neutron router-create dmz-router
+neutron router-gateway-set $(neutron router-list | awk '/ kdss-router / {print $2}') $(neutron net-list | awk '/ kdss-net / {print $2}') 
+neutron router-gateway-set $(neutron router-list | awk '/ dmz-router / {print $2}') $(neutron net-list | awk '/ dmz-net / {print $2}') 
+
+
+
+echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
+
+modprobe ipt_LOG
+OSR=qrouter-aadf3476-a622-4c40-8cdf-ec37db377728; iptables -t raw -I PREROUTING 1 -p icmp -j TRACE; iptables -t raw -I OUTPUT 1 -p icmp -j TRACE; ip netns exec $OSR iptables -t raw -I PREROUTING 1 -p icmp -j TRACE; ip netns exec $OSR iptables -t raw -I OUTPUT 1 -p icmp -j TRACE; read; iptables -D OUTPUT 1 -t raw; iptables -D PREROUTING 1 -t raw; ip netns exec $OSR iptables -t raw -D PREROUTING 1; ip netns exec $OSR iptables -t raw -D OUTPUT 1
+
+
+
+
+yum install gnome-terminal xauth dbus-x11 dejavu-sans-fonts dejavu-sans-mono-fonts dejavu-serif-fonts 
+# add hostname to /etc/hosts
+sudo service messagebus restart

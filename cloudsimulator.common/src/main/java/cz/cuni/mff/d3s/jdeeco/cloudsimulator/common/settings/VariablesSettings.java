@@ -16,7 +16,7 @@ public class VariablesSettings {
 		this.variables = variables != null ? new ArrayList<VariableSetting>(variables) : null;
 	}
 
-	public List<VariableSetting> getProfileImports() {
+	public List<VariableSetting> getVariables() {
 		return variables;
 	}
 }
