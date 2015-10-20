@@ -1,0 +1,40 @@
+# systemctl start openvswitch.service
+
+# to reenable connection to server through ssh
+# ifup br-dmz
+# ifup br-dmz-nat
+# ifup br-priv
+
+# systemctl daemon-reload 
+# systemctl start openstack-conntrack.service
+
+# systemctl start dhcpd.service
+# systemctl start ntpd.service
+# systemctl start mariadb.service
+# systemctl start rabbitmq-server.service
+
+# systemctl start openstack-keystone.service
+
+# systemctl start openstack-glance-api.service
+# systemctl start openstack-glance-registry.service
+
+systemctl start openstack-nova-api.service openstack-nova-cert.service openstack-nova-consoleauth.service openstack-nova-scheduler.service openstack-nova-conductor.service openstack-nova-novncproxy.service
+systemctl start libvirtd.service
+systemctl start openstack-nova-compute.service
+
+systemctl restart openstack-nova-api.service openstack-nova-scheduler.service openstack-nova-conductor.service openstack-nova-compute.service
+systemctl start neutron-server.service
+systemctl start neutron-openvswitch-agent.service neutron-l3-agent.service neutron-dhcp-agent.service neutron-metadata-agent.service
+
+systemctl start httpd.service memcached.service
+
+systemctl start openstack-cinder-api.service openstack-cinder-scheduler.service openstack-cinder-volume.service target.service
+systemctl start nginx.service
+systemctl start mongod.service
+systemctl start openstack-ceilometer-api.service openstack-ceilometer-notification.service openstack-ceilometer-central.service openstack-ceilometer-collector.service openstack-ceilometer-alarm-evaluator.service openstack-ceilometer-alarm-notifier.service
+
+systemctl restart openstack-nova-compute.service
+
+systemctl start openstack-ceilometer-compute.service
+
+systemctl restart openstack-glance-api.service openstack-glance-registry.service
